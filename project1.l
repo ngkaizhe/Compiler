@@ -10,9 +10,14 @@ comma           [,]
 colon           [:]
 period          [.]
 semicolon       [;]
-parenthese      [()]
+parenthese      [(]
 squarebracket   [[\]]
 bracket         [{}]
+/*arithmetic, relational, and logical operators*/
+arithmetic      [+\-*\/]
+remainder       [%]
+relational      [<>](=)?|[=!]=
+logical         (&&)|(\|\|)|(!)
 
 %%
 {digits}        token(yytext);
