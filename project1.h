@@ -64,6 +64,9 @@ int lookup(struct SymbolTable* symbolTable, char* s);
 int insert(struct SymbolTable* symbolTable, char* s);
 
 // dump
-void dump(struct SymbolTable*);
+void dump(struct SymbolTable* symbolTable);
+
+// hash
+int hash(struct SymbolTable* symbolTable, char* s);
 
 #endif

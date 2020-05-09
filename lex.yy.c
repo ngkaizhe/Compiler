@@ -2055,7 +2055,6 @@ int yywrap(void){
     if(lineBuffer[0]){
         listLine();
     }
-    printf("yywrap");
     return 1;
 }
 

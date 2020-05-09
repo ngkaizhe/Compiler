@@ -95,13 +95,14 @@ int lookup(struct SymbolTable* symbolTable, char* s) {
             if (strcmp(temp->values[j], s) == 0) return i;
         }
     }
+    // return hash(symbolTable, s);
     return -1;
 }
 
 // insert
 int insert(struct SymbolTable* symbolTable, char* s) {
     // get hash index
-    int index = 0;
+    int index = hash(symbolTable, s);
     struct SymbolArray* temp = &symbolTable->symbolArrays[index];
 
     // check last index
@@ -132,4 +133,16 @@ void dump(struct SymbolTable* symbolTable) {
             fprintf(yyout, "%s\n", temp->values[j]);
         }
     }
+}
+
+// hash
+int hash(struct SymbolTable* symbolTable, char* s){
+    int size = symbolTable->size;
+    unsigned int hash = 0;
+	int c;
+
+	while (c = *s++)
+	    hash += c;
+
+	return hash % size;
 }
