@@ -1,10 +1,15 @@
 #include"project1.h"
 
+// extern variables for lex
 extern int yylex();
 extern int yylineno;
 extern char* yytext;
 extern FILE* yyin;
 extern FILE* yyout;
+
+// extern variables for line
+extern char lineBuffer[];
+extern int lineNumber;
 
 int main(int argc, char* argv[]){
     yyin = fopen(argv[1], "r");
@@ -20,32 +25,46 @@ int main(int argc, char* argv[]){
     return 0;
 }
 
-// helper function 
-// default print out token
+// output token value with specific format
 void tokenNonType(char* token){
     fprintf(yyout, "<'%s'>\n", token);
+    addList(token);
 }
-// definitions
-// tokens that will be recognized
-// arithmetic, relational, and logical operators
 
-// keyword
+void tokenOperator(char* type, char* token){
+    fprintf(yyout, "<%s: '%s'>\n", type, token);
+    addList(token);
+}
+
 void tokenKeyword(char* token) {
     fprintf(yyout, "<%s>\n", stringToUpper(token));
+    addList(token);
 }
 
-// identifiers(a string of letters and digits beginning with a letter)
-// integer constants
-// boolean constants
-// real constants
-// string constants("aa""bb")
 void tokenType(char* type, char* token) {
-    fprintf(yyout, "<%s : %s>\n", type, token);
+    fprintf(yyout, "<%s: %s>\n", type, token);
+    addList(token);
 }
-// tokens that will be discarded
-// whitespace
-// comments
 
+// output the current line buffer
+void addList(char* token){
+    strcat(lineBuffer, token);
+}
+
+void listLine(){
+    lineNumber++;
+    fprintf(yyout, "Line %d: %s\n\n", lineNumber, lineBuffer);
+    // reset line buffer
+    lineBuffer[0] = '\0';
+}
+
+// error handling
+void handleError(char* errorString){
+    fprintf(yyout, "Bad Character detected (%s) at Line %d\n", errorString, lineNumber+1);
+    addList(errorString);
+}
+
+// output the upper format of the input string
 char* stringToUpper(char* s){
     char* ret = malloc (sizeof (char) * MAX);
 

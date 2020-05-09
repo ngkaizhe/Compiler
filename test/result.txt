@@ -1,4 +1,16 @@
-<'1.1'>
-<'2.5'>
-<'+5.9'>
-<'0.6'>
+<Decimal constant: 1.1>
+<Decimal constant: 2.5>
+Line 1: 1.1 2.5                 
+
+<Decimal constant: 2.5>
+Line 2: 2.5     
+
+<Real constant: +5.9>
+Line 3: +5.9
+
+<Decimal constant: 0.6>
+Line 4: 0.6         
+
+<Id: fea>
+Line 5: fea
+
