@@ -49,7 +49,7 @@ void addList(char* token){
 
 void listLine(){
     lineNumber++;
-    fprintf(yyout, "Line %d: %s\n\n", lineNumber, lineBuffer);
+    fprintf(yyout, "%d: %s\n", lineNumber, lineBuffer);
     // reset line buffer
     lineBuffer[0] = '\0';
 }

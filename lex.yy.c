@@ -385,7 +385,7 @@ static const YY_CHAR yy_ec[256] =
         1,    1,    2,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    2,    4,    5,    1,    1,    6,    7,    1,    8,
-        1,    9,   10,   11,   10,   12,   13,   14,   14,   14,
+        8,    9,   10,   11,   10,   12,   13,   14,   14,   14,
        14,   14,   14,   14,   14,   14,   14,   15,   16,   17,
        18,   17,    1,    1,   19,   19,   19,   19,   19,   19,
        19,   19,   19,   19,   19,   19,   19,   19,   19,   19,
@@ -878,18 +878,17 @@ YY_RULE_SETUP
 #line 72 "project1.l"
 {
     BEGIN INITIAL;
-    addList(yytext);
     listLine();
 }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 77 "project1.l"
+#line 76 "project1.l"
 { addList(yytext);}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 80 "project1.l"
+#line 79 "project1.l"
 {
     BEGIN MULTICOMMENT;
     addList(yytext);
@@ -898,15 +897,14 @@ YY_RULE_SETUP
 case 9:
 /* rule 9 can match eol */
 YY_RULE_SETUP
-#line 84 "project1.l"
+#line 83 "project1.l"
 {
-    addList(yytext);
     listLine();
 }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 88 "project1.l"
+#line 86 "project1.l"
 {
     BEGIN INITIAL;
     addList(yytext);
@@ -914,121 +912,121 @@ YY_RULE_SETUP
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 92 "project1.l"
+#line 90 "project1.l"
 { addList(yytext);}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 95 "project1.l"
+#line 93 "project1.l"
 {tokenNonType(yytext);     addList(yytext);}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 96 "project1.l"
+#line 94 "project1.l"
 {tokenNonType(yytext);     addList(yytext);}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 97 "project1.l"
+#line 95 "project1.l"
 {tokenNonType(yytext);     addList(yytext);}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 98 "project1.l"
+#line 96 "project1.l"
 {tokenNonType(yytext);     addList(yytext);}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 99 "project1.l"
+#line 97 "project1.l"
 {tokenNonType(yytext);     addList(yytext);}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 100 "project1.l"
+#line 98 "project1.l"
 {tokenNonType(yytext);     addList(yytext);}
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 101 "project1.l"
+#line 99 "project1.l"
 {tokenNonType(yytext);     addList(yytext);}
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 104 "project1.l"
+#line 102 "project1.l"
 {tokenOperator("Arithmetic operator", yytext);    addList(yytext);}
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 105 "project1.l"
+#line 103 "project1.l"
 {tokenOperator("Arithmetic operator", yytext);     addList(yytext);}
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 106 "project1.l"
+#line 104 "project1.l"
 {tokenOperator("Relational operator", yytext);     addList(yytext);}
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 107 "project1.l"
+#line 105 "project1.l"
 {tokenOperator("Logical operator", yytext);        addList(yytext);}
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 109 "project1.l"
+#line 107 "project1.l"
 {tokenKeyword(yytext);     addList(yytext);}
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 110 "project1.l"
+#line 108 "project1.l"
 {tokenKeyword(yytext);     addList(yytext);}
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 112 "project1.l"
+#line 110 "project1.l"
 {tokenType("Integer constant", yytext);    addList(yytext);}
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 113 "project1.l"
+#line 111 "project1.l"
 {tokenType("Decimal constant", yytext);    addList(yytext);}
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 114 "project1.l"
+#line 112 "project1.l"
 {tokenType("Boolean constant", yytext);    addList(yytext);}
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 115 "project1.l"
+#line 113 "project1.l"
 {tokenType("Real constant", yytext);       addList(yytext);}
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 118 "project1.l"
+#line 116 "project1.l"
 {tokenType("Id", yytext);      addList(yytext);}
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 120 "project1.l"
+#line 118 "project1.l"
 addList(yytext);
 	YY_BREAK
 case 31:
 /* rule 31 can match eol */
 YY_RULE_SETUP
-#line 121 "project1.l"
+#line 119 "project1.l"
 listLine();
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 123 "project1.l"
+#line 121 "project1.l"
 handleError(yytext);
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 125 "project1.l"
+#line 123 "project1.l"
 ECHO;
 	YY_BREAK
-#line 1032 "lex.yy.c"
+#line 1030 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(STRING):
 case YY_STATE_EOF(SINGLECOMMENT):
@@ -2036,7 +2034,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 125 "project1.l"
+#line 123 "project1.l"
 
 
 int yywrap(void){

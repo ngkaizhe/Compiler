@@ -1,0 +1,23 @@
+1: /* Hello World Example 
+2: */
+<OBJECT>
+<Id: HelloWorld>
+<'{'>
+3: object HelloWorld {
+<DEF>
+<Id: main>
+<'('>
+<')'>
+<'{'>
+4:     def main ( ) {
+5:         // Print text to the console
+<PRINTLN>
+<'('>
+<string: Hello World>
+<')'>
+<';'>
+6:         println ("Hello World");
+<'}'>
+7:     }
+<'}'>
+8: }

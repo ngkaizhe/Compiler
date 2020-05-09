@@ -15,7 +15,7 @@ comma           [,]
 colon           [:]
 period          [.]
 semicolon       [;]
-parenthese      [(]
+parenthese      [()]
 squarebracket   [[\]]
 bracket         [{}]
 /*arithmetic, relational, and logical operators*/
@@ -71,7 +71,6 @@ non-number-alphabet         [^a-zA-Z0-9]
 }
 <SINGLECOMMENT>\n    {
     BEGIN INITIAL;
-    addList(yytext);
     listLine();
 }
 <SINGLECOMMENT>.       { addList(yytext);}
@@ -82,7 +81,6 @@ non-number-alphabet         [^a-zA-Z0-9]
     addList(yytext);
 }
 <MULTICOMMENT>\n    {
-    addList(yytext);
     listLine();
 }
 <MULTICOMMENT>\*\/    {

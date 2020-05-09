@@ -14,7 +14,7 @@ then
 else
     lex project1.l
     gcc project1.c lex.yy.c -o test.out
-    ./test.out "test/input.c" "test/result.txt"
+    ./test.out "test/example1Input" "test/example1Output"
 fi
 
 echo "Test finish run"
