@@ -32,7 +32,7 @@ void tokenType(char* type, char* token);
 void addList(char* token);
 void listLine();
 
-void handleError(char* errorString);
+void handleError(char* expectedVal, char* errorString);
 
 /*help function*/
 char* stringToUpper(char* s);

@@ -59,8 +59,13 @@ non-number-alphabet         [^a-zA-Z0-9]
 <STRING>\"      {
     BEGIN INITIAL;
     *sPointer = '\0';
-    tokenType("string", sBuffer);
+    tokenType("String", sBuffer);
     addList(yytext);
+}
+<STRING>\n    {
+    BEGIN INITIAL;
+    fprintf(yyout, "Semantic error in line %d. Missing closing quote.\n", lineNumber+1);
+    listLine();
 }
 <STRING>.       { *sPointer++ = *yytext; addList(yytext);}
 
@@ -98,7 +103,6 @@ non-number-alphabet         [^a-zA-Z0-9]
 {squarebracket}   {tokenNonType(yytext);     addList(yytext);}
 {bracket}         {tokenNonType(yytext);     addList(yytext);}
 
-
 {arithmetic}      {tokenOperator("Arithmetic operator", yytext);    addList(yytext);}
 {remainder}       {tokenOperator("Arithmetic operator", yytext);     addList(yytext);}
 {relational}      {tokenOperator("Relational operator", yytext);     addList(yytext);}
@@ -112,13 +116,12 @@ non-number-alphabet         [^a-zA-Z0-9]
 {boolean}         {tokenType("Boolean constant", yytext);    addList(yytext);}
 {real}            {tokenType("Real constant", yytext);       addList(yytext);}
 
-
 {identifier}      {tokenType("Id", yytext);      addList(yytext);}
 
-[ \t\r]+          addList(yytext);
-\n                listLine();
 
-.                 handleError(yytext);
+[ \t\r]+          {addList(yytext);}
+\n                {listLine();}
+.                 {handleError("identifier", yytext);}
 
 %%
 

@@ -31,7 +31,7 @@ void tokenNonType(char* token){
 }
 
 void tokenOperator(char* type, char* token){
-    fprintf(yyout, "<%s: '%s'>\n", type, token);
+    fprintf(yyout, "<%s: \"%s\">\n", type, token);
 }
 
 void tokenKeyword(char* token) {
@@ -55,8 +55,8 @@ void listLine(){
 }
 
 // error handling
-void handleError(char* errorString){
-    fprintf(yyout, "Bad Character detected (%s) at Line %d\n", errorString, lineNumber+1);
+void handleError(char* expectedVal, char* errorString){
+    fprintf(yyout, "Semantic error in line %d. Expected an %s but found %s\n", lineNumber+1, expectedVal, errorString);
     addList(errorString);
 }
 

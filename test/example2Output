@@ -1,0 +1,109 @@
+1: /*
+2: testing 
+3: /*
+4: multiple
+5: /*
+6: comment
+7: /*
+8: /*
+9: */
+10: // single comment testing
+<Integer constant: 1>
+<Arithmetic operator: "+">
+<Integer constant: 2>
+<':'>
+11: 1 + 2:
+<Integer constant: 1>
+<Arithmetic operator: "-">
+<Integer constant: 2>
+12: 1 - 2
+<Integer constant: 1>
+<Arithmetic operator: "*">
+<Integer constant: 2>
+13: 1 * 2
+<Integer constant: 1>
+<Arithmetic operator: "/">
+<Integer constant: 2>
+14: 1 / 2
+<Integer constant: 1>
+<Arithmetic operator: "%">
+<Integer constant: 2>
+15: 1 % 2
+<'{'>
+<'{'>
+<'{'>
+<'{'>
+<'{'>
+<'{'>
+<'}'>
+<'}'>
+<'}'>
+<'}'>
+<'}'>
+16: {{{{{{}}}}}
+<'.'>
+<','>
+<':'>
+<';'>
+17: . , : ;
+<'('>
+<')'>
+18: ()
+<'['>
+<']'>
+<'['>
+<']'>
+<'['>
+<']'>
+<'['>
+<']'>
+<'['>
+<']'>
+19: [][][][][]
+<String: a"b"b"c"d"e"f"g>
+20: "a""b""b""c""d""e""f""g"
+<Integer constant: 123>
+<Id: a>
+21: 123a
+<Logical operator: "&&">
+<Logical operator: "||">
+<Logical operator: "!">
+22: && || !
+<Integer constant: 1>
+<Relational operator: ">=">
+<Integer constant: 2>
+23: 1 >= 2
+<Integer constant: 1>
+<Logical operator: "&&">
+<Integer constant: 2>
+24: 1 && 2
+<Boolean constant: true>
+<Logical operator: "||">
+<Boolean constant: false>
+25: true || false
+<Boolean constant: true>
+<Relational operator: "!=">
+<Boolean constant: true>
+26: true != true
+<FLOAT>
+<Id: a>
+<Relational operator: "==">
+<Integer constant: 5>
+<';'>
+27: float a == 5;
+<IF>
+<'('>
+<Id: a>
+<Relational operator: "==">
+<Integer constant: 1>
+<')'>
+<'{'>
+28: if(a == 1){
+<PRINTLN>
+<'('>
+<String: a is 5>
+<')'>
+<';'>
+29:     println("a is 5");
+<'}'>
+30: }

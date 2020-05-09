@@ -1,0 +1,30 @@
+/*
+testing 
+/*
+multiple
+/*
+comment
+/*
+/*
+*/
+// single comment testing
+1 + 2:
+1 - 2
+1 * 2
+1 / 2
+1 % 2
+{{{{{{}}}}}
+. , : ;
+()
+[][][][][]
+"a""b""b""c""d""e""f""g"
+123a
+&& || !
+1 >= 2
+1 && 2
+true || false
+true != true
+float a == 5;
+if(a == 1){
+    println("a is 5");
+}
