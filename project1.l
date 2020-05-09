@@ -25,14 +25,17 @@ identifier      [a-zA-z][0-9a-zA-Z_]*
 /*constants*/
 integer         [0-9]+
 decimal         [0-9]*\.[0-9]+
-boolean         (true)|()false)
+boolean         (true)|(false)
 real            ([+-]?[0-9]*\.[0-9]+)|([+-]?[0-9]+)
 /*use state transition for string constant*/
 string          (\").+(\")
 
+/* token need to discard, whitespace and comments*/
+/* symbol tables*/
+
 %%
-{real}        token(yytext);
-{string}       printf("string detected!\n%s\n", yytext);
+{real}          tokenNonType(yytext);
+{string}        printf("string detected!\n%s\n", yytext);
 \n              ;
 .*              ;
 
