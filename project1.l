@@ -3,6 +3,10 @@
 #include "project1.h"
 int lineNumber = 0;
 char lineBuffer[MAX] = {0};
+
+// string buffer
+char sBuffer[MAX] = {0};
+char *sPointer;
 %}
 
 /* regex definitions*/
@@ -15,7 +19,7 @@ parenthese      [(]
 squarebracket   [[\]]
 bracket         [{}]
 /*arithmetic, relational, and logical operators*/
-arithmetic      [+\-*\/]
+arithmetic      [\+\-*\/]
 remainder       [%]
 relational      [<>](=)?|[=!]=
 logical         (&&)|(\|\|)|(!)
@@ -26,39 +30,92 @@ typekeyword     (boolean)|(class)|(float)|(int)|(object)|(string)|(type)|(val)|(
 identifier      [a-zA-Z][A-za-z0-9]*
 /*constants*/
 integer         [0-9]+
-decimal         [0-9]*\.[0-9]+
+decimal         [0-9]*"."[0-9]+
 boolean         (true)|(false)
-real            ([+-]?[0-9]*\.[0-9]+)|([+-]?[0-9]+)
-/*use state transition for string constant*/
-string          (\").+(\")
+real            ([+-]?[0-9]*"."[0-9]+)|([+-]?[0-9]+)
+
+non-number-alphabet         [^a-zA-Z0-9]
+
+/*string transition*/
+%x STRING
 
 /* token need to discard, whitespace and comments*/
+/* comment transition*/
+%x SINGLECOMMENT
+%x MULTICOMMENT
+
 /* symbol tables*/
 
-%%  
-{comma}           tokenNonType(yytext);
-{colon}           tokenNonType(yytext);
-{period}          tokenNonType(yytext);
-{semicolon}       tokenNonType(yytext);
-{parenthese}      tokenNonType(yytext);
-{squarebracket}   tokenNonType(yytext);
-{bracket}         tokenNonType(yytext);
+%%
+\"              {
+    BEGIN STRING; 
+    sPointer = sBuffer;
+    addList(yytext);
+}
+<STRING>\"\"    {
+    *sPointer++ = '\"';
+    addList(yytext);
+}
+<STRING>\"      {
+    BEGIN INITIAL;
+    *sPointer = '\0';
+    tokenType("string", sBuffer);
+    addList(yytext);
+}
+<STRING>.       { *sPointer++ = *yytext; addList(yytext);}
 
-{arithmetic}      tokenOperator("Arithmetic operator", yytext);
-{remainder}       tokenOperator("Arithmetic operator", yytext);
-{relational}      tokenOperator("Relational operator", yytext);
-{logical}         tokenOperator("Logical operator", yytext);
 
-{keyword}         tokenKeyword(yytext);
-{typekeyword}     tokenKeyword(yytext);
+\/\/            {
+    BEGIN SINGLECOMMENT;
+    addList(yytext);
+}
+<SINGLECOMMENT>\n    {
+    BEGIN INITIAL;
+    addList(yytext);
+    listLine();
+}
+<SINGLECOMMENT>.       { addList(yytext);}
 
-{integer}         tokenType("Integer constant", yytext);
-{decimal}         tokenType("Decimal constant", yytext);
-{boolean}         tokenType("Boolean constant", yytext);
-{real}            tokenType("Real constant", yytext);
-{string}          printf("do something noob");
 
-{identifier}      tokenType("Id", yytext);
+\/\*            {
+    BEGIN MULTICOMMENT;
+    addList(yytext);
+}
+<MULTICOMMENT>\n    {
+    addList(yytext);
+    listLine();
+}
+<MULTICOMMENT>\*\/    {
+    BEGIN INITIAL;
+    addList(yytext);
+}
+<MULTICOMMENT>.       { addList(yytext);}
+
+
+{comma}           {tokenNonType(yytext);     addList(yytext);}
+{colon}           {tokenNonType(yytext);     addList(yytext);}
+{period}          {tokenNonType(yytext);     addList(yytext);}
+{semicolon}       {tokenNonType(yytext);     addList(yytext);}
+{parenthese}      {tokenNonType(yytext);     addList(yytext);}
+{squarebracket}   {tokenNonType(yytext);     addList(yytext);}
+{bracket}         {tokenNonType(yytext);     addList(yytext);}
+
+
+{arithmetic}      {tokenOperator("Arithmetic operator", yytext);    addList(yytext);}
+{remainder}       {tokenOperator("Arithmetic operator", yytext);     addList(yytext);}
+{relational}      {tokenOperator("Relational operator", yytext);     addList(yytext);}
+{logical}         {tokenOperator("Logical operator", yytext);        addList(yytext);}
+
+{keyword}         {tokenKeyword(yytext);     addList(yytext);}
+{typekeyword}     {tokenKeyword(yytext);     addList(yytext);}
+
+{integer}         {tokenType("Integer constant", yytext);    addList(yytext);}
+{decimal}         {tokenType("Decimal constant", yytext);    addList(yytext);}
+{boolean}         {tokenType("Boolean constant", yytext);    addList(yytext);}
+{real}            {tokenType("Real constant", yytext);       addList(yytext);}
+
+
+{identifier}      {tokenType("Id", yytext);      addList(yytext);}
 
 [ \t\r]+          addList(yytext);
 \n                listLine();

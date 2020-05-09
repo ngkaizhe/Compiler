@@ -28,22 +28,18 @@ int main(int argc, char* argv[]){
 // output token value with specific format
 void tokenNonType(char* token){
     fprintf(yyout, "<'%s'>\n", token);
-    addList(token);
 }
 
 void tokenOperator(char* type, char* token){
     fprintf(yyout, "<%s: '%s'>\n", type, token);
-    addList(token);
 }
 
 void tokenKeyword(char* token) {
     fprintf(yyout, "<%s>\n", stringToUpper(token));
-    addList(token);
 }
 
 void tokenType(char* type, char* token) {
     fprintf(yyout, "<%s: %s>\n", type, token);
-    addList(token);
 }
 
 // output the current line buffer
