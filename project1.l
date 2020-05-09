@@ -7,6 +7,9 @@ char lineBuffer[MAX] = {0};
 // string buffer
 char sBuffer[MAX] = {0};
 char *sPointer;
+
+// symbol table
+struct SymbolTable symbolTable;
 %}
 
 /* regex definitions*/

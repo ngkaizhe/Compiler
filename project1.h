@@ -36,4 +36,33 @@ void handleError(char* expectedVal, char* errorString);
 
 /*help function*/
 char* stringToUpper(char* s);
+
+// symbol table
+#define SYMBOLTABLESIZE 1
+
+struct SymbolArray
+{
+    char** values;
+    int size;
+    int maxSize;
+};
+
+struct SymbolTable
+{
+    struct SymbolArray* symbolArrays;
+    int size;
+};
+
+// create
+void create(struct SymbolTable symbolTable);
+
+// lookup
+int lookup(struct SymbolTable symbolTable, char* s);
+
+// insert
+int insert(struct SymbolTable symbolTable, char* s);
+
+// dump
+void dump(struct SymbolTable);
+
 #endif
