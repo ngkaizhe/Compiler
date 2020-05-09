@@ -107,3 +107,8 @@
 29:     println("a is 5");
 <'}'>
 30: }
+
+Symbol Table:
+a
+a
+a
