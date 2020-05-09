@@ -540,7 +540,10 @@ char lineBuffer[MAX] = {0};
 // string buffer
 char sBuffer[MAX] = {0};
 char *sPointer;
-#line 544 "lex.yy.c"
+
+// symbol table
+struct SymbolTable* symbolTable;
+#line 547 "lex.yy.c"
 /* regex definitions*/
 /* delimiter->comma(,) colon(:) period(.) semicolon(;) parentheses(()) square brackets([]) brackets({})*/
 /*arithmetic, relational, and logical operators*/
@@ -553,7 +556,7 @@ char *sPointer;
 /* comment transition*/
 
 /* symbol tables*/
-#line 557 "lex.yy.c"
+#line 560 "lex.yy.c"
 
 #define INITIAL 0
 #define STRING 1
@@ -773,9 +776,9 @@ YY_DECL
 		}
 
 	{
-#line 49 "project1.l"
+#line 52 "project1.l"
 
-#line 779 "lex.yy.c"
+#line 782 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -834,7 +837,7 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 50 "project1.l"
+#line 53 "project1.l"
 {
     BEGIN STRING; 
     sPointer = sBuffer;
@@ -843,7 +846,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 55 "project1.l"
+#line 58 "project1.l"
 {
     *sPointer++ = '\"';
     addList(yytext);
@@ -851,7 +854,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 59 "project1.l"
+#line 62 "project1.l"
 {
     BEGIN INITIAL;
     *sPointer = '\0';
@@ -862,7 +865,7 @@ YY_RULE_SETUP
 case 4:
 /* rule 4 can match eol */
 YY_RULE_SETUP
-#line 65 "project1.l"
+#line 68 "project1.l"
 {
     BEGIN INITIAL;
     fprintf(yyout, "Semantic error in line %d. Missing closing quote.\n", lineNumber+1);
@@ -871,12 +874,12 @@ YY_RULE_SETUP
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 70 "project1.l"
+#line 73 "project1.l"
 { *sPointer++ = *yytext; addList(yytext);}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 73 "project1.l"
+#line 76 "project1.l"
 {
     BEGIN SINGLECOMMENT;
     addList(yytext);
@@ -885,7 +888,7 @@ YY_RULE_SETUP
 case 7:
 /* rule 7 can match eol */
 YY_RULE_SETUP
-#line 77 "project1.l"
+#line 80 "project1.l"
 {
     BEGIN INITIAL;
     listLine();
@@ -893,12 +896,12 @@ YY_RULE_SETUP
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 81 "project1.l"
+#line 84 "project1.l"
 { addList(yytext);}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 84 "project1.l"
+#line 87 "project1.l"
 {
     BEGIN MULTICOMMENT;
     addList(yytext);
@@ -907,14 +910,14 @@ YY_RULE_SETUP
 case 10:
 /* rule 10 can match eol */
 YY_RULE_SETUP
-#line 88 "project1.l"
+#line 91 "project1.l"
 {
     listLine();
 }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 91 "project1.l"
+#line 94 "project1.l"
 {
     BEGIN INITIAL;
     addList(yytext);
@@ -922,121 +925,121 @@ YY_RULE_SETUP
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 95 "project1.l"
+#line 98 "project1.l"
 { addList(yytext);}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 98 "project1.l"
+#line 101 "project1.l"
 {tokenNonType(yytext);     addList(yytext);}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 99 "project1.l"
+#line 102 "project1.l"
 {tokenNonType(yytext);     addList(yytext);}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 100 "project1.l"
+#line 103 "project1.l"
 {tokenNonType(yytext);     addList(yytext);}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 101 "project1.l"
+#line 104 "project1.l"
 {tokenNonType(yytext);     addList(yytext);}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 102 "project1.l"
+#line 105 "project1.l"
 {tokenNonType(yytext);     addList(yytext);}
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 103 "project1.l"
+#line 106 "project1.l"
 {tokenNonType(yytext);     addList(yytext);}
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 104 "project1.l"
+#line 107 "project1.l"
 {tokenNonType(yytext);     addList(yytext);}
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 106 "project1.l"
+#line 109 "project1.l"
 {tokenOperator("Arithmetic operator", yytext);    addList(yytext);}
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 107 "project1.l"
+#line 110 "project1.l"
 {tokenOperator("Arithmetic operator", yytext);     addList(yytext);}
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 108 "project1.l"
+#line 111 "project1.l"
 {tokenOperator("Relational operator", yytext);     addList(yytext);}
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 109 "project1.l"
+#line 112 "project1.l"
 {tokenOperator("Logical operator", yytext);        addList(yytext);}
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 111 "project1.l"
+#line 114 "project1.l"
 {tokenKeyword(yytext);     addList(yytext);}
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 112 "project1.l"
+#line 115 "project1.l"
 {tokenKeyword(yytext);     addList(yytext);}
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 114 "project1.l"
+#line 117 "project1.l"
 {tokenType("Integer constant", yytext);    addList(yytext);}
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 115 "project1.l"
+#line 118 "project1.l"
 {tokenType("Decimal constant", yytext);    addList(yytext);}
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 116 "project1.l"
+#line 119 "project1.l"
 {tokenType("Boolean constant", yytext);    addList(yytext);}
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 117 "project1.l"
+#line 120 "project1.l"
 {tokenType("Real constant", yytext);       addList(yytext);}
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 119 "project1.l"
-{tokenType("Id", yytext);      addList(yytext);}
+#line 122 "project1.l"
+{tokenType("Id", yytext);      addList(yytext);   insert(symbolTable, yytext);}
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 122 "project1.l"
+#line 125 "project1.l"
 {addList(yytext);}
 	YY_BREAK
 case 32:
 /* rule 32 can match eol */
 YY_RULE_SETUP
-#line 123 "project1.l"
+#line 126 "project1.l"
 {listLine();}
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 124 "project1.l"
+#line 127 "project1.l"
 {handleError("identifier", yytext);}
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 126 "project1.l"
+#line 129 "project1.l"
 ECHO;
 	YY_BREAK
-#line 1040 "lex.yy.c"
+#line 1043 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(STRING):
 case YY_STATE_EOF(SINGLECOMMENT):
@@ -2044,7 +2047,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 126 "project1.l"
+#line 129 "project1.l"
 
 
 int yywrap(void){
@@ -2052,6 +2055,7 @@ int yywrap(void){
     if(lineBuffer[0]){
         listLine();
     }
+    printf("yywrap");
     return 1;
 }
 

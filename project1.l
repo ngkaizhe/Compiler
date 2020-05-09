@@ -9,7 +9,7 @@ char sBuffer[MAX] = {0};
 char *sPointer;
 
 // symbol table
-struct SymbolTable symbolTable;
+struct SymbolTable* symbolTable;
 %}
 
 /* regex definitions*/
@@ -119,7 +119,7 @@ non-number-alphabet         [^a-zA-Z0-9]
 {boolean}         {tokenType("Boolean constant", yytext);    addList(yytext);}
 {real}            {tokenType("Real constant", yytext);       addList(yytext);}
 
-{identifier}      {tokenType("Id", yytext);      addList(yytext);}
+{identifier}      {tokenType("Id", yytext);      addList(yytext);   insert(symbolTable, yytext);}
 
 
 [ \t\r]+          {addList(yytext);}

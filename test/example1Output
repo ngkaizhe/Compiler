@@ -1,23 +1,26 @@
-1: /* Hello World Example 
-2: */
+1: /* Hello World Example */
 <OBJECT>
 <Id: HelloWorld>
 <'{'>
-3: object HelloWorld {
+2: object HelloWorld {
 <DEF>
 <Id: main>
 <'('>
 <')'>
 <'{'>
-4:     def main ( ) {
-5:         // Print text to the console
+3:     def main ( ) {
+4:         // Print text to the console
 <PRINTLN>
 <'('>
-<string: Hello World>
+<String: Hello World>
 <')'>
 <';'>
-6:         println ("Hello World");
+5:         println ("Hello World");
 <'}'>
-7:     }
+6:     }
 <'}'>
-8: }
+7: }
+
+Symbol Table:
+HelloWorld
+main

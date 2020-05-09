@@ -39,6 +39,7 @@ char* stringToUpper(char* s);
 
 // symbol table
 #define SYMBOLTABLESIZE 1
+#define SYMBOLARRAYSIZE 1
 
 struct SymbolArray
 {
@@ -54,15 +55,15 @@ struct SymbolTable
 };
 
 // create
-void create(struct SymbolTable symbolTable);
+void create(struct SymbolTable* symbolTable);
 
 // lookup
-int lookup(struct SymbolTable symbolTable, char* s);
+int lookup(struct SymbolTable* symbolTable, char* s);
 
 // insert
-int insert(struct SymbolTable symbolTable, char* s);
+int insert(struct SymbolTable* symbolTable, char* s);
 
 // dump
-void dump(struct SymbolTable);
+void dump(struct SymbolTable*);
 
 #endif
