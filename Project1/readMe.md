@@ -1,5 +1,5 @@
 ﻿## Instruction
-1. Go to the main folder(which have run.sh inside)
+1. Go to the "Project1" main folder(which have run.sh inside)
 2. Open terminal
 3. Type 
 4. sh ./run.sh "{your input file relative path}" "{your output file relative path}"
