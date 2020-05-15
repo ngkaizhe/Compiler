@@ -33,9 +33,8 @@ typekeyword     (boolean)|(class)|(float)|(int)|(object)|(string)|(type)|(val)|(
 identifier      [a-zA-Z][A-za-z0-9]*
 /*constants*/
 integer         [0-9]+
-decimal         [0-9]*"."[0-9]+
 boolean         (true)|(false)
-real            ([+-]?[0-9]*"."[0-9]+)|([+-]?[0-9]+)
+real            [0-9]+"."[0-9]+([Ee][+-]?[0-9]+)?
 
 non-number-alphabet         [^a-zA-Z0-9]
 
@@ -115,7 +114,6 @@ non-number-alphabet         [^a-zA-Z0-9]
 {typekeyword}     {tokenKeyword(yytext);     addList(yytext);}
 
 {integer}         {tokenType("Integer constant", yytext);    addList(yytext);}
-{decimal}         {tokenType("Decimal constant", yytext);    addList(yytext);}
 {boolean}         {tokenType("Boolean constant", yytext);    addList(yytext);}
 {real}            {tokenType("Real constant", yytext);       addList(yytext);}
 

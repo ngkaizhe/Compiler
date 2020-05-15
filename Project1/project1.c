@@ -105,6 +105,13 @@ int insert(struct SymbolTable* symbolTable, char* s) {
     int index = hash(symbolTable, s);
     struct SymbolArray* temp = &symbolTable->symbolArrays[index];
 
+    // check whether there is a duplicate string in our values
+    // if have, then discard
+    for(int i=0;i < temp->size; i++){
+        // discard
+        if(strcmp(temp->values[i], s) == 0) return index;
+    }
+
     // check last index
     temp->values[temp->size] = (char*) malloc(sizeof(char) * (strlen(s) + 1));
     // strcpy_s(temp->values[temp->size], (strlen(s) + 1), s);
