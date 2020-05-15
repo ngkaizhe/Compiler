@@ -1,0 +1,100 @@
+1: 
+2: /* fib.scala
+3:  *
+4:  * This test program computes the Nth Fibonacci number
+5:  */
+6: 
+<OBJECT>
+<id: fib>
+7: object fib
+<'{'>
+8: {
+9:   // variables
+<VAR>
+<id: n>
+<':'>
+<INT>
+<Assignment operator: =>
+<integer: 8>
+10:   var n: int = 8
+<VAR>
+<id: Fn>
+<':'>
+<INT>
+<Assignment operator: =>
+<integer: 1>
+11:   var Fn: int = 1
+<VAR>
+<id: FNminus1>
+<':'>
+<INT>
+<Assignment operator: =>
+<integer: 1>
+12:   var FNminus1: int = 1
+<VAR>
+<id: temp>
+<':'>
+<INT>
+13:   var temp: int
+14: 
+<DEF>
+<id: main>
+<'('>
+<')'>
+<'{'>
+15:   def main () {
+16:     // compute the nth Fibonacci number
+<WHILE>
+<'('>
+<id: n>
+<Relational operator: >>
+<integer: 2>
+<')'>
+<'{'>
+17:     while (n > 2) {
+<id: temp>
+<Assignment operator: =>
+<id: Fn>
+18:       temp = Fn
+<id: Fn>
+<Assignment operator: =>
+<id: Fn>
+<Arithmetic operator: +>
+<id: FNminus1>
+19:       Fn = Fn + FNminus1
+<id: FNminus1>
+<Assignment operator: =>
+<id: temp>
+20:       FNminus1 = temp
+<id: n>
+<Assignment operator: =>
+<id: n>
+<Arithmetic operator: ->
+<integer: 1>
+21:       n = n - 1
+<'}'>
+22:     }
+23:     
+24:     // print result
+<PRINT>
+<'('>
+<string: Result of computation: >
+<')'>
+25:     print ("Result of computation: ")
+<PRINTLN>
+<'('>
+<id: n>
+<')'>
+26:     println (n)
+<'}'>
+27:   }
+<'}'>
+28: }
+
+Symbol Table:
+fib
+n
+Fn
+FNminus1
+temp
+main

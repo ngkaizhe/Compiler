@@ -351,8 +351,8 @@ static void yynoreturn yy_fatal_error ( const char* msg  );
 	(yy_hold_char) = *yy_cp; \
 	*yy_cp = '\0'; \
 	(yy_c_buf_p) = yy_cp;
-#define YY_NUM_RULES 33
-#define YY_END_OF_BUFFER 34
+#define YY_NUM_RULES 34
+#define YY_END_OF_BUFFER 35
 /* This struct is not used in this scanner,
    but its presence is necessary. */
 struct yy_trans_info
@@ -362,21 +362,21 @@ struct yy_trans_info
 	};
 static const flex_int16_t yy_accept[135] =
     {   0,
-        0,    0,    0,    0,    0,    0,    0,    0,   34,   32,
-       30,   31,   23,    1,   21,   32,   17,   20,   13,   15,
-       20,   26,   14,   16,   22,   32,   29,   18,   29,   29,
-       29,   29,   29,   29,   29,   29,   29,   29,   29,   29,
-       29,   29,   19,   32,    5,    4,    3,    8,    7,   12,
-       10,   12,   30,   22,   23,    9,    6,    0,   26,   29,
-       29,   29,   29,   29,   29,   29,   29,   24,   29,   29,
-       29,   29,   29,   29,   29,   29,   29,   29,   29,   29,
-       29,   29,   29,    2,   11,   28,   29,   29,   29,   29,
-       29,   29,   29,   29,   29,   29,   25,   29,   29,   29,
+        0,    0,    0,    0,    0,    0,    0,    0,   35,   33,
+       31,   32,   23,    1,   21,   33,   17,   20,   13,   15,
+       20,   27,   14,   16,   22,   24,   30,   18,   30,   30,
+       30,   30,   30,   30,   30,   30,   30,   30,   30,   30,
+       30,   30,   19,   33,    5,    4,    3,    8,    7,   12,
+       10,   12,   31,   22,   23,    9,    6,    0,   27,   30,
+       30,   30,   30,   30,   30,   30,   30,   25,   30,   30,
+       30,   30,   30,   30,   30,   30,   30,   30,   30,   30,
+       30,   30,   30,    2,   11,   29,   30,   30,   30,   30,
+       30,   30,   30,   30,   30,   30,   26,   30,   30,   30,
 
-       29,   29,   29,   29,   29,   29,    0,   29,   29,   29,
-       29,   29,   29,   29,   29,   29,   29,   29,   27,   29,
-        0,   28,   29,   29,   29,   24,   29,   29,   29,   29,
-       29,   29,   29,    0
+       30,   30,   30,   30,   30,   30,    0,   30,   30,   30,
+       30,   30,   30,   30,   30,   30,   30,   30,   28,   30,
+        0,   29,   30,   30,   30,   25,   30,   30,   30,   30,
+       30,   30,   30,    0
     } ;
 
 static const YY_CHAR yy_ec[256] =
@@ -776,7 +776,7 @@ YY_DECL
 		}
 
 	{
-#line 51 "project1.l"
+#line 52 "project1.l"
 
 #line 782 "lex.yy.c"
 
@@ -837,7 +837,7 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 52 "project1.l"
+#line 53 "project1.l"
 {
     BEGIN STRING; 
     sPointer = sBuffer;
@@ -846,7 +846,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 57 "project1.l"
+#line 58 "project1.l"
 {
     *sPointer++ = '\"';
     addList(yytext);
@@ -854,18 +854,18 @@ YY_RULE_SETUP
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 61 "project1.l"
+#line 62 "project1.l"
 {
     BEGIN INITIAL;
     *sPointer = '\0';
-    tokenType("String", sBuffer);
+    tokenType("string", sBuffer);
     addList(yytext);
 }
 	YY_BREAK
 case 4:
 /* rule 4 can match eol */
 YY_RULE_SETUP
-#line 67 "project1.l"
+#line 68 "project1.l"
 {
     BEGIN INITIAL;
     fprintf(yyout, "Semantic error in line %d. Missing closing quote.\n", lineNumber+1);
@@ -874,12 +874,12 @@ YY_RULE_SETUP
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 72 "project1.l"
+#line 73 "project1.l"
 { *sPointer++ = *yytext; addList(yytext);}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 75 "project1.l"
+#line 76 "project1.l"
 {
     BEGIN SINGLECOMMENT;
     addList(yytext);
@@ -888,7 +888,7 @@ YY_RULE_SETUP
 case 7:
 /* rule 7 can match eol */
 YY_RULE_SETUP
-#line 79 "project1.l"
+#line 80 "project1.l"
 {
     BEGIN INITIAL;
     listLine();
@@ -896,12 +896,12 @@ YY_RULE_SETUP
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 83 "project1.l"
+#line 84 "project1.l"
 { addList(yytext);}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 86 "project1.l"
+#line 87 "project1.l"
 {
     BEGIN MULTICOMMENT;
     addList(yytext);
@@ -910,14 +910,14 @@ YY_RULE_SETUP
 case 10:
 /* rule 10 can match eol */
 YY_RULE_SETUP
-#line 90 "project1.l"
+#line 91 "project1.l"
 {
     listLine();
 }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 93 "project1.l"
+#line 94 "project1.l"
 {
     BEGIN INITIAL;
     addList(yytext);
@@ -925,116 +925,121 @@ YY_RULE_SETUP
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 97 "project1.l"
+#line 98 "project1.l"
 { addList(yytext);}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 100 "project1.l"
+#line 101 "project1.l"
 {tokenNonType(yytext);     addList(yytext);}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 101 "project1.l"
+#line 102 "project1.l"
 {tokenNonType(yytext);     addList(yytext);}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 102 "project1.l"
+#line 103 "project1.l"
 {tokenNonType(yytext);     addList(yytext);}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 103 "project1.l"
+#line 104 "project1.l"
 {tokenNonType(yytext);     addList(yytext);}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 104 "project1.l"
+#line 105 "project1.l"
 {tokenNonType(yytext);     addList(yytext);}
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 105 "project1.l"
+#line 106 "project1.l"
 {tokenNonType(yytext);     addList(yytext);}
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 106 "project1.l"
+#line 107 "project1.l"
 {tokenNonType(yytext);     addList(yytext);}
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 108 "project1.l"
+#line 109 "project1.l"
 {tokenOperator("Arithmetic operator", yytext);    addList(yytext);}
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 109 "project1.l"
+#line 110 "project1.l"
 {tokenOperator("Arithmetic operator", yytext);     addList(yytext);}
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 110 "project1.l"
+#line 111 "project1.l"
 {tokenOperator("Relational operator", yytext);     addList(yytext);}
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 111 "project1.l"
+#line 112 "project1.l"
 {tokenOperator("Logical operator", yytext);        addList(yytext);}
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
 #line 113 "project1.l"
-{tokenKeyword(yytext);     addList(yytext);}
+{tokenOperator("Assignment operator", yytext);        addList(yytext);}
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 114 "project1.l"
+#line 115 "project1.l"
 {tokenKeyword(yytext);     addList(yytext);}
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
 #line 116 "project1.l"
-{tokenType("Integer constant", yytext);    addList(yytext);}
+{tokenKeyword(yytext);     addList(yytext);}
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 117 "project1.l"
-{tokenType("Boolean constant", yytext);    addList(yytext);}
+#line 118 "project1.l"
+{tokenType("integer", yytext);    addList(yytext);}
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 118 "project1.l"
-{tokenType("Real constant", yytext);       addList(yytext);}
+#line 119 "project1.l"
+{tokenType("boolean", yytext);    addList(yytext);}
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
 #line 120 "project1.l"
-{tokenType("Id", yytext);      addList(yytext);   insert(symbolTable, yytext);}
+{tokenType("real", yytext);       addList(yytext);}
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 123 "project1.l"
-{addList(yytext);}
+#line 122 "project1.l"
+{tokenType("id", yytext);      addList(yytext);   insert(symbolTable, yytext);}
 	YY_BREAK
 case 31:
-/* rule 31 can match eol */
-YY_RULE_SETUP
-#line 124 "project1.l"
-{listLine();}
-	YY_BREAK
-case 32:
 YY_RULE_SETUP
 #line 125 "project1.l"
-{handleError("identifier", yytext);}
+{addList(yytext);}
+	YY_BREAK
+case 32:
+/* rule 32 can match eol */
+YY_RULE_SETUP
+#line 126 "project1.l"
+{listLine();}
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
 #line 127 "project1.l"
+{handleError("identifier", yytext);}
+	YY_BREAK
+case 34:
+YY_RULE_SETUP
+#line 129 "project1.l"
 ECHO;
 	YY_BREAK
-#line 1038 "lex.yy.c"
+#line 1043 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(STRING):
 case YY_STATE_EOF(SINGLECOMMENT):
@@ -2042,7 +2047,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 127 "project1.l"
+#line 129 "project1.l"
 
 
 int yywrap(void){

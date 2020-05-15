@@ -26,6 +26,7 @@ arithmetic      [\+\-*\/]
 remainder       [%]
 relational      [<>](=)?|[=!]=
 logical         (&&)|(\|\|)|(!)
+assignment      [=]
 /*keywords*/
 keyword         (break)|(case)|(continue)|(def)|(do)|(else)|(exit)|(for)|(if)|(null)|(print)|(println)|(repeat)|(return)|(to)|(var)|(while)
 typekeyword     (boolean)|(class)|(float)|(int)|(object)|(string)|(type)|(val)|(char)
@@ -61,7 +62,7 @@ non-number-alphabet         [^a-zA-Z0-9]
 <STRING>\"      {
     BEGIN INITIAL;
     *sPointer = '\0';
-    tokenType("String", sBuffer);
+    tokenType("string", sBuffer);
     addList(yytext);
 }
 <STRING>\n    {
@@ -109,15 +110,16 @@ non-number-alphabet         [^a-zA-Z0-9]
 {remainder}       {tokenOperator("Arithmetic operator", yytext);     addList(yytext);}
 {relational}      {tokenOperator("Relational operator", yytext);     addList(yytext);}
 {logical}         {tokenOperator("Logical operator", yytext);        addList(yytext);}
+{assignment}         {tokenOperator("Assignment operator", yytext);        addList(yytext);}
 
 {keyword}         {tokenKeyword(yytext);     addList(yytext);}
 {typekeyword}     {tokenKeyword(yytext);     addList(yytext);}
 
-{integer}         {tokenType("Integer constant", yytext);    addList(yytext);}
-{boolean}         {tokenType("Boolean constant", yytext);    addList(yytext);}
-{real}            {tokenType("Real constant", yytext);       addList(yytext);}
+{integer}         {tokenType("integer", yytext);    addList(yytext);}
+{boolean}         {tokenType("boolean", yytext);    addList(yytext);}
+{real}            {tokenType("real", yytext);       addList(yytext);}
 
-{identifier}      {tokenType("Id", yytext);      addList(yytext);   insert(symbolTable, yytext);}
+{identifier}      {tokenType("id", yytext);      addList(yytext);   insert(symbolTable, yytext);}
 
 
 [ \t\r]+          {addList(yytext);}

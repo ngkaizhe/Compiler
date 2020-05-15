@@ -35,7 +35,7 @@ void tokenNonType(char* token){
 }
 
 void tokenOperator(char* type, char* token){
-    fprintf(yyout, "<%s: \"%s\">\n", type, token);
+    fprintf(yyout, "<%s: %s>\n", type, token);
 }
 
 void tokenKeyword(char* token) {
