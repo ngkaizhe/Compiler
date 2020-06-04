@@ -1,4 +1,4 @@
-#include"project1.h"
+#include"project2.h"
 
 // extern variables for lex
 extern int yylex();
@@ -16,10 +16,10 @@ int main(int argc, char* argv[]) {
     yyin = fopen(argv[1], "r");
     yyout = fopen(argv[2], "w");
     symbolTable = (struct SymbolTable*) malloc(sizeof(struct SymbolTable*) * 1);
-    create(symbolTable);
+    Create(symbolTable);
     if(yyin != NULL){
         yylex();
-        dump(symbolTable);
+        Dump(symbolTable);
         fclose(yyin);
         fclose(yyout);
     }
@@ -30,28 +30,28 @@ int main(int argc, char* argv[]) {
 }
 
 // output token value with specific format
-void tokenNonType(char* token){
+void TokenNonType(char* token){
     fprintf(yyout, "<'%s'>\n", token);
 }
 
-void tokenOperator(char* type, char* token){
+void TokenOperator(char* type, char* token){
     fprintf(yyout, "<%s: %s>\n", type, token);
 }
 
-void tokenKeyword(char* token) {
-    fprintf(yyout, "<%s>\n", stringToUpper(token));
+void TokenKeyword(char* token) {
+    fprintf(yyout, "<%s>\n", StringToUpper(token));
 }
 
-void tokenType(char* type, char* token) {
+void TokenType(char* type, char* token) {
     fprintf(yyout, "<%s: %s>\n", type, token);
 }
 
 // output the current line buffer
-void addList(char* token){
+void AddList(char* token){
     strcat(lineBuffer, token);
 }
 
-void listLine(){
+void ListLine(){
     lineNumber++;
     fprintf(yyout, "%d: %s\n", lineNumber, lineBuffer);
     // reset line buffer
@@ -59,13 +59,13 @@ void listLine(){
 }
 
 // error handling
-void handleError(char* expectedVal, char* errorString){
+void HandleError(char* expectedVal, char* errorString){
     fprintf(yyout, "Semantic error in line %d. Expected an %s but found %s\n", lineNumber+1, expectedVal, errorString);
-    addList(errorString);
+    AddList(errorString);
 }
 
 // output the upper format of the input string
-char* stringToUpper(char* s){
+char* StringToUpper(char* s){
     char* ret = malloc (sizeof (char) * MAX);
 
     for(int i=0; s[i] != '\0'; i++){
@@ -76,7 +76,7 @@ char* stringToUpper(char* s){
 }
 
 // create
-void create(struct SymbolTable* symbolTable) {
+void Create(struct SymbolTable* symbolTable) {
     symbolTable->size = SYMBOLTABLESIZE;
     for (int i = 0; i < symbolTable->size; i++) {
         symbolTable->symbolArrays = (struct SymbolArray*) malloc(sizeof(struct SymbolArray) * symbolTable->size);
@@ -88,7 +88,7 @@ void create(struct SymbolTable* symbolTable) {
 }
 
 // lookup
-int lookup(struct SymbolTable* symbolTable, char* s) {
+int Lookup(struct SymbolTable* symbolTable, char* s) {
     for (int i = 0; i < symbolTable->size; i++) {
         struct SymbolArray* temp = &symbolTable->symbolArrays[i];
         for (int j = 0; j < temp->size; j++) {
@@ -100,9 +100,9 @@ int lookup(struct SymbolTable* symbolTable, char* s) {
 }
 
 // insert
-int insert(struct SymbolTable* symbolTable, char* s) {
+int Insert(struct SymbolTable* symbolTable, char* s) {
     // get hash index
-    int index = hash(symbolTable, s);
+    int index = Hash(symbolTable, s);
     struct SymbolArray* temp = &symbolTable->symbolArrays[index];
 
     // check whether there is a duplicate string in our values
@@ -132,7 +132,7 @@ int insert(struct SymbolTable* symbolTable, char* s) {
 }
 
 // dump
-void dump(struct SymbolTable* symbolTable) {
+void Dump(struct SymbolTable* symbolTable) {
     fprintf(yyout, "\nSymbol Table:\n");
     for (int i = 0; i < symbolTable->size; i++) {
         struct SymbolArray* temp = &symbolTable->symbolArrays[i];
@@ -143,7 +143,7 @@ void dump(struct SymbolTable* symbolTable) {
 }
 
 // hash
-int hash(struct SymbolTable* symbolTable, char* s){
+int Hash(struct SymbolTable* symbolTable, char* s){
     int size = symbolTable->size;
     unsigned int hash = 0;
 	int c;

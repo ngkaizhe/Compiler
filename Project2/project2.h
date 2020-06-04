@@ -1,5 +1,5 @@
-#ifndef PROJECT1_H
-#define PROJECT1_H 
+#ifndef PROJECT2_H
+#define PROJECT2_H 
 
 #include <ctype.h>
 #include <stdlib.h>
@@ -8,34 +8,34 @@
 #define MAX 1024
 
 // default print out token
-void tokenNonType(char* token);
+void TokenNonType(char* token);
 // definitions
 // tokens that will be recognized
 // arithmetic, relational, and logical operators
-void tokenOperator(char* type, char* token);
+void TokenOperator(char* type, char* token);
 
 // keyword
-void tokenKeyword(char* token);
+void TokenKeyword(char* token);
 
 // identifiers(a string of letters and digits beginning with a letter)
 // integer constants
 // boolean constants
 // real constants
 // string constants("aa""bb")
-void tokenType(char* type, char* token);
+void TokenType(char* type, char* token);
 // tokens that will be discarded
 // whitespace
 // comments
 
 // newline
 // list out the current line to check
-void addList(char* token);
-void listLine();
+void AddList(char* token);
+void ListLine();
 
-void handleError(char* expectedVal, char* errorString);
+void HandleError(char* expectedVal, char* errorString);
 
 /*help function*/
-char* stringToUpper(char* s);
+char* StringToUpper(char* s);
 
 // symbol table
 #define SYMBOLTABLESIZE 1
@@ -55,18 +55,18 @@ struct SymbolTable
 };
 
 // create
-void create(struct SymbolTable* symbolTable);
+void Create(struct SymbolTable* symbolTable);
 
 // lookup
-int lookup(struct SymbolTable* symbolTable, char* s);
+int Lookup(struct SymbolTable* symbolTable, char* s);
 
 // insert
-int insert(struct SymbolTable* symbolTable, char* s);
+int Insert(struct SymbolTable* symbolTable, char* s);
 
 // dump
-void dump(struct SymbolTable* symbolTable);
+void Dump(struct SymbolTable* symbolTable);
 
 // hash
-int hash(struct SymbolTable* symbolTable, char* s);
+int Hash(struct SymbolTable* symbolTable, char* s);
 
 #endif
