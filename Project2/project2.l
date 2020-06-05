@@ -1,6 +1,7 @@
 %{
 #include "stdio.h" 
-#include "project2.h"
+#include "y.tab.h"
+
 int lineNumber = 0;
 char lineBuffer[MAX] = {0};
 

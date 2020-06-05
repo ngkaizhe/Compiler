@@ -1,5 +1,5 @@
 # compiler command
-CC= gcc
+CC= g++
 CFLAG= -c -g
 
 all: y.tab.o lex.yy.o project2.o
@@ -15,4 +15,7 @@ lex.yy.o: project2.l
 
 project2.o: project2.h project2.c
 	${CC} ${CFLAG} project2.c
+
+clean:
+	rm -f *.o lex.yy.c y.tab.c y.tab.h
 	

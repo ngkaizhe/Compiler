@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include<stdio.h>
 #include<string.h>
+
 #define MAX 1024
 
 // default print out token

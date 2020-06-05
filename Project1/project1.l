@@ -1,6 +1,7 @@
 %{
 #include "stdio.h" 
 #include "project1.h"
+
 int lineNumber = 0;
 char lineBuffer[MAX] = {0};
 

@@ -12,13 +12,25 @@ extern char lineBuffer[];
 extern int lineNumber;
 extern struct SymbolTable* symbolTable;
 
+// extern variables for yacc
+extern int yyparse();
+
+// the main function to execute
 int main(int argc, char* argv[]) {
+    // set input and output file
     yyin = fopen(argv[1], "r");
     yyout = fopen(argv[2], "w");
+    // init symbol table
     symbolTable = (struct SymbolTable*) malloc(sizeof(struct SymbolTable*) * 1);
     Create(symbolTable);
+
     if(yyin != NULL){
-        yylex();
+        // perform parsing
+        // error parsing
+        if(yyparse() == 1){
+            yyerror("Parsing error! ");
+        }
+
         Dump(symbolTable);
         fclose(yyin);
         fclose(yyout);
