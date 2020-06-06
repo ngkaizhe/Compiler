@@ -2,20 +2,15 @@
 CC= g++
 CFLAG= -c -g
 
-all: y.tab.o lex.yy.o project2.o
-	${CC} y.tab.o lex.yy.o project2.o -o project2
+all: lex.yy.cpp y.tab.cpp project2.h project2.cpp
+	${CC} y.tab.cpp project2.cpp -o project2 -ll -ly -std=c++11
 
-y.tab.o: project2.y
-	yacc -d project2.y
-	${CC} $(CFLAG) y.tab.c
+lex.yy.cpp: project2.l
+	lex -o lex.yy.cpp project2.l
 
-lex.yy.o: project2.l
-	lex project2.l
-	${CC} ${CFLAG} lex.yy.c
-
-project2.o: project2.h project2.c
-	${CC} ${CFLAG} project2.c
+y.tab.cpp: project2.y
+	yacc -d project2.y -o y.tab.cpp
 
 clean:
-	rm -f *.o lex.yy.c y.tab.c y.tab.h
+	rm -f *.o lex.yy.cpp y.tab.cpp y.tab.hpp
 	

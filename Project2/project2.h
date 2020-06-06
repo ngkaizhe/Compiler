@@ -1,73 +1,170 @@
 #ifndef PROJECT2_H
 #define PROJECT2_H 
 
-#include <ctype.h>
-#include <stdlib.h>
-#include<stdio.h>
-#include<string.h>
-
-#define MAX 1024
-
-// default print out token
-void TokenNonType(char* token);
-// definitions
-// tokens that will be recognized
-// arithmetic, relational, and logical operators
-void TokenOperator(char* type, char* token);
-
-// keyword
-void TokenKeyword(char* token);
-
-// identifiers(a string of letters and digits beginning with a letter)
-// integer constants
-// boolean constants
-// real constants
-// string constants("aa""bb")
-void TokenType(char* type, char* token);
-// tokens that will be discarded
-// whitespace
-// comments
+#include<vector>
+#include<string>
+#include<iostream>
+using namespace std;
 
 // newline
 // list out the current line to check
 void AddList(char* token);
 void ListLine();
 
-void HandleError(char* expectedVal, char* errorString);
-
-/*help function*/
-char* StringToUpper(char* s);
-
 // symbol table
-#define SYMBOLTABLESIZE 1
-#define SYMBOLARRAYSIZE 1
 
-struct SymbolArray
-{
-    char** values;
-    int size;
-    int maxSize;
+enum class IDTYPE {
+    INVALID,
+
+    FUNCTION,
+    CONSTVAR,
+    VARIABLE,
 };
 
-struct SymbolTable
-{
-    struct SymbolArray* symbolArrays;
-    int size;
+enum class VALUETYPE {
+    INVALID, // invalid is when idtype and id is setted, but they wont use the value(eg-> value type = double, then value type of ival should be invalid)
+    UNSET, // when idtype and id is setted, but they no yet set the value
+
+    VOID,
+    STRING,
+    CHAR,
+    INT,
+    FLOAT,
+    BOOLEAN,
+
+    ARRSTRING,
+    ARRCHAR,
+    ARRINT,
+    ARRFLOAT,
+    ARRBOOLEAN,
 };
 
-// create
-void Create(struct SymbolTable* symbolTable);
+class VALUE {
+public:
+    VALUE();
 
-// lookup
-int Lookup(struct SymbolTable* symbolTable, char* s);
+    void Dump();
 
-// insert
-int Insert(struct SymbolTable* symbolTable, char* s);
+    VALUETYPE valueType;
 
-// dump
-void Dump(struct SymbolTable* symbolTable);
+    // only one of the value below will be used
+    // the value
+    int ival;
+    double fval;
+    string sval;
+    bool bval;
+    char cval;
 
-// hash
-int Hash(struct SymbolTable* symbolTable, char* s);
+    // if the value is array type
+    vector<int> ivals;
+    vector<double> dvals;
+    vector<string> svals;
+    vector<bool> bvals;
+    vector<char> cvals;
+};
+
+class ID {
+public:
+    ID();
+
+    // set idname
+    ID(string idName);
+
+    // set idtype here
+    // set to function
+    void SetToFunction();
+    // set to const var
+    void SetToConstVar();
+    // set to var
+    void SetToVar();
+
+    // set value type here
+    // var/const var
+    // this is going to set the value type explicitly
+    void SetValueType(VALUETYPE valType);
+    // function
+    void SetReturnType(VALUETYPE valType);
+    void AddParameter(ID valType);
+
+    // set value for const at declaration
+    // will set the type implicitly if the type wasn't set
+    void SetConstValue(char cval);
+    void SetConstValue(double fval);
+    void SetConstValue(string sval);
+    void SetConstValue(int ival);
+    void SetConstValue(vector<char> cvals);
+    void SetConstValue(vector<double> dvals);
+    void SetConstValue(vector<string> svals);
+    void SetConstValue(vector<int> ivals);
+
+    // set value for var only
+    // will set the type implicitly if the type wasn't set
+    void SetValue(char cval);
+    void SetValue(double fval);
+    void SetValue(string sval);
+    void SetValue(int ival);
+    void SetValue(vector<char> cvals);
+    void SetValue(vector<double> dvals);
+    void SetValue(vector<string> svals);
+    void SetValue(vector<int> ivals);
+
+    // dump out the id values
+    void Dump();
+
+// variables
+// we dont set it to private as it will be very hard to maintain the codes
+
+    // id type
+    IDTYPE idType;
+    // id name
+    string IDName;
+
+    // will only used by function
+    vector<ID*> parameters;
+    // return type for function
+    VALUE retVal;
+
+    // value type
+    VALUE value;
+};
+
+class Symbol
+{
+public:
+    void Dump();
+
+    vector<ID> ids;
+};
+
+class SymbolTable
+{
+private:
+    // the valid symbols that we are using
+    vector<Symbol> validSymbols;
+    // symbols that are already out of scope
+    vector<Symbol> invalidSymbols;
+
+public:
+    SymbolTable(){};
+
+    // create symbol if we reached a new scope
+    void CreateSymbol();
+
+    // drop symbol for different scope
+    void DropSymbol();
+
+    // look up the id name in the current scope or the larger scope
+    ID LookUp(string IDName);
+    
+    // insert the ID into the current scope
+    void Insert(ID id);
+
+    // print all value in the current symbol table
+    void DumpValidSymbols();
+    void DumpInvalidSymbols();
+};
+
+// helper debug function
+void DebugLog(string log);
 
 #endif

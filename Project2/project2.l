@@ -1,17 +1,15 @@
 %{
-#include "stdio.h" 
-#include "y.tab.h"
+#include "y.tab.hpp"
+#include "project2.h"
 
-int lineNumber = 0;
-char lineBuffer[MAX] = {0};
+extern int lineNumber = 0;
+extern string lineBuffer = "";
 
 // string buffer
-char sBuffer[MAX] = {0};
-char *sPointer;
-
-// symbol table
-struct SymbolTable* symbolTable;
+extern string sBuffer = "";
 %}
+
+%option yylineno
 
 /* regex definitions*/
 /* delimiter->comma(,) colon(:) period(.) semicolon(;) parentheses(()) square brackets([]) brackets({})*/
@@ -31,14 +29,16 @@ assignment      [=]
 /*keywords*/
 keyword         (break)|(case)|(continue)|(def)|(do)|(else)|(exit)|(for)|(if)|(null)|(print)|(println)|(repeat)|(return)|(to)|(var)|(while)
 typekeyword     (boolean)|(class)|(float)|(int)|(object)|(string)|(type)|(val)|(char)
+
 /*identifiers*/
 identifier      [a-zA-Z][A-za-z0-9]*
 /*constants*/
 integer         [0-9]+
-boolean         (true)|(false)
 real            [0-9]+"."[0-9]+([Ee][+-]?[0-9]+)?
 
-non-number-alphabet         [^a-zA-Z0-9]
+true            true
+false           false
+
 
 /*string transition*/
 %x STRING
@@ -52,23 +52,27 @@ non-number-alphabet         [^a-zA-Z0-9]
 
 %%
 \"              {
-    BEGIN STRING; 
-    sPointer = sBuffer;
+    BEGIN STRING;
     addList(yytext);
 }
 <STRING>\"\"    {
-    *sPointer++ = '\"';
+    sBuffer += "\"";
     addList(yytext);
 }
 <STRING>\"      {
     BEGIN INITIAL;
-    *sPointer = '\0';
-    tokenType("string", sBuffer);
     addList(yytext);
+
+    Value retValue;
+    retValue.valueType = VALUETYPE::STRING;
+    retValue.sval = string(yytext);
+
+    yylval.value = new Value(retValue);
+    return VALUETOKEN;
 }
 <STRING>\n    {
     BEGIN INITIAL;
-    fprintf(yyout, "Semantic error in line %d. Missing closing quote.\n", lineNumber+1);
+    yyerror("Semantic error of string. Missing closing quote.\n");
     listLine();
 }
 <STRING>.       { *sPointer++ = *yytext; addList(yytext);}
@@ -99,33 +103,72 @@ non-number-alphabet         [^a-zA-Z0-9]
 <MULTICOMMENT>.       { addList(yytext);}
 
 
-{comma}           {tokenNonType(yytext);     addList(yytext);}
-{colon}           {tokenNonType(yytext);     addList(yytext);}
-{period}          {tokenNonType(yytext);     addList(yytext);}
-{semicolon}       {tokenNonType(yytext);     addList(yytext);}
-{parenthese}      {tokenNonType(yytext);     addList(yytext);}
-{squarebracket}   {tokenNonType(yytext);     addList(yytext);}
-{bracket}         {tokenNonType(yytext);     addList(yytext);}
+{comma}             {addList(yytext);}
+{colon}             {addList(yytext);}
+{period}            {addList(yytext);}
+{semicolon}         {addList(yytext);}
+{parenthese}        {addList(yytext);}
+{squarebracket}     {addList(yytext);}
+{bracket}           {addList(yytext);}
 
-{arithmetic}      {tokenOperator("Arithmetic operator", yytext);    addList(yytext);}
-{remainder}       {tokenOperator("Arithmetic operator", yytext);     addList(yytext);}
-{relational}      {tokenOperator("Relational operator", yytext);     addList(yytext);}
-{logical}         {tokenOperator("Logical operator", yytext);        addList(yytext);}
-{assignment}         {tokenOperator("Assignment operator", yytext);        addList(yytext);}
+{arithmetic}        {addList(yytext); return yytext[0];}
+{remainder}         {addList(yytext); return yytext[0];}
+{relational}        {addList(yytext);}
+{logical}           {addList(yytext);}
+{assignment}        {addList(yytext); return yytext[0];}
 
-{keyword}         {tokenKeyword(yytext);     addList(yytext);}
-{typekeyword}     {tokenKeyword(yytext);     addList(yytext);}
+{keyword}           {addList(yytext);}
+{typekeyword}       {addList(yytext);}
 
-{integer}         {tokenType("integer", yytext);    addList(yytext);}
-{boolean}         {tokenType("boolean", yytext);    addList(yytext);}
-{real}            {tokenType("real", yytext);       addList(yytext);}
+{integer}           {
+                        addList(yytext);
+                        Value retValue;
+                        retValue.valueType = VALUETYPE::INT;
+                        retValue.ival = stoi(string(yytext));
+                        yylval.value = new Value(retValue);
 
-{identifier}      {tokenType("id", yytext);      addList(yytext);   insert(symbolTable, yytext);}
+                        return VALUETOKEN;
+                    }
+
+{true}              {
+                        addList(yytext);
+                        Value retValue;
+                        retValue.valueType = VALUETYPE::BOOLEAN;
+                        retValue.bval = true;
+                        yylval.value = new Value(retValue);
+
+                        return VALUETOKEN;
+                    }
+{false}             {
+                        addList(yytext);
+                        Value retValue;
+                        retValue.valueType = VALUETYPE::BOOLEAN;
+                        retValue.bval = false;
+                        yylval.value = new Value(retValue);
+
+                        return VALUETOKEN;
+                    }
+
+{real}              {
+                        addList(yytext);
+                        Value retValue;
+                        retValue.valueType = VALUETYPE::FLOAT;
+                        retValue.fval = stof(string(yytext));
+                        yylval.value = new Value(retValue);
+
+                        return VALUETOKEN;
+                    }
+
+{identifier}        {
+                        addList(yytext);
+                        yylval.idname = new string(yytext);
+                        return ID_NAME;
+                    }
 
 
-[ \t\r]+          {addList(yytext);}
-\n                {listLine();}
-.                 {handleError("identifier", yytext);}
+[ \t\r]+            {addList(yytext);}
+\n                  {listLine();}
+.                   {yyerror("Unrecognized character detected!");}
 
 %%
 
