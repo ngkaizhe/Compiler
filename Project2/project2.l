@@ -1,5 +1,8 @@
 %{
-#include "y.tab.hpp"
+    extern "C"
+    {
+        int yylex(void);
+    }
 #include "project2.h"
 
 extern int lineNumber = 0;
@@ -8,8 +11,6 @@ extern string lineBuffer = "";
 // string buffer
 extern string sBuffer = "";
 %}
-
-%option yylineno
 
 /* regex definitions*/
 /* delimiter->comma(,) colon(:) period(.) semicolon(;) parentheses(()) square brackets([]) brackets({})*/
@@ -53,121 +54,121 @@ false           false
 %%
 \"              {
     BEGIN STRING;
-    addList(yytext);
+    AddList(yytext);
 }
 <STRING>\"\"    {
     sBuffer += "\"";
-    addList(yytext);
+    AddList(yytext);
 }
 <STRING>\"      {
     BEGIN INITIAL;
-    addList(yytext);
+    AddList(yytext);
 
-    Value retValue;
+    VALUE retValue;
     retValue.valueType = VALUETYPE::STRING;
     retValue.sval = string(yytext);
 
-    yylval.value = new Value(retValue);
+    yylval.value = new VALUE(retValue);
     return VALUETOKEN;
 }
 <STRING>\n    {
     BEGIN INITIAL;
     yyerror("Semantic error of string. Missing closing quote.\n");
-    listLine();
+    ListLine();
 }
-<STRING>.       { *sPointer++ = *yytext; addList(yytext);}
+<STRING>.       { *sPointer++ = *yytext; AddList(yytext);}
 
 
 \/\/            {
     BEGIN SINGLECOMMENT;
-    addList(yytext);
+    AddList(yytext);
 }
 <SINGLECOMMENT>\n    {
     BEGIN INITIAL;
-    listLine();
+    ListLine();
 }
-<SINGLECOMMENT>.       { addList(yytext);}
+<SINGLECOMMENT>.       { AddList(yytext);}
 
 
 \/\*            {
     BEGIN MULTICOMMENT;
-    addList(yytext);
+    AddList(yytext);
 }
 <MULTICOMMENT>\n    {
-    listLine();
+    ListLine();
 }
 <MULTICOMMENT>\*\/    {
     BEGIN INITIAL;
-    addList(yytext);
+    AddList(yytext);
 }
-<MULTICOMMENT>.       { addList(yytext);}
+<MULTICOMMENT>.       { AddList(yytext);}
 
 
-{comma}             {addList(yytext);}
-{colon}             {addList(yytext);}
-{period}            {addList(yytext);}
-{semicolon}         {addList(yytext);}
-{parenthese}        {addList(yytext);}
-{squarebracket}     {addList(yytext);}
-{bracket}           {addList(yytext);}
+{comma}             {AddList(yytext);}
+{colon}             {AddList(yytext);}
+{period}            {AddList(yytext);}
+{semicolon}         {AddList(yytext);}
+{parenthese}        {AddList(yytext);}
+{squarebracket}     {AddList(yytext);}
+{bracket}           {AddList(yytext);}
 
-{arithmetic}        {addList(yytext); return yytext[0];}
-{remainder}         {addList(yytext); return yytext[0];}
-{relational}        {addList(yytext);}
-{logical}           {addList(yytext);}
-{assignment}        {addList(yytext); return yytext[0];}
+{arithmetic}        {AddList(yytext); return yytext[0];}
+{remainder}         {AddList(yytext); return yytext[0];}
+{relational}        {AddList(yytext);}
+{logical}           {AddList(yytext);}
+{assignment}        {AddList(yytext); return yytext[0];}
 
-{keyword}           {addList(yytext);}
-{typekeyword}       {addList(yytext);}
+{keyword}           {AddList(yytext);}
+{typekeyword}       {AddList(yytext);}
 
 {integer}           {
-                        addList(yytext);
-                        Value retValue;
+                        AddList(yytext);
+                        VALUE retValue;
                         retValue.valueType = VALUETYPE::INT;
                         retValue.ival = stoi(string(yytext));
-                        yylval.value = new Value(retValue);
+                        yylval.value = new VALUE(retValue);
 
                         return VALUETOKEN;
                     }
 
 {true}              {
-                        addList(yytext);
-                        Value retValue;
+                        AddList(yytext);
+                        VALUE retValue;
                         retValue.valueType = VALUETYPE::BOOLEAN;
                         retValue.bval = true;
-                        yylval.value = new Value(retValue);
+                        yylval.value = new VALUE(retValue);
 
                         return VALUETOKEN;
                     }
 {false}             {
-                        addList(yytext);
-                        Value retValue;
+                        AddList(yytext);
+                        VALUE retValue;
                         retValue.valueType = VALUETYPE::BOOLEAN;
                         retValue.bval = false;
-                        yylval.value = new Value(retValue);
+                        yylval.value = new VALUE(retValue);
 
                         return VALUETOKEN;
                     }
 
 {real}              {
-                        addList(yytext);
-                        Value retValue;
+                        AddList(yytext);
+                        VALUE retValue;
                         retValue.valueType = VALUETYPE::FLOAT;
                         retValue.fval = stof(string(yytext));
-                        yylval.value = new Value(retValue);
+                        yylval.value = new VALUE(retValue);
 
                         return VALUETOKEN;
                     }
 
 {identifier}        {
-                        addList(yytext);
+                        AddList(yytext);
                         yylval.idname = new string(yytext);
                         return ID_NAME;
                     }
 
 
-[ \t\r]+            {addList(yytext);}
-\n                  {listLine();}
+[ \t\r]+            {AddList(yytext);}
+\n                  {ListLine();}
 .                   {yyerror("Unrecognized character detected!");}
 
 %%
@@ -175,7 +176,7 @@ false           false
 int yywrap(void){
     // if the last line wasn't the newline, we need to manually output the lineBuffer
     if(lineBuffer[0]){
-        listLine();
+        ListLine();
     }
     return 1;
 }

@@ -163,27 +163,8 @@ extern FILE *yyin, *yyout;
 #define EOB_ACT_END_OF_FILE 1
 #define EOB_ACT_LAST_MATCH 2
     
-    /* Note: We specifically omit the test for yy_rule_can_match_eol because it requires
-     *       access to the local variable yy_act. Since yyless() is a macro, it would break
-     *       existing scanners that call yyless() from OUTSIDE yylex.
-     *       One obvious solution it to make yy_act a global. I tried that, and saw
-     *       a 5% performance hit in a non-yylineno scanner, because yy_act is
-     *       normally declared as a register variable-- so it is not worth it.
-     */
-    #define  YY_LESS_LINENO(n) \
-            do { \
-                int yyl;\
-                for ( yyl = n; yyl < yyleng; ++yyl )\
-                    if ( yytext[yyl] == '\n' )\
-                        --yylineno;\
-            }while(0)
-    #define YY_LINENO_REWIND_TO(dst) \
-            do {\
-                const char *p;\
-                for ( p = yy_cp-1; p >= (dst); --p)\
-                    if ( *p == '\n' )\
-                        --yylineno;\
-            }while(0)
+    #define YY_LESS_LINENO(n)
+    #define YY_LINENO_REWIND_TO(ptr)
     
 /* Return all but the first "n" matched characters back to the input stream. */
 #define yyless(n) \
@@ -536,12 +517,6 @@ static const flex_int16_t yy_chk[228] =
       135,  135,  135,  135,  135,  135,  135
     } ;
 
-/* Table of booleans, true if rule could match eol. */
-static const flex_int32_t yy_rule_can_match_eol[36] =
-    {   0,
-0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0,     };
-
 static yy_state_type yy_last_accepting_state;
 static char *yy_last_accepting_cpos;
 
@@ -558,7 +533,10 @@ int yy_flex_debug = 0;
 char *yytext;
 #line 1 "project2.l"
 #line 2 "project2.l"
-#include "y.tab.hpp"
+    extern "C"
+    {
+        int yylex(void);
+    }
 #include "project2.h"
 
 extern int lineNumber = 0;
@@ -566,7 +544,7 @@ extern string lineBuffer = "";
 
 // string buffer
 extern string sBuffer = "";
-#line 570 "lex.yy.cpp"
+#line 548 "lex.yy.cpp"
 /* regex definitions*/
 /* delimiter->comma(,) colon(:) period(.) semicolon(;) parentheses(()) square brackets([]) brackets({})*/
 /*arithmetic, relational, and logical operators*/
@@ -579,7 +557,7 @@ extern string sBuffer = "";
 /* comment transition*/
 
 /* symbol tables*/
-#line 583 "lex.yy.cpp"
+#line 561 "lex.yy.cpp"
 
 #define INITIAL 0
 #define STRING 1
@@ -799,9 +777,9 @@ YY_DECL
 		}
 
 	{
-#line 53 "project2.l"
+#line 54 "project2.l"
 
-#line 805 "lex.yy.cpp"
+#line 783 "lex.yy.cpp"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -847,16 +825,6 @@ yy_find_action:
 
 		YY_DO_BEFORE_ACTION;
 
-		if ( yy_act != YY_END_OF_BUFFER && yy_rule_can_match_eol[yy_act] )
-			{
-			int yyl;
-			for ( yyl = 0; yyl < yyleng; ++yyl )
-				if ( yytext[yyl] == '\n' )
-					
-    yylineno++;
-;
-			}
-
 do_action:	/* This label is used only to access EOF actions. */
 
 		switch ( yy_act )
@@ -870,254 +838,254 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 54 "project2.l"
+#line 55 "project2.l"
 {
     BEGIN STRING;
-    addList(yytext);
+    AddList(yytext);
 }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 58 "project2.l"
+#line 59 "project2.l"
 {
     sBuffer += "\"";
-    addList(yytext);
+    AddList(yytext);
 }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 62 "project2.l"
+#line 63 "project2.l"
 {
     BEGIN INITIAL;
-    addList(yytext);
+    AddList(yytext);
 
-    Value retValue;
+    VALUE retValue;
     retValue.valueType = VALUETYPE::STRING;
     retValue.sval = string(yytext);
 
-    yylval.value = new Value(retValue);
+    yylval.value = new VALUE(retValue);
     return VALUETOKEN;
 }
 	YY_BREAK
 case 4:
 /* rule 4 can match eol */
 YY_RULE_SETUP
-#line 73 "project2.l"
+#line 74 "project2.l"
 {
     BEGIN INITIAL;
     yyerror("Semantic error of string. Missing closing quote.\n");
-    listLine();
+    ListLine();
 }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 78 "project2.l"
-{ *sPointer++ = *yytext; addList(yytext);}
+#line 79 "project2.l"
+{ *sPointer++ = *yytext; AddList(yytext);}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 81 "project2.l"
+#line 82 "project2.l"
 {
     BEGIN SINGLECOMMENT;
-    addList(yytext);
+    AddList(yytext);
 }
 	YY_BREAK
 case 7:
 /* rule 7 can match eol */
 YY_RULE_SETUP
-#line 85 "project2.l"
+#line 86 "project2.l"
 {
     BEGIN INITIAL;
-    listLine();
+    ListLine();
 }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 89 "project2.l"
-{ addList(yytext);}
+#line 90 "project2.l"
+{ AddList(yytext);}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 92 "project2.l"
+#line 93 "project2.l"
 {
     BEGIN MULTICOMMENT;
-    addList(yytext);
+    AddList(yytext);
 }
 	YY_BREAK
 case 10:
 /* rule 10 can match eol */
 YY_RULE_SETUP
-#line 96 "project2.l"
+#line 97 "project2.l"
 {
-    listLine();
+    ListLine();
 }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 99 "project2.l"
+#line 100 "project2.l"
 {
     BEGIN INITIAL;
-    addList(yytext);
+    AddList(yytext);
 }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 103 "project2.l"
-{ addList(yytext);}
+#line 104 "project2.l"
+{ AddList(yytext);}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 106 "project2.l"
-{addList(yytext);}
+#line 107 "project2.l"
+{AddList(yytext);}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 107 "project2.l"
-{addList(yytext);}
+#line 108 "project2.l"
+{AddList(yytext);}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 108 "project2.l"
-{addList(yytext);}
+#line 109 "project2.l"
+{AddList(yytext);}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 109 "project2.l"
-{addList(yytext);}
+#line 110 "project2.l"
+{AddList(yytext);}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 110 "project2.l"
-{addList(yytext);}
+#line 111 "project2.l"
+{AddList(yytext);}
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 111 "project2.l"
-{addList(yytext);}
+#line 112 "project2.l"
+{AddList(yytext);}
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 112 "project2.l"
-{addList(yytext);}
+#line 113 "project2.l"
+{AddList(yytext);}
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 114 "project2.l"
-{addList(yytext); return yytext[0];}
+#line 115 "project2.l"
+{AddList(yytext); return yytext[0];}
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 115 "project2.l"
-{addList(yytext); return yytext[0];}
+#line 116 "project2.l"
+{AddList(yytext); return yytext[0];}
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 116 "project2.l"
-{addList(yytext);}
+#line 117 "project2.l"
+{AddList(yytext);}
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 117 "project2.l"
-{addList(yytext);}
+#line 118 "project2.l"
+{AddList(yytext);}
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 118 "project2.l"
-{addList(yytext); return yytext[0];}
+#line 119 "project2.l"
+{AddList(yytext); return yytext[0];}
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 120 "project2.l"
-{addList(yytext);}
+#line 121 "project2.l"
+{AddList(yytext);}
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 121 "project2.l"
-{addList(yytext);}
+#line 122 "project2.l"
+{AddList(yytext);}
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 123 "project2.l"
+#line 124 "project2.l"
 {
-                        addList(yytext);
-                        Value retValue;
+                        AddList(yytext);
+                        VALUE retValue;
                         retValue.valueType = VALUETYPE::INT;
                         retValue.ival = stoi(string(yytext));
-                        yylval.value = new Value(retValue);
+                        yylval.value = new VALUE(retValue);
 
                         return VALUETOKEN;
                     }
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 133 "project2.l"
+#line 134 "project2.l"
 {
-                        addList(yytext);
-                        Value retValue;
+                        AddList(yytext);
+                        VALUE retValue;
                         retValue.valueType = VALUETYPE::BOOLEAN;
                         retValue.bval = true;
-                        yylval.value = new Value(retValue);
+                        yylval.value = new VALUE(retValue);
 
                         return VALUETOKEN;
                     }
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 142 "project2.l"
+#line 143 "project2.l"
 {
-                        addList(yytext);
-                        Value retValue;
+                        AddList(yytext);
+                        VALUE retValue;
                         retValue.valueType = VALUETYPE::BOOLEAN;
                         retValue.bval = false;
-                        yylval.value = new Value(retValue);
+                        yylval.value = new VALUE(retValue);
 
                         return VALUETOKEN;
                     }
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 152 "project2.l"
+#line 153 "project2.l"
 {
-                        addList(yytext);
-                        Value retValue;
+                        AddList(yytext);
+                        VALUE retValue;
                         retValue.valueType = VALUETYPE::FLOAT;
                         retValue.fval = stof(string(yytext));
-                        yylval.value = new Value(retValue);
+                        yylval.value = new VALUE(retValue);
 
                         return VALUETOKEN;
                     }
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 162 "project2.l"
+#line 163 "project2.l"
 {
-                        addList(yytext);
+                        AddList(yytext);
                         yylval.idname = new string(yytext);
                         return ID_NAME;
                     }
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 169 "project2.l"
-{addList(yytext);}
+#line 170 "project2.l"
+{AddList(yytext);}
 	YY_BREAK
 case 33:
 /* rule 33 can match eol */
 YY_RULE_SETUP
-#line 170 "project2.l"
-{listLine();}
+#line 171 "project2.l"
+{ListLine();}
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 171 "project2.l"
+#line 172 "project2.l"
 {yyerror("Unrecognized character detected!");}
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 173 "project2.l"
+#line 174 "project2.l"
 ECHO;
 	YY_BREAK
-#line 1121 "lex.yy.cpp"
+#line 1089 "lex.yy.cpp"
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(STRING):
 case YY_STATE_EOF(SINGLECOMMENT):
@@ -1488,10 +1456,6 @@ static int yy_get_next_buffer (void)
 
 	*--yy_cp = (char) c;
 
-    if ( c == '\n' ){
-        --yylineno;
-    }
-
 	(yytext_ptr) = yy_bp;
 	(yy_hold_char) = *yy_cp;
 	(yy_c_buf_p) = yy_cp;
@@ -1568,11 +1532,6 @@ static int yy_get_next_buffer (void)
 	c = *(unsigned char *) (yy_c_buf_p);	/* cast for 8-bit char's */
 	*(yy_c_buf_p) = '\0';	/* preserve yytext */
 	(yy_hold_char) = *++(yy_c_buf_p);
-
-	if ( c == '\n' )
-		
-    yylineno++;
-;
 
 	return c;
 }
@@ -2040,9 +1999,6 @@ static int yy_init_globals (void)
      * This function is called from yylex_destroy(), so don't allocate here.
      */
 
-    /* We do not touch yylineno unless the option is enabled. */
-    yylineno =  1;
-    
     (yy_buffer_stack) = NULL;
     (yy_buffer_stack_top) = 0;
     (yy_buffer_stack_max) = 0;
@@ -2137,13 +2093,13 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 173 "project2.l"
+#line 174 "project2.l"
 
 
 int yywrap(void){
     // if the last line wasn't the newline, we need to manually output the lineBuffer
     if(lineBuffer[0]){
-        listLine();
+        ListLine();
     }
     return 1;
 }
