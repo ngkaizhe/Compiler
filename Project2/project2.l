@@ -1,15 +1,9 @@
 %{
-    extern "C"
-    {
-        int yylex(void);
-    }
 #include "project2.h"
 
-extern int lineNumber = 0;
-extern string lineBuffer = "";
-
+string lineBuffer = "";
 // string buffer
-extern string sBuffer = "";
+string sBuffer = "";
 %}
 
 /* regex definitions*/
@@ -42,7 +36,7 @@ false           false
 
 
 /*string transition*/
-%x STRING
+%x STRINGS
 
 /* token need to discard, whitespace and comments*/
 /* comment transition*/
@@ -53,14 +47,14 @@ false           false
 
 %%
 \"              {
-    BEGIN STRING;
+    BEGIN STRINGS;
     AddList(yytext);
 }
-<STRING>\"\"    {
+<STRINGS>\"\"    {
     sBuffer += "\"";
     AddList(yytext);
 }
-<STRING>\"      {
+<STRINGS>\"      {
     BEGIN INITIAL;
     AddList(yytext);
 
@@ -71,12 +65,12 @@ false           false
     yylval.value = new VALUE(retValue);
     return VALUETOKEN;
 }
-<STRING>\n    {
+<STRINGS>\n    {
     BEGIN INITIAL;
     yyerror("Semantic error of string. Missing closing quote.\n");
     ListLine();
 }
-<STRING>.       { *sPointer++ = *yytext; AddList(yytext);}
+<STRINGS>.       { sBuffer += string(yytext); AddList(yytext);}
 
 
 \/\/            {
@@ -162,7 +156,7 @@ false           false
 
 {identifier}        {
                         AddList(yytext);
-                        yylval.idname = new string(yytext);
+                        yylval.idName = new string(yytext);
                         return ID_NAME;
                     }
 

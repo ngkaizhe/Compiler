@@ -69,6 +69,8 @@
 /* First part of user prologue.  */
 #line 1 "project2.y"
 
+extern int yylex();
+
 #include "project2.h"
 #include "stdio.h"
 
@@ -77,13 +79,12 @@ VALUE oper(char operC, VALUE v1, VALUE v2);
 
 SymbolTable symbolTable = SymbolTable();
 
-// extern variable
-FILE* yyin;
-FILE* yyout;
-
 int yyerror(const char* s);
+extern int yylineno;  // defined and maintained in lex
+extern int yyparse();
+extern FILE* yyin, *yyout;
 
-#line 87 "y.tab.cpp"
+#line 88 "y.tab.cpp"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -159,7 +160,7 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 17 "project2.y"
+#line 18 "project2.y"
 
 
     /* id name */
@@ -168,7 +169,7 @@ union YYSTYPE
     /* constant exp*/
     VALUE* value;
 
-#line 172 "y.tab.cpp"
+#line 173 "y.tab.cpp"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -575,8 +576,8 @@ static const yytype_int8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int8 yyrline[] =
 {
-       0,    56,    56,    57,    58,    61,    71,    74,    79,    80,
-      81,    82,    83,    92
+       0,    58,    58,    59,    60,    63,    73,    76,    81,    82,
+      83,    84,    85,    94
 };
 #endif
 
@@ -1174,7 +1175,7 @@ yyreduce:
   switch (yyn)
     {
   case 5:
-#line 61 "project2.y"
+#line 63 "project2.y"
                           {
                 // check whether the exp has the same value type with the id name
                 VALUE rvalue = symbolTable.LookUp(*(yyvsp[-2].idName)).value;
@@ -1185,45 +1186,45 @@ yyreduce:
                     yyerror("Different type of value can't do the assignment operation!");
                 }
             }
-#line 1189 "y.tab.cpp"
+#line 1190 "y.tab.cpp"
     break;
 
   case 7:
-#line 74 "project2.y"
+#line 76 "project2.y"
                            {
             // find the id in the symbol table
                 VALUE idVal = symbolTable.LookUp(*(yyvsp[0].idName)).value;
                 (yyval.value) = new VALUE(idVal);
             }
-#line 1199 "y.tab.cpp"
+#line 1200 "y.tab.cpp"
     break;
 
   case 8:
-#line 79 "project2.y"
+#line 81 "project2.y"
                         {(yyval.value) = new VALUE(oper('+', *(yyvsp[-2].value), *(yyvsp[0].value)));}
-#line 1205 "y.tab.cpp"
+#line 1206 "y.tab.cpp"
     break;
 
   case 9:
-#line 80 "project2.y"
+#line 82 "project2.y"
                         {(yyval.value) = new VALUE(oper('-', *(yyvsp[-2].value), *(yyvsp[0].value)));}
-#line 1211 "y.tab.cpp"
+#line 1212 "y.tab.cpp"
     break;
 
   case 10:
-#line 81 "project2.y"
+#line 83 "project2.y"
                         {(yyval.value) = new VALUE(oper('+', *(yyvsp[-2].value), *(yyvsp[0].value)));}
-#line 1217 "y.tab.cpp"
+#line 1218 "y.tab.cpp"
     break;
 
   case 11:
-#line 82 "project2.y"
+#line 84 "project2.y"
                         {(yyval.value) = new VALUE(oper('/', *(yyvsp[-2].value), *(yyvsp[0].value)));}
-#line 1223 "y.tab.cpp"
+#line 1224 "y.tab.cpp"
     break;
 
   case 12:
-#line 83 "project2.y"
+#line 85 "project2.y"
                                  {
                 VALUE value;
                 value.valueType = (yyvsp[0].value)->valueType;
@@ -1233,11 +1234,11 @@ yyreduce:
 
                 (yyval.value) = new VALUE(oper('*', *(yyvsp[0].value), value));
             }
-#line 1237 "y.tab.cpp"
+#line 1238 "y.tab.cpp"
     break;
 
 
-#line 1241 "y.tab.cpp"
+#line 1242 "y.tab.cpp"
 
       default: break;
     }
@@ -1431,8 +1432,9 @@ yyreturn:
   return yyresult;
 }
 
-#line 95 "project2.y"
+#line 97 "project2.y"
 
+#include "lex.yy.cpp"
 
 VALUE oper(char operC, VALUE v1, VALUE v2){
     // type should be the same
@@ -1457,6 +1459,7 @@ VALUE oper(char operC, VALUE v1, VALUE v2){
     }
     // add operation for int
     if(operC == '+' && v1.valueType == VALUETYPE::INT){
+        DebugLog("+ operator found!");
         VALUE answer;
         // set answer value type
         answer.valueType = VALUETYPE::INT;
@@ -1531,13 +1534,9 @@ VALUE oper(char operC, VALUE v1, VALUE v2){
 }
 
 int yyerror(const char* s){
-    extern int yylineno;  // defined and maintained in lex
     fprintf(stderr, "Error, Line%d: %s\n", yylineno, s);
     exit(1);
 }
-
-
-extern int yyparse();
 
 // the main function to execute
 int main(int argc, char* argv[]) {

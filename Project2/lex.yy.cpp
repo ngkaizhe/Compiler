@@ -533,18 +533,12 @@ int yy_flex_debug = 0;
 char *yytext;
 #line 1 "project2.l"
 #line 2 "project2.l"
-    extern "C"
-    {
-        int yylex(void);
-    }
 #include "project2.h"
 
-extern int lineNumber = 0;
-extern string lineBuffer = "";
-
+string lineBuffer = "";
 // string buffer
-extern string sBuffer = "";
-#line 548 "lex.yy.cpp"
+string sBuffer = "";
+#line 542 "lex.yy.cpp"
 /* regex definitions*/
 /* delimiter->comma(,) colon(:) period(.) semicolon(;) parentheses(()) square brackets([]) brackets({})*/
 /*arithmetic, relational, and logical operators*/
@@ -557,10 +551,10 @@ extern string sBuffer = "";
 /* comment transition*/
 
 /* symbol tables*/
-#line 561 "lex.yy.cpp"
+#line 555 "lex.yy.cpp"
 
 #define INITIAL 0
-#define STRING 1
+#define STRINGS 1
 #define SINGLECOMMENT 2
 #define MULTICOMMENT 3
 
@@ -777,9 +771,9 @@ YY_DECL
 		}
 
 	{
-#line 54 "project2.l"
+#line 48 "project2.l"
 
-#line 783 "lex.yy.cpp"
+#line 777 "lex.yy.cpp"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -838,15 +832,15 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 55 "project2.l"
+#line 49 "project2.l"
 {
-    BEGIN STRING;
+    BEGIN STRINGS;
     AddList(yytext);
 }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 59 "project2.l"
+#line 53 "project2.l"
 {
     sBuffer += "\"";
     AddList(yytext);
@@ -854,7 +848,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 63 "project2.l"
+#line 57 "project2.l"
 {
     BEGIN INITIAL;
     AddList(yytext);
@@ -870,7 +864,7 @@ YY_RULE_SETUP
 case 4:
 /* rule 4 can match eol */
 YY_RULE_SETUP
-#line 74 "project2.l"
+#line 68 "project2.l"
 {
     BEGIN INITIAL;
     yyerror("Semantic error of string. Missing closing quote.\n");
@@ -879,12 +873,12 @@ YY_RULE_SETUP
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 79 "project2.l"
-{ *sPointer++ = *yytext; AddList(yytext);}
+#line 73 "project2.l"
+{ sBuffer += string(yytext); AddList(yytext);}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 82 "project2.l"
+#line 76 "project2.l"
 {
     BEGIN SINGLECOMMENT;
     AddList(yytext);
@@ -893,7 +887,7 @@ YY_RULE_SETUP
 case 7:
 /* rule 7 can match eol */
 YY_RULE_SETUP
-#line 86 "project2.l"
+#line 80 "project2.l"
 {
     BEGIN INITIAL;
     ListLine();
@@ -901,12 +895,12 @@ YY_RULE_SETUP
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 90 "project2.l"
+#line 84 "project2.l"
 { AddList(yytext);}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 93 "project2.l"
+#line 87 "project2.l"
 {
     BEGIN MULTICOMMENT;
     AddList(yytext);
@@ -915,14 +909,14 @@ YY_RULE_SETUP
 case 10:
 /* rule 10 can match eol */
 YY_RULE_SETUP
-#line 97 "project2.l"
+#line 91 "project2.l"
 {
     ListLine();
 }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 100 "project2.l"
+#line 94 "project2.l"
 {
     BEGIN INITIAL;
     AddList(yytext);
@@ -930,82 +924,82 @@ YY_RULE_SETUP
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 104 "project2.l"
+#line 98 "project2.l"
 { AddList(yytext);}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 107 "project2.l"
+#line 101 "project2.l"
 {AddList(yytext);}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 108 "project2.l"
+#line 102 "project2.l"
 {AddList(yytext);}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 109 "project2.l"
+#line 103 "project2.l"
 {AddList(yytext);}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 110 "project2.l"
+#line 104 "project2.l"
 {AddList(yytext);}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 111 "project2.l"
+#line 105 "project2.l"
 {AddList(yytext);}
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 112 "project2.l"
+#line 106 "project2.l"
 {AddList(yytext);}
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 113 "project2.l"
+#line 107 "project2.l"
 {AddList(yytext);}
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 115 "project2.l"
+#line 109 "project2.l"
 {AddList(yytext); return yytext[0];}
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 116 "project2.l"
+#line 110 "project2.l"
 {AddList(yytext); return yytext[0];}
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 117 "project2.l"
+#line 111 "project2.l"
 {AddList(yytext);}
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 118 "project2.l"
+#line 112 "project2.l"
 {AddList(yytext);}
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 119 "project2.l"
+#line 113 "project2.l"
 {AddList(yytext); return yytext[0];}
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 121 "project2.l"
+#line 115 "project2.l"
 {AddList(yytext);}
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 122 "project2.l"
+#line 116 "project2.l"
 {AddList(yytext);}
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 124 "project2.l"
+#line 118 "project2.l"
 {
                         AddList(yytext);
                         VALUE retValue;
@@ -1018,7 +1012,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 134 "project2.l"
+#line 128 "project2.l"
 {
                         AddList(yytext);
                         VALUE retValue;
@@ -1031,7 +1025,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 143 "project2.l"
+#line 137 "project2.l"
 {
                         AddList(yytext);
                         VALUE retValue;
@@ -1044,7 +1038,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 153 "project2.l"
+#line 147 "project2.l"
 {
                         AddList(yytext);
                         VALUE retValue;
@@ -1057,37 +1051,37 @@ YY_RULE_SETUP
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 163 "project2.l"
+#line 157 "project2.l"
 {
                         AddList(yytext);
-                        yylval.idname = new string(yytext);
+                        yylval.idName = new string(yytext);
                         return ID_NAME;
                     }
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 170 "project2.l"
+#line 164 "project2.l"
 {AddList(yytext);}
 	YY_BREAK
 case 33:
 /* rule 33 can match eol */
 YY_RULE_SETUP
-#line 171 "project2.l"
+#line 165 "project2.l"
 {ListLine();}
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 172 "project2.l"
+#line 166 "project2.l"
 {yyerror("Unrecognized character detected!");}
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 174 "project2.l"
+#line 168 "project2.l"
 ECHO;
 	YY_BREAK
-#line 1089 "lex.yy.cpp"
+#line 1083 "lex.yy.cpp"
 case YY_STATE_EOF(INITIAL):
-case YY_STATE_EOF(STRING):
+case YY_STATE_EOF(STRINGS):
 case YY_STATE_EOF(SINGLECOMMENT):
 case YY_STATE_EOF(MULTICOMMENT):
 	yyterminate();
@@ -2093,7 +2087,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 174 "project2.l"
+#line 168 "project2.l"
 
 
 int yywrap(void){

@@ -1,12 +1,12 @@
 #include"project2.h"
 
 // extern variables for lex
-int yylineno;
-char* yytext;
+extern int yylineno;
+extern char* yytext;
 
 // extern variables for line
-string lineBuffer;
-int lineNumber;
+extern string lineBuffer;
+extern int yylineno;  // defined and maintained in lex
 
 // extern variables for yacc
 int yyerror(const char* );
@@ -17,7 +17,7 @@ void AddList(char* token){
 }
 
 void ListLine(){
-    lineNumber++;
+    yylineno++;
     // dont print anything from now
     // fprintf(yyout, "%d: %s\n", lineNumber, lineBuffer);
     // reset line buffer

@@ -1,4 +1,6 @@
 %{
+extern int yylex();
+
 #include "project2.h"
 #include "stdio.h"
 
@@ -7,11 +9,10 @@ VALUE oper(char operC, VALUE v1, VALUE v2);
 
 SymbolTable symbolTable = SymbolTable();
 
-// extern variable
-FILE* yyin;
-FILE* yyout;
-
 int yyerror(const char* s);
+extern int yylineno;  // defined and maintained in lex
+extern int yyparse();
+extern FILE* yyin, *yyout;
 %}
 
 %union{
@@ -51,6 +52,7 @@ int yyerror(const char* s);
 %nonassoc UMINUS
 
 %%
+
 /* descriptions of expected inputs corresponding actions (in C)*/
 
 STMTS   : STMT
@@ -93,6 +95,7 @@ EXP     :   ID_NAME        {
         ;
 
 %%
+#include "lex.yy.cpp"
 
 VALUE oper(char operC, VALUE v1, VALUE v2){
     // type should be the same
@@ -117,6 +120,7 @@ VALUE oper(char operC, VALUE v1, VALUE v2){
     }
     // add operation for int
     if(operC == '+' && v1.valueType == VALUETYPE::INT){
+        DebugLog("+ operator found!");
         VALUE answer;
         // set answer value type
         answer.valueType = VALUETYPE::INT;
@@ -191,13 +195,9 @@ VALUE oper(char operC, VALUE v1, VALUE v2){
 }
 
 int yyerror(const char* s){
-    extern int yylineno;  // defined and maintained in lex
     fprintf(stderr, "Error, Line%d: %s\n", yylineno, s);
     exit(1);
 }
-
-
-extern int yyparse();
 
 // the main function to execute
 int main(int argc, char* argv[]) {
