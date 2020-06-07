@@ -97,54 +97,54 @@ char            '.'
 
 {arithmetic}        {AddList(yytext); return yytext[0];}
 
-<=                  {AddList(yytext); return LE;}
-<                   {AddList(yytext); return LT;}
-==                  {AddList(yytext); return EQ;}
-!=                  {AddList(yytext); return NQ;}
->=                  {AddList(yytext); return GE;}
->                  {AddList(yytext); return GT;}
+"<="                 {AddList(yytext); return LE;}
+"<"                   {AddList(yytext); return LT;}
+"=="                  {AddList(yytext); return EQ;}
+"!="                  {AddList(yytext); return NQ;}
+">="                  {AddList(yytext); return GE;}
+">"                  {AddList(yytext); return GT;}
 
-||                  {AddList(yytext); return OR;}
-&&                  {AddList(yytext); return AND;}
-!                   {AddList(yytext); return NOT;}
+"||"                  {AddList(yytext); return OR;}
+"&&"                  {AddList(yytext); return AND;}
+"!"                   {AddList(yytext); return NOT;}
 
-=                   {AddList(yytext); return yytext[0];}
+"="                   {AddList(yytext); return yytext[0];}
 
 
-def                 { AddList(yytext); return DEF;}
+"def"                 { AddList(yytext); return DEF;}
 
-if                  { AddList(yytext); return IF;}
+"if"                  { AddList(yytext); return IF;}
                     
-else                { AddList(yytext); return ELSE;}
+"else"                { AddList(yytext); return ELSE;}
 
-for                 { AddList(yytext); return FOR;}
+"for"                 { AddList(yytext); return FOR;}
 
-print               { AddList(yytext); return PRINT;}
+"print"               { AddList(yytext); return PRINT;}
 
-println             { AddList(yytext); return PRINTLN;}
+"println"             { AddList(yytext); return PRINTLN;}
 
-return              { AddList(yytext); return RETURN;}
+"return"              { AddList(yytext); return RETURN;}
 
-to                  { AddList(yytext); return TO;}
+"to"                  { AddList(yytext); return TO;}
 
-var                 { AddList(yytext); return VAR;}
+"var"                 { AddList(yytext); return VAR;}
 
-val                 { AddList(yytext); return VAL;}
+"val"                 { AddList(yytext); return VAL;}
 
-while               { AddList(yytext); return WHILE;}
+"while"               { AddList(yytext); return WHILE;}
 
-object              { AddList(yytext); return OBJECT;}
+"object"              { AddList(yytext); return OBJECT;}
 
 
-boolean             { AddList(yytext); yylval.valueType = new VALUETYPE(VALUETYPE::BOOLEAN); return VALUE_TYPE;}
+"boolean"             { AddList(yytext); yylval.valueType = new VALUETYPE(VALUETYPE::BOOLEAN); return VALUE_TYPE;}
 
-float               { AddList(yytext); yylval.valueType = new VALUETYPE(VALUETYPE::FLOAT); return VALUE_TYPE;}
+"float"               { AddList(yytext); yylval.valueType = new VALUETYPE(VALUETYPE::FLOAT); return VALUE_TYPE;}
 
-int                 { AddList(yytext); yylval.valueType = new VALUETYPE(VALUETYPE::INT); return VALUE_TYPE;}
+"int"                 { AddList(yytext); yylval.valueType = new VALUETYPE(VALUETYPE::INT); return VALUE_TYPE;}
 
-string              { AddList(yytext); yylval.valueType = new VALUETYPE(VALUETYPE::STRING); return VALUE_TYPE;}
+"string"              { AddList(yytext); yylval.valueType = new VALUETYPE(VALUETYPE::STRING); return VALUE_TYPE;}
 
-char                { AddList(yytext); yylval.valueType = new VALUETYPE(VALUETYPE::CHAR); return VALUE_TYPE;}
+"char"                { AddList(yytext); yylval.valueType = new VALUETYPE(VALUETYPE::CHAR); return VALUE_TYPE;}
 
 
 {integer}           {
@@ -188,7 +188,7 @@ false               {
 {char}              {
                         AddList(yytext);
                         VALUE retValue = VALUE(true);
-                        yylval.value = new VALUE(yytext[1]));
+                        yylval.value = new VALUE(yytext[1]);
 
                         return ID_NAME;
                     }

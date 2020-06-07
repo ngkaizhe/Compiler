@@ -402,7 +402,7 @@ VALUE& VALUE::operator[](int idx) {
     if (idx < 0) {
         throw "The index used in [] operator must be larger or equal than zero!";
     }
-    VALUE answerValue;
+    VALUE& answerValue = *this;
 
     // check whether is array or not
     // bool
