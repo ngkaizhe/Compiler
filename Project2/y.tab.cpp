@@ -1534,7 +1534,8 @@ VALUE oper(char operC, VALUE v1, VALUE v2){
 }
 
 int yyerror(const char* s){
-    fprintf(stderr, "Error, Line%d: %s\n", yylineno, s);
+    // fprintf(stderr, "Error, Line%d: %s\n", yylineno, s);
+    DebugLog("Error, Line " + to_string(yylineno) + " , Error Message: " + string(s));
     exit(1);
 }
 
@@ -1547,6 +1548,10 @@ int main(int argc, char* argv[]) {
     symbolTable.CreateSymbol();
 
     if(yyin != NULL){
+        // output the first start checking message
+        DebugLog("========================");
+        DebugLog("Line " + to_string(yylineno) + " Start Checking");
+
         // perform parsing
         // error parsing
         if(yyparse() == 1){
