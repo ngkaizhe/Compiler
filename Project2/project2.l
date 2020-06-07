@@ -99,7 +99,12 @@ char            '.'
 
 {arithmetic}        {AddList(yytext); return yytext[0];}
 
-{relational}        {AddList(yytext);}
+<=                  {AddList(yytext); return LE;}
+<                   {AddList(yytext); return LT;}
+==                  {AddList(yytext); return EQ;}
+!=                  {AddList(yytext); return NQ;}
+>=                  {AddList(yytext); return GE;}
+>                  {AddList(yytext); return GT;}
 
 ||                  {AddList(yytext); return OR;}
 &&                  {AddList(yytext); return AND;}

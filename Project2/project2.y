@@ -50,6 +50,17 @@ extern FILE* yyin, *yyout;
 %token WHILE
 %token OBJECT
 
+%token AND
+%token OR
+%token NOT
+
+%token LT
+%token LE
+%token EQ
+%token NQ
+%token GE
+%token GT
+
 %type <value> EXP
 
 %token UMINUS
