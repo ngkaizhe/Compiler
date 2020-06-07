@@ -858,7 +858,7 @@ YY_RULE_SETUP
     retValue.sval = string(yytext);
 
     yylval.value = new VALUE(retValue);
-    return VALUETOKEN;
+    return VALUE_TOKEN;
 }
 	YY_BREAK
 case 4:
@@ -1007,7 +1007,7 @@ YY_RULE_SETUP
                         retValue.ival = stoi(string(yytext));
                         yylval.value = new VALUE(retValue);
 
-                        return VALUETOKEN;
+                        return VALUE_TOKEN;
                     }
 	YY_BREAK
 case 28:
@@ -1020,7 +1020,7 @@ YY_RULE_SETUP
                         retValue.bval = true;
                         yylval.value = new VALUE(retValue);
 
-                        return VALUETOKEN;
+                        return VALUE_TOKEN;
                     }
 	YY_BREAK
 case 29:
@@ -1033,7 +1033,7 @@ YY_RULE_SETUP
                         retValue.bval = false;
                         yylval.value = new VALUE(retValue);
 
-                        return VALUETOKEN;
+                        return VALUE_TOKEN;
                     }
 	YY_BREAK
 case 30:
@@ -1046,7 +1046,7 @@ YY_RULE_SETUP
                         retValue.fval = stof(string(yytext));
                         yylval.value = new VALUE(retValue);
 
-                        return VALUETOKEN;
+                        return VALUE_TOKEN;
                     }
 	YY_BREAK
 case 31:

@@ -55,15 +55,11 @@ extern int yydebug;
     YYerror = 256,                 /* error  */
     YYUNDEF = 257,                 /* "invalid token"  */
     ID_NAME = 258,                 /* ID_NAME  */
-    VALUETOKEN = 259,              /* VALUETOKEN  */
-    INT_TYPE = 260,                /* INT_TYPE  */
-    FLOAT_TYPE = 261,              /* FLOAT_TYPE  */
-    BOOL_TYPE = 262,               /* BOOL_TYPE  */
-    STRING_TYPE = 263,             /* STRING_TYPE  */
-    CHAR_TYPE = 264,               /* CHAR_TYPE  */
-    VAR = 265,                     /* VAR  */
-    VAL = 266,                     /* VAL  */
-    UMINUS = 267                   /* UMINUS  */
+    VALUE_TOKEN = 259,             /* VALUE_TOKEN  */
+    VALUE_TYPE = 260,              /* VALUE_TYPE  */
+    VAR = 261,                     /* VAR  */
+    VAL = 262,                     /* VAL  */
+    UMINUS = 263                   /* UMINUS  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -72,15 +68,11 @@ extern int yydebug;
 #define YYerror 256
 #define YYUNDEF 257
 #define ID_NAME 258
-#define VALUETOKEN 259
-#define INT_TYPE 260
-#define FLOAT_TYPE 261
-#define BOOL_TYPE 262
-#define STRING_TYPE 263
-#define CHAR_TYPE 264
-#define VAR 265
-#define VAL 266
-#define UMINUS 267
+#define VALUE_TOKEN 259
+#define VALUE_TYPE 260
+#define VAR 261
+#define VAL 262
+#define UMINUS 263
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
@@ -95,7 +87,10 @@ union YYSTYPE
     /* constant exp*/
     VALUE* value;
 
-#line 99 "y.tab.hpp"
+    /* value type*/
+    VALUETYPE* valueType;
+
+#line 94 "y.tab.hpp"
 
 };
 typedef union YYSTYPE YYSTYPE;

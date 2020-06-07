@@ -129,15 +129,11 @@ extern int yydebug;
     YYerror = 256,                 /* error  */
     YYUNDEF = 257,                 /* "invalid token"  */
     ID_NAME = 258,                 /* ID_NAME  */
-    VALUETOKEN = 259,              /* VALUETOKEN  */
-    INT_TYPE = 260,                /* INT_TYPE  */
-    FLOAT_TYPE = 261,              /* FLOAT_TYPE  */
-    BOOL_TYPE = 262,               /* BOOL_TYPE  */
-    STRING_TYPE = 263,             /* STRING_TYPE  */
-    CHAR_TYPE = 264,               /* CHAR_TYPE  */
-    VAR = 265,                     /* VAR  */
-    VAL = 266,                     /* VAL  */
-    UMINUS = 267                   /* UMINUS  */
+    VALUE_TOKEN = 259,             /* VALUE_TOKEN  */
+    VALUE_TYPE = 260,              /* VALUE_TYPE  */
+    VAR = 261,                     /* VAR  */
+    VAL = 262,                     /* VAL  */
+    UMINUS = 263                   /* UMINUS  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -146,15 +142,11 @@ extern int yydebug;
 #define YYerror 256
 #define YYUNDEF 257
 #define ID_NAME 258
-#define VALUETOKEN 259
-#define INT_TYPE 260
-#define FLOAT_TYPE 261
-#define BOOL_TYPE 262
-#define STRING_TYPE 263
-#define CHAR_TYPE 264
-#define VAR 265
-#define VAL 266
-#define UMINUS 267
+#define VALUE_TOKEN 259
+#define VALUE_TYPE 260
+#define VAR 261
+#define VAL 262
+#define UMINUS 263
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
@@ -169,7 +161,10 @@ union YYSTYPE
     /* constant exp*/
     VALUE* value;
 
-#line 173 "y.tab.cpp"
+    /* value type*/
+    VALUETYPE* valueType;
+
+#line 168 "y.tab.cpp"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -191,24 +186,23 @@ enum yysymbol_kind_t
   YYSYMBOL_YYerror = 1,                    /* error  */
   YYSYMBOL_YYUNDEF = 2,                    /* "invalid token"  */
   YYSYMBOL_ID_NAME = 3,                    /* ID_NAME  */
-  YYSYMBOL_VALUETOKEN = 4,                 /* VALUETOKEN  */
-  YYSYMBOL_INT_TYPE = 5,                   /* INT_TYPE  */
-  YYSYMBOL_FLOAT_TYPE = 6,                 /* FLOAT_TYPE  */
-  YYSYMBOL_BOOL_TYPE = 7,                  /* BOOL_TYPE  */
-  YYSYMBOL_STRING_TYPE = 8,                /* STRING_TYPE  */
-  YYSYMBOL_CHAR_TYPE = 9,                  /* CHAR_TYPE  */
-  YYSYMBOL_VAR = 10,                       /* VAR  */
-  YYSYMBOL_VAL = 11,                       /* VAL  */
-  YYSYMBOL_UMINUS = 12,                    /* UMINUS  */
-  YYSYMBOL_13_ = 13,                       /* '='  */
-  YYSYMBOL_14_ = 14,                       /* '-'  */
-  YYSYMBOL_15_ = 15,                       /* '+'  */
-  YYSYMBOL_16_ = 16,                       /* '*'  */
-  YYSYMBOL_17_ = 17,                       /* '/'  */
-  YYSYMBOL_YYACCEPT = 18,                  /* $accept  */
-  YYSYMBOL_STMTS = 19,                     /* STMTS  */
-  YYSYMBOL_STMT = 20,                      /* STMT  */
-  YYSYMBOL_EXP = 21                        /* EXP  */
+  YYSYMBOL_VALUE_TOKEN = 4,                /* VALUE_TOKEN  */
+  YYSYMBOL_VALUE_TYPE = 5,                 /* VALUE_TYPE  */
+  YYSYMBOL_VAR = 6,                        /* VAR  */
+  YYSYMBOL_VAL = 7,                        /* VAL  */
+  YYSYMBOL_UMINUS = 8,                     /* UMINUS  */
+  YYSYMBOL_9_ = 9,                         /* '='  */
+  YYSYMBOL_10_ = 10,                       /* '-'  */
+  YYSYMBOL_11_ = 11,                       /* '+'  */
+  YYSYMBOL_12_ = 12,                       /* '*'  */
+  YYSYMBOL_13_ = 13,                       /* '/'  */
+  YYSYMBOL_14_ = 14,                       /* ':'  */
+  YYSYMBOL_YYACCEPT = 15,                  /* $accept  */
+  YYSYMBOL_STMTS = 16,                     /* STMTS  */
+  YYSYMBOL_STMT = 17,                      /* STMT  */
+  YYSYMBOL_VALDECLARATION = 18,            /* VALDECLARATION  */
+  YYSYMBOL_VARDECLARATION = 19,            /* VARDECLARATION  */
+  YYSYMBOL_EXP = 20                        /* EXP  */
 };
 typedef enum yysymbol_kind_t yysymbol_kind_t;
 
@@ -516,20 +510,20 @@ union yyalloc
 #endif /* !YYCOPY_NEEDED */
 
 /* YYFINAL -- State number of the termination state.  */
-#define YYFINAL  10
+#define YYFINAL  16
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   20
+#define YYLAST   37
 
 /* YYNTOKENS -- Number of terminals.  */
-#define YYNTOKENS  18
+#define YYNTOKENS  15
 /* YYNNTS -- Number of nonterminals.  */
-#define YYNNTS  4
+#define YYNNTS  6
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  13
+#define YYNRULES  21
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  21
+#define YYNSTATES  39
 
-#define YYMAXUTOK   267
+#define YYMAXUTOK   263
 
 
 /* YYTRANSLATE(TOKEN-NUM) -- Symbol number corresponding to TOKEN-NUM
@@ -547,9 +541,9 @@ static const yytype_int8 yytranslate[] =
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,    16,    15,     2,    14,     2,    17,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,    13,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,    12,    11,     2,    10,     2,    13,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,    14,     2,
+       2,     9,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
@@ -569,15 +563,16 @@ static const yytype_int8 yytranslate[] =
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     1,     2,     3,     4,
-       5,     6,     7,     8,     9,    10,    11,    12
+       5,     6,     7,     8
 };
 
 #if YYDEBUG
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
-static const yytype_int8 yyrline[] =
+static const yytype_uint8 yyrline[] =
 {
-       0,    58,    58,    59,    60,    63,    73,    76,    81,    82,
-      83,    84,    85,    94
+       0,    57,    57,    58,    59,    62,    72,    73,    74,    78,
+      86,    96,   104,   112,   120,   130,   135,   136,   137,   138,
+     139,   148
 };
 #endif
 
@@ -594,9 +589,9 @@ static const char *yysymbol_name (yysymbol_kind_t yysymbol) YY_ATTRIBUTE_UNUSED;
 static const char *const yytname[] =
 {
   "\"end of file\"", "error", "\"invalid token\"", "ID_NAME",
-  "VALUETOKEN", "INT_TYPE", "FLOAT_TYPE", "BOOL_TYPE", "STRING_TYPE",
-  "CHAR_TYPE", "VAR", "VAL", "UMINUS", "'='", "'-'", "'+'", "'*'", "'/'",
-  "$accept", "STMTS", "STMT", "EXP", YY_NULLPTR
+  "VALUE_TOKEN", "VALUE_TYPE", "VAR", "VAL", "UMINUS", "'='", "'-'", "'+'",
+  "'*'", "'/'", "':'", "$accept", "STMTS", "STMT", "VALDECLARATION",
+  "VARDECLARATION", "EXP", YY_NULLPTR
 };
 
 static const char *
@@ -611,12 +606,12 @@ yysymbol_name (yysymbol_kind_t yysymbol)
    (internal) symbol number NUM (which must be that of a token).  */
 static const yytype_int16 yytoknum[] =
 {
-       0,   256,   257,   258,   259,   260,   261,   262,   263,   264,
-     265,   266,   267,    61,    45,    43,    42,    47
+       0,   256,   257,   258,   259,   260,   261,   262,   263,    61,
+      45,    43,    42,    47,    58
 };
 #endif
 
-#define YYPACT_NINF (-13)
+#define YYPACT_NINF (-7)
 
 #define yypact_value_is_default(Yyn) \
   ((Yyn) == YYPACT_NINF)
@@ -630,9 +625,10 @@ static const yytype_int16 yytoknum[] =
      STATE-NUM.  */
 static const yytype_int8 yypact[] =
 {
-      -1,   -12,   -13,     2,    14,    -1,     3,     2,   -13,   -13,
-     -13,   -13,     2,     2,     2,     2,     3,    -9,    -9,   -13,
-     -13
+      -2,    -6,    -7,     4,     6,     7,    12,    -2,    -7,    -7,
+      15,     7,     9,    10,    -7,    -7,    -7,    -7,     7,     7,
+       7,     7,    15,    18,    24,    26,    27,     8,     8,    -7,
+      -7,    -7,    22,    -7,    25,    29,    31,    -7,    -7
 };
 
   /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -640,21 +636,22 @@ static const yytype_int8 yypact[] =
      means the default is an error.  */
 static const yytype_int8 yydefact[] =
 {
-       4,     7,    13,     0,     0,     2,     6,     0,     7,    12,
-       1,     3,     0,     0,     0,     0,     5,     9,     8,    10,
-      11
+       4,    15,    21,     0,     0,     0,     0,     2,     7,     8,
+       6,     0,    14,     0,    15,    20,     1,     3,     0,     0,
+       0,     0,     5,     0,     0,     0,     0,    17,    16,    18,
+      19,    13,    12,    10,     0,     0,     0,    11,     9
 };
 
   /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-     -13,    10,   -13,    -3
+      -7,    30,    -7,    -7,    -7,    -5
 };
 
   /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
-      -1,     4,     5,     6
+      -1,     6,     7,     8,     9,    10
 };
 
   /* YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
@@ -662,39 +659,44 @@ static const yytype_int8 yydefgoto[] =
      number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_int8 yytable[] =
 {
-       9,     7,     1,     2,    16,     8,     2,    14,    15,    17,
-      18,    19,    20,     3,    10,    11,     3,    12,    13,    14,
-      15
+      15,     1,     2,    11,     3,     4,    22,    12,     5,    13,
+      14,     2,    16,    27,    28,    29,    30,     5,    23,    25,
+      20,    21,    31,    24,    26,    18,    19,    20,    21,    32,
+      33,    35,    34,    37,    36,    38,     0,    17
 };
 
 static const yytype_int8 yycheck[] =
 {
-       3,    13,     3,     4,     7,     3,     4,    16,    17,    12,
-      13,    14,    15,    14,     0,     5,    14,    14,    15,    16,
-      17
+       5,     3,     4,     9,     6,     7,    11,     3,    10,     3,
+       3,     4,     0,    18,    19,    20,    21,    10,     9,     9,
+      12,    13,     4,    14,    14,    10,    11,    12,    13,     5,
+       4,     9,     5,     4,     9,     4,    -1,     7
 };
 
   /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
      symbol of state STATE-NUM.  */
 static const yytype_int8 yystos[] =
 {
-       0,     3,     4,    14,    19,    20,    21,    13,     3,    21,
-       0,    19,    14,    15,    16,    17,    21,    21,    21,    21,
-      21
+       0,     3,     4,     6,     7,    10,    16,    17,    18,    19,
+      20,     9,     3,     3,     3,    20,     0,    16,    10,    11,
+      12,    13,    20,     9,    14,     9,    14,    20,    20,    20,
+      20,     4,     5,     4,     5,     9,     9,     4,     4
 };
 
   /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
 static const yytype_int8 yyr1[] =
 {
-       0,    18,    19,    19,    19,    20,    20,    21,    21,    21,
-      21,    21,    21,    21
+       0,    15,    16,    16,    16,    17,    17,    17,    17,    18,
+      18,    19,    19,    19,    19,    20,    20,    20,    20,    20,
+      20,    20
 };
 
   /* YYR2[YYN] -- Number of symbols on the right hand side of rule YYN.  */
 static const yytype_int8 yyr2[] =
 {
-       0,     2,     1,     2,     0,     3,     1,     1,     3,     3,
-       3,     3,     2,     1
+       0,     2,     1,     2,     0,     3,     1,     1,     1,     6,
+       4,     6,     4,     4,     2,     1,     3,     3,     3,     3,
+       2,     1
 };
 
 
@@ -1175,7 +1177,7 @@ yyreduce:
   switch (yyn)
     {
   case 5:
-#line 63 "project2.y"
+#line 62 "project2.y"
                           {
                 // check whether the exp has the same value type with the id name
                 VALUE rvalue = symbolTable.LookUp(*(yyvsp[-2].idName)).value;
@@ -1186,45 +1188,115 @@ yyreduce:
                     yyerror("Different type of value can't do the assignment operation!");
                 }
             }
-#line 1190 "y.tab.cpp"
+#line 1192 "y.tab.cpp"
     break;
 
-  case 7:
-#line 76 "project2.y"
+  case 9:
+#line 79 "project2.y"
+                        {
+                            // error checking first
+                            // check VALUE_TOKEN's value type same as VALUE_TYPE
+                            // check ID is already used in this scope or not
+
+                            // insert id with name to the symbol table
+                        }
+#line 1204 "y.tab.cpp"
+    break;
+
+  case 10:
+#line 87 "project2.y"
+                        {
+                            // error checking first
+                            // check ID is already used in this scope or not
+
+                            // insert id with name to the symbol table
+                        }
+#line 1215 "y.tab.cpp"
+    break;
+
+  case 11:
+#line 97 "project2.y"
+                        {
+                            // error checking first
+                            // check VALUE_TOKEN's value type same as VALUE_TYPE
+                            // check ID is already used in this scope or not
+
+                            // insert id with name to the symbol table
+                        }
+#line 1227 "y.tab.cpp"
+    break;
+
+  case 12:
+#line 105 "project2.y"
+                        {
+                            // error checking first
+                            // check ID is already used in this scope or not
+
+                            // insert id with name to the symbol table
+                            // set 
+                        }
+#line 1239 "y.tab.cpp"
+    break;
+
+  case 13:
+#line 113 "project2.y"
+                        {
+                            // error checking first
+                            // check ID is already used in this scope or not
+
+                            // insert id with name to the symbol table
+                            // set value
+                        }
+#line 1251 "y.tab.cpp"
+    break;
+
+  case 14:
+#line 121 "project2.y"
+                        {
+                            // error checking first
+                            // check ID is already used in this scope or not
+
+                            // insert id with name to the symbol table
+                        }
+#line 1262 "y.tab.cpp"
+    break;
+
+  case 15:
+#line 130 "project2.y"
                            {
             // find the id in the symbol table
                 VALUE idVal = symbolTable.LookUp(*(yyvsp[0].idName)).value;
                 (yyval.value) = new VALUE(idVal);
             }
-#line 1200 "y.tab.cpp"
+#line 1272 "y.tab.cpp"
     break;
 
-  case 8:
-#line 81 "project2.y"
+  case 16:
+#line 135 "project2.y"
                         {(yyval.value) = new VALUE(oper('+', *(yyvsp[-2].value), *(yyvsp[0].value)));}
-#line 1206 "y.tab.cpp"
+#line 1278 "y.tab.cpp"
     break;
 
-  case 9:
-#line 82 "project2.y"
+  case 17:
+#line 136 "project2.y"
                         {(yyval.value) = new VALUE(oper('-', *(yyvsp[-2].value), *(yyvsp[0].value)));}
-#line 1212 "y.tab.cpp"
+#line 1284 "y.tab.cpp"
     break;
 
-  case 10:
-#line 83 "project2.y"
+  case 18:
+#line 137 "project2.y"
                         {(yyval.value) = new VALUE(oper('+', *(yyvsp[-2].value), *(yyvsp[0].value)));}
-#line 1218 "y.tab.cpp"
+#line 1290 "y.tab.cpp"
     break;
 
-  case 11:
-#line 84 "project2.y"
+  case 19:
+#line 138 "project2.y"
                         {(yyval.value) = new VALUE(oper('/', *(yyvsp[-2].value), *(yyvsp[0].value)));}
-#line 1224 "y.tab.cpp"
+#line 1296 "y.tab.cpp"
     break;
 
-  case 12:
-#line 85 "project2.y"
+  case 20:
+#line 139 "project2.y"
                                  {
                 VALUE value;
                 value.valueType = (yyvsp[0].value)->valueType;
@@ -1234,11 +1306,11 @@ yyreduce:
 
                 (yyval.value) = new VALUE(oper('*', *(yyvsp[0].value), value));
             }
-#line 1238 "y.tab.cpp"
+#line 1310 "y.tab.cpp"
     break;
 
 
-#line 1242 "y.tab.cpp"
+#line 1314 "y.tab.cpp"
 
       default: break;
     }
@@ -1432,7 +1504,7 @@ yyreturn:
   return yyresult;
 }
 
-#line 97 "project2.y"
+#line 153 "project2.y"
 
 #include "lex.yy.cpp"
 
@@ -1450,6 +1522,7 @@ VALUE oper(char operC, VALUE v1, VALUE v2){
     // add operation
     // add operation for float
     if(operC == '+' && v1.valueType == VALUETYPE::FLOAT){
+        DebugLog("+ operator found! Checking Result......OK");
         VALUE answer;
         // set answer value type
         answer.valueType = VALUETYPE::FLOAT;
@@ -1459,7 +1532,7 @@ VALUE oper(char operC, VALUE v1, VALUE v2){
     }
     // add operation for int
     if(operC == '+' && v1.valueType == VALUETYPE::INT){
-        DebugLog("+ operator found!");
+        DebugLog("+ operator found! Checking Result......OK");
         VALUE answer;
         // set answer value type
         answer.valueType = VALUETYPE::INT;
@@ -1471,6 +1544,7 @@ VALUE oper(char operC, VALUE v1, VALUE v2){
     // minus operation
     // minus operation for float
     if(operC == '-' && v1.valueType == VALUETYPE::FLOAT){
+        DebugLog("- operator found! Checking Result......OK");
         VALUE answer;
         // set answer value type
         answer.valueType = VALUETYPE::FLOAT;
@@ -1480,6 +1554,7 @@ VALUE oper(char operC, VALUE v1, VALUE v2){
     }
     // minus operation for int
     if(operC == '-' && v1.valueType == VALUETYPE::INT){
+        DebugLog("- operator found! Checking Result......OK");
         VALUE answer;
         // set answer value type
         answer.valueType = VALUETYPE::INT;
@@ -1491,6 +1566,7 @@ VALUE oper(char operC, VALUE v1, VALUE v2){
     // multiple operation
     // multiple operation for float
     if(operC == '*' && v1.valueType == VALUETYPE::FLOAT){
+        DebugLog("* operator found! Checking Result......OK");
         VALUE answer;
         // set answer value type
         answer.valueType = VALUETYPE::FLOAT;
@@ -1500,6 +1576,7 @@ VALUE oper(char operC, VALUE v1, VALUE v2){
     }
     // multiple operation for int
     if(operC == '*' && v1.valueType == VALUETYPE::INT){
+        DebugLog("* operator found! Checking Result......OK");
         VALUE answer;
         // set answer value type
         answer.valueType = VALUETYPE::INT;
@@ -1511,6 +1588,7 @@ VALUE oper(char operC, VALUE v1, VALUE v2){
     // divide operation
     // divide operation for float
     if(operC == '/' && v1.valueType == VALUETYPE::FLOAT){
+        DebugLog("/ operator found! Checking Result......OK");
         VALUE answer;
         // set answer value type
         answer.valueType = VALUETYPE::FLOAT;
@@ -1520,6 +1598,7 @@ VALUE oper(char operC, VALUE v1, VALUE v2){
     }
     // divide operation for int
     if(operC == '/' && v1.valueType == VALUETYPE::INT){
+        DebugLog("/ operator found! Checking Result......OK");
         VALUE answer;
         // set answer value type
         answer.valueType = VALUETYPE::INT;

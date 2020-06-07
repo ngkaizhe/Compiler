@@ -17,22 +17,16 @@ squarebracket   [[\]]
 bracket         [{}]
 /*arithmetic, relational, and logical operators*/
 arithmetic      [\+\-*\/]
-remainder       [%]
+
 relational      [<>](=)?|[=!]=
 logical         (&&)|(\|\|)|(!)
 assignment      [=]
-/*keywords*/
-keyword         (break)|(case)|(continue)|(def)|(do)|(else)|(exit)|(for)|(if)|(null)|(print)|(println)|(repeat)|(return)|(to)|(var)|(while)
-typekeyword     (boolean)|(class)|(float)|(int)|(object)|(string)|(type)|(val)|(char)
 
 /*identifiers*/
 identifier      [a-zA-Z][A-za-z0-9]*
 /*constants*/
 integer         [0-9]+
 real            [0-9]+"."[0-9]+([Ee][+-]?[0-9]+)?
-
-true            true
-false           false
 
 
 /*string transition*/
@@ -58,12 +52,9 @@ false           false
     BEGIN INITIAL;
     AddList(yytext);
 
-    VALUE retValue;
-    retValue.valueType = VALUETYPE::STRING;
-    retValue.sval = string(yytext);
+    yylval.value = new VALUE(string(yytext));
 
-    yylval.value = new VALUE(retValue);
-    return VALUETOKEN;
+    return VALUE_TOKEN;
 }
 <STRINGS>\n    {
     BEGIN INITIAL;
@@ -107,7 +98,7 @@ false           false
 {bracket}           {AddList(yytext);}
 
 {arithmetic}        {AddList(yytext); return yytext[0];}
-{remainder}         {AddList(yytext); return yytext[0];}
+
 {relational}        {AddList(yytext);}
 {logical}           {AddList(yytext);}
 {assignment}        {AddList(yytext); return yytext[0];}
@@ -117,41 +108,33 @@ false           false
 
 {integer}           {
                         AddList(yytext);
-                        VALUE retValue;
-                        retValue.valueType = VALUETYPE::INT;
-                        retValue.ival = stoi(string(yytext));
+                        VALUE retValue = VALUE(stoi(string(yytext)));
                         yylval.value = new VALUE(retValue);
 
-                        return VALUETOKEN;
+                        return VALUE_TOKEN;
                     }
 
-{true}              {
+true                {
                         AddList(yytext);
-                        VALUE retValue;
-                        retValue.valueType = VALUETYPE::BOOLEAN;
-                        retValue.bval = true;
+                        VALUE retValue = VALUE(true);
                         yylval.value = new VALUE(retValue);
 
-                        return VALUETOKEN;
+                        return VALUE_TOKEN;
                     }
-{false}             {
+false               {
                         AddList(yytext);
-                        VALUE retValue;
-                        retValue.valueType = VALUETYPE::BOOLEAN;
-                        retValue.bval = false;
+                        VALUE retValue = VALUE(false);
                         yylval.value = new VALUE(retValue);
 
-                        return VALUETOKEN;
+                        return VALUE_TOKEN;
                     }
 
 {real}              {
                         AddList(yytext);
-                        VALUE retValue;
-                        retValue.valueType = VALUETYPE::FLOAT;
-                        retValue.fval = stof(string(yytext));
-                        yylval.value = new VALUE(retValue);
+                        VALUE retValue = VALUE(true);
+                        yylval.value = new VALUE(stof(string(yytext)));
 
-                        return VALUETOKEN;
+                        return VALUE_TOKEN;
                     }
 
 {identifier}        {

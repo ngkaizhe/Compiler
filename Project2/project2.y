@@ -22,6 +22,9 @@ extern FILE* yyin, *yyout;
 
     /* constant exp*/
     VALUE* value;
+
+    /* value type*/
+    VALUETYPE* valueType;
 };
 
 /* all name should be followed by T to indicate as token*/
@@ -30,14 +33,10 @@ extern FILE* yyin, *yyout;
 
 // token came from lex with value
 %token <idName> ID_NAME
-%token <value> VALUETOKEN
+%token <value> VALUE_TOKEN
 
 // token came from lex without value
-%token INT_TYPE
-%token FLOAT_TYPE
-%token BOOL_TYPE
-%token STRING_TYPE
-%token CHAR_TYPE
+%token <valueType> VALUE_TYPE
 %token VAR
 %token VAL
 
@@ -71,17 +70,73 @@ STMT    : ID_NAME '=' EXP {
                 }
             }
         | EXP
+        | VALDECLARATION
+        | VARDECLARATION
         ;
+
+// constant declaration
+VALDECLARATION  :       VAL ID_NAME ':' VALUE_TYPE '=' VALUE_TOKEN
+                        {
+                            // error checking first
+                            // check VALUE_TOKEN's value type same as VALUE_TYPE
+                            // check ID is already used in this scope or not
+
+                            // insert id with name to the symbol table
+                        }
+                |       VAL ID_NAME '=' VALUE_TOKEN
+                        {
+                            // error checking first
+                            // check ID is already used in this scope or not
+
+                            // insert id with name to the symbol table
+                        }
+                ;       
+
+// variable declaration
+VARDECLARATION  :       VAR ID_NAME ':' VALUE_TYPE '=' VALUE_TOKEN
+                        {
+                            // error checking first
+                            // check VALUE_TOKEN's value type same as VALUE_TYPE
+                            // check ID is already used in this scope or not
+
+                            // insert id with name to the symbol table
+                        }
+                |       VAR ID_NAME ':' VALUE_TYPE 
+                        {
+                            // error checking first
+                            // check ID is already used in this scope or not
+
+                            // insert id with name to the symbol table
+                            // set 
+                        }
+                |       VAR ID_NAME '=' VALUE_TOKEN
+                        {
+                            // error checking first
+                            // check ID is already used in this scope or not
+
+                            // insert id with name to the symbol table
+                            // set value
+                        }
+                |       VAR ID_NAME
+                        {
+                            // error checking first
+                            // check ID is already used in this scope or not
+
+                            // insert id with name to the symbol table
+                        }
+                ;     
+
 
 EXP     :   ID_NAME        {
             // find the id in the symbol table
                 VALUE idVal = symbolTable.LookUp(*$1).value;
                 $$ = new VALUE(idVal);
             }
-        |   EXP '+' EXP {$$ = new VALUE(oper('+', *$1, *$3));}
-        |   EXP '-' EXP {$$ = new VALUE(oper('-', *$1, *$3));}
-        |   EXP '*' EXP {$$ = new VALUE(oper('+', *$1, *$3));}
-        |   EXP '/' EXP {$$ = new VALUE(oper('/', *$1, *$3));}
+        |   EXP '+' EXP {$$ = new VALUE(*$1 + *$3);}
+        |   EXP '-' EXP {$$ = new VALUE(*$1 - *$3);}
+        |   EXP '*' EXP {$$ = new VALUE(*$1 * *$3);}
+        |   EXP '/' EXP {$$ = new VALUE(*$1 / *$3);}
+        
         |   '-' EXP %prec UMINUS {
                 VALUE value;
                 value.valueType = $2->valueType;
@@ -91,8 +146,10 @@ EXP     :   ID_NAME        {
 
                 $$ = new VALUE(oper('*', *$2, value));
             }
-        |   VALUETOKEN
+        |   VALUE_TOKEN
         ;
+
+
 
 %%
 #include "lex.yy.cpp"
@@ -111,6 +168,7 @@ VALUE oper(char operC, VALUE v1, VALUE v2){
     // add operation
     // add operation for float
     if(operC == '+' && v1.valueType == VALUETYPE::FLOAT){
+        DebugLog("+ operator found! Checking Result......OK");
         VALUE answer;
         // set answer value type
         answer.valueType = VALUETYPE::FLOAT;
@@ -120,7 +178,7 @@ VALUE oper(char operC, VALUE v1, VALUE v2){
     }
     // add operation for int
     if(operC == '+' && v1.valueType == VALUETYPE::INT){
-        DebugLog("+ operator found!");
+        DebugLog("+ operator found! Checking Result......OK");
         VALUE answer;
         // set answer value type
         answer.valueType = VALUETYPE::INT;
@@ -132,6 +190,7 @@ VALUE oper(char operC, VALUE v1, VALUE v2){
     // minus operation
     // minus operation for float
     if(operC == '-' && v1.valueType == VALUETYPE::FLOAT){
+        DebugLog("- operator found! Checking Result......OK");
         VALUE answer;
         // set answer value type
         answer.valueType = VALUETYPE::FLOAT;
@@ -141,6 +200,7 @@ VALUE oper(char operC, VALUE v1, VALUE v2){
     }
     // minus operation for int
     if(operC == '-' && v1.valueType == VALUETYPE::INT){
+        DebugLog("- operator found! Checking Result......OK");
         VALUE answer;
         // set answer value type
         answer.valueType = VALUETYPE::INT;
@@ -152,6 +212,7 @@ VALUE oper(char operC, VALUE v1, VALUE v2){
     // multiple operation
     // multiple operation for float
     if(operC == '*' && v1.valueType == VALUETYPE::FLOAT){
+        DebugLog("* operator found! Checking Result......OK");
         VALUE answer;
         // set answer value type
         answer.valueType = VALUETYPE::FLOAT;
@@ -161,6 +222,7 @@ VALUE oper(char operC, VALUE v1, VALUE v2){
     }
     // multiple operation for int
     if(operC == '*' && v1.valueType == VALUETYPE::INT){
+        DebugLog("* operator found! Checking Result......OK");
         VALUE answer;
         // set answer value type
         answer.valueType = VALUETYPE::INT;
@@ -172,6 +234,7 @@ VALUE oper(char operC, VALUE v1, VALUE v2){
     // divide operation
     // divide operation for float
     if(operC == '/' && v1.valueType == VALUETYPE::FLOAT){
+        DebugLog("/ operator found! Checking Result......OK");
         VALUE answer;
         // set answer value type
         answer.valueType = VALUETYPE::FLOAT;
@@ -181,6 +244,7 @@ VALUE oper(char operC, VALUE v1, VALUE v2){
     }
     // divide operation for int
     if(operC == '/' && v1.valueType == VALUETYPE::INT){
+        DebugLog("/ operator found! Checking Result......OK");
         VALUE answer;
         // set answer value type
         answer.valueType = VALUETYPE::INT;
