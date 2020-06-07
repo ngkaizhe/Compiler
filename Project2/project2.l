@@ -15,11 +15,9 @@ semicolon       [;]
 parenthese      [()]
 squarebracket   [[\]]
 bracket         [{}]
-/*arithmetic, relational, and logical operators*/
-arithmetic      [\+\-*\/]
 
-relational      [<>](=)?|[=!]=
-logical         (&&)|(\|\|)|(!)
+/*arithmetic operators*/
+arithmetic      [\+\-*\/]
 
 /*identifiers*/
 identifier      [a-zA-Z][A-za-z0-9]*
@@ -89,13 +87,13 @@ char            '.'
 <MULTICOMMENT>.       { AddList(yytext);}
 
 
-{comma}             {AddList(yytext);}
-{colon}             {AddList(yytext);}
-{period}            {AddList(yytext);}
-{semicolon}         {AddList(yytext);}
-{parenthese}        {AddList(yytext);}
-{squarebracket}     {AddList(yytext);}
-{bracket}           {AddList(yytext);}
+{comma}             {AddList(yytext); return yytext[0];}
+{colon}             {AddList(yytext); return yytext[0];}
+{period}            {AddList(yytext); return yytext[0];}
+{semicolon}         {AddList(yytext); return yytext[0];}
+{parenthese}        {AddList(yytext); return yytext[0];}
+{squarebracket}     {AddList(yytext); return yytext[0];}
+{bracket}           {AddList(yytext); return yytext[0];}
 
 {arithmetic}        {AddList(yytext); return yytext[0];}
 
