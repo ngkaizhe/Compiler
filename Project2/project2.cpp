@@ -14,14 +14,6 @@ void AddList(char* token) {
 }
 
 void ListLine() {
-    // pretty print for the end of line
-    DebugLog("Line " + to_string(yylineno) + " Finish Checking");
-    DebugLog("========================\n");
-    yylineno++;
-    // pretty print for the starting of line
-    DebugLog("========================");
-    DebugLog("Line " + to_string(yylineno) + " Start Checking");
-
     // dont print anything from now
     // fprintf(yyout, "%d: %s\n", lineNumber, lineBuffer);
     // reset line buffer

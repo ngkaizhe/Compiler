@@ -349,10 +349,6 @@ int main(int argc, char* argv[]) {
     symbolTable.CreateSymbol();
 
     if(yyin != NULL){
-        // output the first start checking message
-        DebugLog("========================");
-        DebugLog("Line " + to_string(yylineno) + " Start Checking from main");
-
         // perform parsing
         // error parsing
         if(yyparse() == 1){

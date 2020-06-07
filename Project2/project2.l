@@ -201,10 +201,6 @@ false               {
 %%
 
 int yywrap(void){
-    // output the last end checking message
-    DebugLog("Line " + to_string(yylineno) + " Finish Checking from yywrap");
-    DebugLog("========================");
-
     return 1;
 }
 
