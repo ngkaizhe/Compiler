@@ -167,7 +167,8 @@ void ID::AddParameter(ID id)
 void ID::InitValue(VALUE value)
 {
     if (idType == IDTYPE::CONSTVAR || idType == IDTYPE::VARIABLE) {
-        if (this->value.valueType == value.valueType) {
+        if (this->value.valueType == value.valueType || this->value.valueType == VALUETYPE::UNSET) {
+            this->value.valueType = value.valueType;
             this->value = value;
         }
         else throw string("Variable value type is " + this->value.ValueTypeString() + ", but the value type assigned is "
@@ -575,7 +576,7 @@ void SymbolTable::DropSymbol()
     this->invalidSymbols.push_back(symbol);
 }
 
-ID SymbolTable::LookUp(string IDName)
+ID& SymbolTable::LookUp(string IDName)
 {
     // look up for the current scope first
     for (int i = validSymbols.size() - 1; i >= 0; i--) {
@@ -589,7 +590,6 @@ ID SymbolTable::LookUp(string IDName)
 
     // else look up not found
     throw string("Error found in function SymbolTable::LookUp(string IDName)\nIDName pass in didn't found in symbol table!\n");
-    return ID();
 }
 
 ID& SymbolTable::Insert(ID id)

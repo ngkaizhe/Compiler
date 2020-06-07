@@ -113,14 +113,21 @@ VALDECLARATION  :       VAL ID_NAME ':' VALUE_TYPE '=' VALUE_TOKEN
                             catch(string s){
                                 yyerror(s.c_str());
                             }
-                            
                         }
                 |       VAL ID_NAME '=' VALUE_TOKEN
                         {
                             // error checking first
-                            // check ID is already used in this scope or not
-
-                            // insert id with name to the symbol table
+                            try{
+                                ID newId = ID();
+                                newId.SetToConstVar(*$2);
+                                // check ID is already used in this scope or not
+                                // insert id with name to the symbol table
+                                ID& idRef = symbolTable.Insert(newId);
+                                idRef.InitValue(*$4);
+                            }
+                            catch(string s){
+                                yyerror(s.c_str());
+                            }
                         }
                 ;       
 

@@ -205,6 +205,10 @@ int yywrap(void){
     if(lineBuffer[0]){
         ListLine();
     }
+    // output the last end checking message
+    DebugLog("Line " + to_string(yylineno) + " End Checking");
+    DebugLog("========================");
+
     return 1;
 }
 
