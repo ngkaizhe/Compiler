@@ -564,11 +564,13 @@ void Symbol::Dump()
 
 void SymbolTable::CreateSymbol()
 {
+    DebugLog("New Symbol Created! Means that we have enter a new scope......OK");
     this->validSymbols.push_back(Symbol());
 }
 
 void SymbolTable::DropSymbol()
 {
+    DebugLog("Symbol Dropped! Means that we have leave the current scope......OK");
     Symbol symbol = this->validSymbols.back();
     this->validSymbols.pop_back();
     this->invalidSymbols.push_back(symbol);

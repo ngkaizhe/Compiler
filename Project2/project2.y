@@ -6,13 +6,15 @@ extern int yylex();
 
 // function declaration
 VALUE oper(char operC, VALUE v1, VALUE v2);
-
 SymbolTable symbolTable = SymbolTable();
 
 int yyerror(const char* s);
 extern int yylineno;  // defined and maintained in lex
 extern int yyparse();
 extern FILE* yyin, *yyout;
+
+// function name to dynamic tracking current function scope
+ID* functionPtr;
 %}
 
 %union{
@@ -29,7 +31,6 @@ extern FILE* yyin, *yyout;
 
 /* all name should be followed by T to indicate as token*/
 %start PROGRAM
-
 
 // token came from lex with value
 %token <idName> ID_NAME
@@ -76,32 +77,103 @@ extern FILE* yyin, *yyout;
 /* descriptions of expected inputs corresponding actions (in C)*/
 
 // starting program token
-PROGRAM :   OBJECT ID_NAME 
-        {
-            DebugLog("Object definition start!");
-            ID objectId = ID();
-            objectId.IDName = *$2;
-            objectId.idType = IDTYPE::OBJECTID;
-            symbolTable.Insert(objectId);
-        }   '{' 
-        {
-            // create new scope
-            symbolTable.CreateSymbol();
-        }
-            OBJCONTENT '}' 
-        {
-            DebugLog("Object definition end!");
-            // check whether their are main function inside
-            // symbolTable.LookUp("main");
-            // drop the symbol table
-            symbolTable.DropSymbol();
-        };
+PROGRAM     :   OBJECT ID_NAME 
+            {
+                DebugLog("Object definition start!");
+                ID objectId = ID();
+                objectId.IDName = *$2;
+                objectId.idType = IDTYPE::OBJECTID;
+                symbolTable.Insert(objectId);
+            }   
+                '{'
+            {
+                // create new scope
+                symbolTable.CreateSymbol();
+            }
+                OBJCONTENT '}'
+            {
+                // check whether their are main function inside
+                // symbolTable.LookUp("main");
+                // drop the symbol table
+                symbolTable.DropSymbol();
+                DebugLog("Object definition end!");
+            }
+            ;
 
 // obj content
-OBJCONTENT : METHOD_DECLARATIONS STMTS;
+OBJCONTENT : STMTS FUNCTION_DEFINITIONS;
 
-// method declarations
-METHOD_DECLARATIONS : ;
+// function definitions
+FUNCTION_DEFINITIONS    : FUNCTION_DEFINITION FUNCTION_DEFINITIONS
+                        | FUNCTION_DEFINITION
+                        ;
+
+// function definition
+FUNCTION_DEFINITION :   DEF ID_NAME 
+                        {
+                            // insert function name
+                            ID functionID = ID();
+                            functionID.SetToFunction(*$2);
+
+                            ID& functionRef = symbolTable.Insert(functionID);
+                            // set the functionPtr to current function
+                            functionPtr = &functionRef;
+                        }
+                        '(' FORMAL_ARGS ')' ':' VALUE_TYPE
+                        {
+                            // set the return type for the function
+                            functionPtr->SetReturnType(*$8);
+                        }
+                        '{'
+                        {
+                            // create the scope
+                            symbolTable.CreateSymbol();
+
+                            // put all parameter into the current scope
+                            for(int i=0; i< functionPtr->parameters.size(); i++){
+                                symbolTable.Insert(*(functionPtr->parameters[i]));
+                            }
+                        }
+                        STMTS
+                        '}'
+                        {
+                            // dump to check that we set the correct function
+                            // functionPtr->Dump();
+                            // drop the current scope
+                            symbolTable.DropSymbol();
+                            // set the functionPtr to null
+                            functionPtr = NULL;
+                        }
+                        ;
+
+// insert all parameter into the current scope
+FORMAL_ARGS : ARG ',' FORMAL_ARGS
+            | ARG
+            ;
+
+ARG         : ID_NAME ':' VALUE_TYPE
+            {
+                // recreate a new ID as the function parameter
+                ID parameterID = ID();
+                parameterID.SetToVar(*$1);
+                // set the value type too
+                parameterID.SetValueType(*$3);
+
+                // set the parameter to the function id
+                functionPtr->AddParameter(parameterID);
+            };
+
+// return statement
+RETURN_STMT : RETURN EXP
+            {
+                // check whether we are in the function scope
+                if(functionPtr == NULL) 
+                    yyerror("Return can only called inside the function scope!");
+
+                // check whether the return exp's type is same as the current function type
+                if($2->valueType != functionPtr->retVal.valueType) 
+                    yyerror("The function return type definition is different as the function return type declaration!"); 
+            }
 
 // statements
 STMTS   : STMT
@@ -110,20 +182,22 @@ STMTS   : STMT
         ;
 
 // statement
-STMT    : ID_NAME '=' EXP {
-                // check whether the exp has the same value type with the id name
-                VALUE rvalue = symbolTable.LookUp(*$1).value;
-                if(rvalue.valueType == $3->valueType){
-                    DebugLog("Assignment operation done!");
+STMT            : ID_NAME '=' EXP 
+                {
+                    // check whether the exp has the same value type with the id name
+                    VALUE rvalue = symbolTable.LookUp(*$1).value;
+                    if(rvalue.valueType == $3->valueType){
+                        DebugLog("Assignment operation done!");
+                    }
+                    else{
+                        yyerror("Different type of value can't do the assignment operation!");
+                    }
                 }
-                else{
-                    yyerror("Different type of value can't do the assignment operation!");
-                }
-            }
-        | EXP
-        | VALDECLARATION
-        | VARDECLARATION
-        ;
+                | EXP
+                | VALDECLARATION
+                | VARDECLARATION
+                | RETURN_STMT
+                ;
 
 // constant declaration
 VALDECLARATION  :       VAL ID_NAME ':' VALUE_TYPE '=' VALUE_TOKEN

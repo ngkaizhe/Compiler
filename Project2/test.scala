@@ -1,7 +1,9 @@
-object aaa{
-    var ee :int
+object example{
+    val a = 5
 
-    var eee
-    val e=1
-    var a1: int [10]
+    // function declaration
+    def add(a:int, b:int): int
+    {
+        return a+b
+    }
 }
