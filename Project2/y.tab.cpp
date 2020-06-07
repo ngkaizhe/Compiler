@@ -630,8 +630,8 @@ static const yytype_int8 yytranslate[] =
 static const yytype_uint8 yyrline[] =
 {
        0,    78,    78,    79,    80,    83,    93,    94,    95,    99,
-     107,   117,   125,   133,   141,   151,   156,   157,   158,   159,
-     161,   170
+     118,   128,   136,   144,   152,   162,   167,   168,   169,   170,
+     172,   181
 };
 #endif
 
@@ -1258,27 +1258,38 @@ yyreduce:
 #line 100 "project2.y"
                         {
                             // error checking first
-                            // check VALUE_TOKEN's value type same as VALUE_TYPE
-                            // check ID is already used in this scope or not
+                            try{
+                                ID newId = ID();
+                                newId.SetToConstVar(*(yyvsp[-4].idName));
+                                // check ID is already used in this scope or not
+                                // insert id with name to the symbol table
+                                ID& idRef = symbolTable.Insert(newId);
 
-                            // insert id with name to the symbol table
-                        }
-#line 1267 "y.tab.cpp"
-    break;
-
-  case 10:
-#line 108 "project2.y"
-                        {
-                            // error checking first
-                            // check ID is already used in this scope or not
-
-                            // insert id with name to the symbol table
+                                // check VALUE_TOKEN's value type same as VALUE_TYPE
+                                idRef.SetValueType(*(yyvsp[-2].valueType));
+                                idRef.InitValue(*(yyvsp[0].value));
+                            }
+                            catch(string s){
+                                yyerror(s.c_str());
+                            }
+                            
                         }
 #line 1278 "y.tab.cpp"
     break;
 
+  case 10:
+#line 119 "project2.y"
+                        {
+                            // error checking first
+                            // check ID is already used in this scope or not
+
+                            // insert id with name to the symbol table
+                        }
+#line 1289 "y.tab.cpp"
+    break;
+
   case 11:
-#line 118 "project2.y"
+#line 129 "project2.y"
                         {
                             // error checking first
                             // check VALUE_TOKEN's value type same as VALUE_TYPE
@@ -1286,11 +1297,11 @@ yyreduce:
 
                             // insert id with name to the symbol table
                         }
-#line 1290 "y.tab.cpp"
+#line 1301 "y.tab.cpp"
     break;
 
   case 12:
-#line 126 "project2.y"
+#line 137 "project2.y"
                         {
                             // error checking first
                             // check ID is already used in this scope or not
@@ -1298,11 +1309,11 @@ yyreduce:
                             // insert id with name to the symbol table
                             // set 
                         }
-#line 1302 "y.tab.cpp"
+#line 1313 "y.tab.cpp"
     break;
 
   case 13:
-#line 134 "project2.y"
+#line 145 "project2.y"
                         {
                             // error checking first
                             // check ID is already used in this scope or not
@@ -1310,56 +1321,56 @@ yyreduce:
                             // insert id with name to the symbol table
                             // set value
                         }
-#line 1314 "y.tab.cpp"
+#line 1325 "y.tab.cpp"
     break;
 
   case 14:
-#line 142 "project2.y"
+#line 153 "project2.y"
                         {
                             // error checking first
                             // check ID is already used in this scope or not
 
                             // insert id with name to the symbol table
                         }
-#line 1325 "y.tab.cpp"
+#line 1336 "y.tab.cpp"
     break;
 
   case 15:
-#line 151 "project2.y"
+#line 162 "project2.y"
                            {
             // find the id in the symbol table
                 VALUE idVal = symbolTable.LookUp(*(yyvsp[0].idName)).value;
                 (yyval.value) = new VALUE(idVal);
             }
-#line 1335 "y.tab.cpp"
+#line 1346 "y.tab.cpp"
     break;
 
   case 16:
-#line 156 "project2.y"
+#line 167 "project2.y"
                         {(yyval.value) = new VALUE(*(yyvsp[-2].value) + *(yyvsp[0].value));}
-#line 1341 "y.tab.cpp"
+#line 1352 "y.tab.cpp"
     break;
 
   case 17:
-#line 157 "project2.y"
+#line 168 "project2.y"
                         {(yyval.value) = new VALUE(*(yyvsp[-2].value) - *(yyvsp[0].value));}
-#line 1347 "y.tab.cpp"
+#line 1358 "y.tab.cpp"
     break;
 
   case 18:
-#line 158 "project2.y"
+#line 169 "project2.y"
                         {(yyval.value) = new VALUE(*(yyvsp[-2].value) * *(yyvsp[0].value));}
-#line 1353 "y.tab.cpp"
+#line 1364 "y.tab.cpp"
     break;
 
   case 19:
-#line 159 "project2.y"
+#line 170 "project2.y"
                         {(yyval.value) = new VALUE(*(yyvsp[-2].value) / *(yyvsp[0].value));}
-#line 1359 "y.tab.cpp"
+#line 1370 "y.tab.cpp"
     break;
 
   case 20:
-#line 161 "project2.y"
+#line 172 "project2.y"
                                  {
                 VALUE value;
                 value.valueType = (yyvsp[0].value)->valueType;
@@ -1369,11 +1380,11 @@ yyreduce:
 
                 (yyval.value) = new VALUE(oper('*', *(yyvsp[0].value), value));
             }
-#line 1373 "y.tab.cpp"
+#line 1384 "y.tab.cpp"
     break;
 
 
-#line 1377 "y.tab.cpp"
+#line 1388 "y.tab.cpp"
 
       default: break;
     }
@@ -1567,7 +1578,7 @@ yyreturn:
   return yyresult;
 }
 
-#line 175 "project2.y"
+#line 186 "project2.y"
 
 #include "lex.yy.cpp"
 

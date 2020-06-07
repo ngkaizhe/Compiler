@@ -169,7 +169,7 @@ public:
     ID LookUp(string IDName);
 
     // insert the ID into the current scope
-    void Insert(ID id);
+    ID& Insert(ID id);
 
     // print all value in the current symbol table
     void DumpValidSymbols();

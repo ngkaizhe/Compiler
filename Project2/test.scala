@@ -1,4 +1,4 @@
 //fea
 //fea
-1+2
-2+2
+val a:int = 1
+val b:int = 1.5

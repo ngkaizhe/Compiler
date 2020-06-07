@@ -99,10 +99,21 @@ STMT    : ID_NAME '=' EXP {
 VALDECLARATION  :       VAL ID_NAME ':' VALUE_TYPE '=' VALUE_TOKEN
                         {
                             // error checking first
-                            // check VALUE_TOKEN's value type same as VALUE_TYPE
-                            // check ID is already used in this scope or not
+                            try{
+                                ID newId = ID();
+                                newId.SetToConstVar(*$2);
+                                // check ID is already used in this scope or not
+                                // insert id with name to the symbol table
+                                ID& idRef = symbolTable.Insert(newId);
 
-                            // insert id with name to the symbol table
+                                // check VALUE_TOKEN's value type same as VALUE_TYPE
+                                idRef.SetValueType(*$4);
+                                idRef.InitValue(*$6);
+                            }
+                            catch(string s){
+                                yyerror(s.c_str());
+                            }
+                            
                         }
                 |       VAL ID_NAME '=' VALUE_TOKEN
                         {
