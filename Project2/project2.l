@@ -20,13 +20,13 @@ arithmetic      [\+\-*\/]
 
 relational      [<>](=)?|[=!]=
 logical         (&&)|(\|\|)|(!)
-assignment      [=]
 
 /*identifiers*/
 identifier      [a-zA-Z][A-za-z0-9]*
 /*constants*/
 integer         [0-9]+
 real            [0-9]+"."[0-9]+([Ee][+-]?[0-9]+)?
+char            '.'
 
 
 /*string transition*/
@@ -100,8 +100,13 @@ real            [0-9]+"."[0-9]+([Ee][+-]?[0-9]+)?
 {arithmetic}        {AddList(yytext); return yytext[0];}
 
 {relational}        {AddList(yytext);}
-{logical}           {AddList(yytext);}
-{assignment}        {AddList(yytext); return yytext[0];}
+
+||                  {AddList(yytext); return OR;}
+&&                  {AddList(yytext); return AND;}
+!                   {AddList(yytext); return NOT;}
+
+=                   {AddList(yytext); return yytext[0];}
+
 
 def                 { AddList(yytext); return DEF;}
 
@@ -173,7 +178,15 @@ false               {
 {identifier}        {
                         AddList(yytext);
                         yylval.idName = new string(yytext);
-                        
+
+                        return ID_NAME;
+                    }
+
+{char}              {
+                        AddList(yytext);
+                        VALUE retValue = VALUE(true);
+                        yylval.value = new VALUE(yytext[1]));
+
                         return ID_NAME;
                     }
 
