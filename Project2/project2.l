@@ -13,7 +13,7 @@ colon           [:]
 period          [.]
 semicolon       [;]
 parenthese      [()]
-squarebracket   [[\]]
+squarebracket   [\[\]]
 bracket         [{}]
 
 /*arithmetic operators*/

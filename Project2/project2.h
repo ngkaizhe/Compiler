@@ -19,6 +19,7 @@ enum class IDTYPE {
     FUNCTION,
     CONSTVAR,
     VARIABLE,
+    OBJECTID,
 };
 
 enum class VALUETYPE {

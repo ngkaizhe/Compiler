@@ -295,23 +295,28 @@ VALUE::VALUE(VALUETYPE valueType, int range) {
 
     // set vector size
     // char vector
-    if (valueType == VALUETYPE::ARRCHAR) {
+    if (valueType == VALUETYPE::CHAR) {
+        valueType = VALUETYPE::ARRCHAR;
         cvals.resize((size_t)range);
     }
     // boolean vector
-    else if (valueType == VALUETYPE::ARRBOOLEAN) {
+    else if (valueType == VALUETYPE::BOOLEAN) {
+        valueType = VALUETYPE::ARRBOOLEAN;
         bvals.resize((size_t)range);
     }
     // string vector
-    else if (valueType == VALUETYPE::ARRSTRING) {
+    else if (valueType == VALUETYPE::STRING) {
+        valueType = VALUETYPE::ARRSTRING;
         svals.resize((size_t)range);
     }
     // int vector
-    else if (valueType == VALUETYPE::ARRINT) {
+    else if (valueType == VALUETYPE::INT) {
+        valueType = VALUETYPE::ARRINT;
         ivals.resize((size_t)range);
     }
     // float vector
-    else if (valueType == VALUETYPE::ARRFLOAT) {
+    else if (valueType == VALUETYPE::FLOAT) {
+        valueType = VALUETYPE::ARRFLOAT;
         fvals.resize((size_t)range);
     }
     // this shouldn't be called
@@ -319,6 +324,7 @@ VALUE::VALUE(VALUETYPE valueType, int range) {
         throw string("I dont know how possible do you reach here!\n" 
             "Bug Found at VALUE::VALUE(VALUETYPE valueType, int range)\n");
     }
+    DebugLog("Array declaration detected! Array value setted......OK");
 }
 
 // operator overloading

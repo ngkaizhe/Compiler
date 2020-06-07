@@ -28,7 +28,7 @@ extern FILE* yyin, *yyout;
 };
 
 /* all name should be followed by T to indicate as token*/
-%start STMTS
+%start PROGRAM
 
 
 // token came from lex with value
@@ -75,11 +75,41 @@ extern FILE* yyin, *yyout;
 
 /* descriptions of expected inputs corresponding actions (in C)*/
 
+// starting program token
+PROGRAM :   OBJECT ID_NAME 
+        {
+            DebugLog("Object definition start!");
+            ID objectId = ID();
+            objectId.IDName = *$2;
+            objectId.idType = IDTYPE::OBJECTID;
+            symbolTable.Insert(objectId);
+        }   '{' 
+        {
+            // create new scope
+            symbolTable.CreateSymbol();
+        }
+            OBJCONTENT '}' 
+        {
+            DebugLog("Object definition end!");
+            // check whether their are main function inside
+            // symbolTable.LookUp("main");
+            // drop the symbol table
+            symbolTable.DropSymbol();
+        };
+
+// obj content
+OBJCONTENT : METHOD_DECLARATIONS STMTS;
+
+// method declarations
+METHOD_DECLARATIONS : ;
+
+// statements
 STMTS   : STMT
         | STMT STMTS
         |
         ;
 
+// statement
 STMT    : ID_NAME '=' EXP {
                 // check whether the exp has the same value type with the id name
                 VALUE rvalue = symbolTable.LookUp(*$1).value;
@@ -192,6 +222,7 @@ VARDECLARATION  :       VAR ID_NAME ':' VALUE_TYPE
                             try{
                                 ID newId = ID();
                                 newId.SetToVar(*$2);
+
                                 // check ID is already used in this scope or not
                                 // insert id with name to the symbol table
                                 ID& idRef = symbolTable.Insert(newId);
@@ -200,9 +231,30 @@ VARDECLARATION  :       VAR ID_NAME ':' VALUE_TYPE
                                 yyerror(s.c_str());
                             }
                         }
+                |       VAR ID_NAME ':' VALUE_TYPE '[' VALUE_TOKEN ']'
+                        {
+                            
+                            // error checking first
+                            try{
+                                ID newId = ID();
+                                newId.SetToVar(*$2);
+                                
+                                // check ID is already used in this scope or not
+                                // insert id with name to the symbol table
+                                ID& idRef = symbolTable.Insert(newId);
+
+                                // the value_token must be type int
+                                if($6->valueType != VALUETYPE::INT) yyerror("array declaration's number value must be integer!");
+                                // set the array range for id name
+                                idRef.value = VALUE(*$4, $6->ival);
+                            }
+                            catch(string s){
+                                yyerror(s.c_str());
+                            }
+                        }
                 ;     
 
-
+// expression
 EXP     :   ID_NAME        {
             // find the id in the symbol table
                 VALUE idVal = symbolTable.LookUp(*$1).value;
@@ -336,7 +388,7 @@ VALUE oper(char operC, VALUE v1, VALUE v2){
 
 int yyerror(const char* s){
     // fprintf(stderr, "Error, Line%d: %s\n", yylineno, s);
-    DebugLog("Error, Line " + to_string(yylineno) + " , Error Message: " + string(s));
+    DebugLog("Error Message: " + string(s));
     exit(1);
 }
 
