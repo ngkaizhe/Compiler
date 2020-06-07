@@ -132,36 +132,73 @@ VALDECLARATION  :       VAL ID_NAME ':' VALUE_TYPE '=' VALUE_TOKEN
                 ;       
 
 // variable declaration
-VARDECLARATION  :       VAR ID_NAME ':' VALUE_TYPE '=' VALUE_TOKEN
+VARDECLARATION  :       VAR ID_NAME ':' VALUE_TYPE 
                         {
                             // error checking first
-                            // check VALUE_TOKEN's value type same as VALUE_TYPE
-                            // check ID is already used in this scope or not
+                            try{
+                                ID newId = ID();
+                                newId.SetToVar(*$2);
+                                // check ID is already used in this scope or not
+                                // insert id with name to the symbol table
+                                ID& idRef = symbolTable.Insert(newId);
 
-                            // insert id with name to the symbol table
-                        }
-                |       VAR ID_NAME ':' VALUE_TYPE 
-                        {
-                            // error checking first
-                            // check ID is already used in this scope or not
-
-                            // insert id with name to the symbol table
-                            // set 
+                                // set value type
+                                idRef.SetValueType(*$4);
+                            }
+                            catch(string s){
+                                yyerror(s.c_str());
+                            }
+                            
                         }
                 |       VAR ID_NAME '=' VALUE_TOKEN
                         {
                             // error checking first
-                            // check ID is already used in this scope or not
+                            try{
+                                ID newId = ID();
+                                newId.SetToVar(*$2);
+                                // check ID is already used in this scope or not
+                                // insert id with name to the symbol table
+                                ID& idRef = symbolTable.Insert(newId);
 
-                            // insert id with name to the symbol table
-                            // set value
+                                // set type
+                                idRef.InitValue(*$4);
+                            }
+                            catch(string s){
+                                yyerror(s.c_str());
+                            }
+                        }
+                
+                |       VAR ID_NAME ':' VALUE_TYPE '=' VALUE_TOKEN
+                        {
+                            // error checking first
+                            try{
+                                ID newId = ID();
+                                newId.SetToVar(*$2);
+                                // check ID is already used in this scope or not
+                                // insert id with name to the symbol table
+                                ID& idRef = symbolTable.Insert(newId);
+
+                                // check VALUE_TOKEN's value type same as VALUE_TYPE
+                                idRef.SetValueType(*$4);
+                                idRef.InitValue(*$6);
+                            }
+                            catch(string s){
+                                yyerror(s.c_str());
+                            }
                         }
                 |       VAR ID_NAME
                         {
                             // error checking first
-                            // check ID is already used in this scope or not
-
-                            // insert id with name to the symbol table
+                            try{
+                                ID newId = ID();
+                                newId.SetToVar(*$2);
+                                // check ID is already used in this scope or not
+                                // insert id with name to the symbol table
+                                ID& idRef = symbolTable.Insert(newId);
+                            }
+                            catch(string s){
+                                yyerror(s.c_str());
+                            }
                         }
                 ;     
 
@@ -314,7 +351,7 @@ int main(int argc, char* argv[]) {
     if(yyin != NULL){
         // output the first start checking message
         DebugLog("========================");
-        DebugLog("Line " + to_string(yylineno) + " Start Checking");
+        DebugLog("Line " + to_string(yylineno) + " Start Checking from main");
 
         // perform parsing
         // error parsing

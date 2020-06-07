@@ -24,7 +24,7 @@ identifier      [a-zA-Z][A-za-z0-9]*
 /*constants*/
 integer         [0-9]+
 real            [0-9]+"."[0-9]+([Ee][+-]?[0-9]+)?
-char            '.'
+char            '([^'\\\n]|\\.)'
 
 
 /*string transition*/
@@ -190,7 +190,7 @@ false               {
                         VALUE retValue = VALUE(true);
                         yylval.value = new VALUE(yytext[1]);
 
-                        return ID_NAME;
+                        return VALUE_TOKEN;
                     }
 
 
@@ -201,12 +201,8 @@ false               {
 %%
 
 int yywrap(void){
-    // if the last line wasn't the newline, we need to manually output the lineBuffer
-    if(lineBuffer[0]){
-        ListLine();
-    }
     // output the last end checking message
-    DebugLog("Line " + to_string(yylineno) + " End Checking");
+    DebugLog("Line " + to_string(yylineno) + " Finish Checking from yywrap");
     DebugLog("========================");
 
     return 1;

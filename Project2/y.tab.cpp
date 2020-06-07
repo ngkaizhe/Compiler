@@ -630,8 +630,8 @@ static const yytype_int8 yytranslate[] =
 static const yytype_uint8 yyrline[] =
 {
        0,    78,    78,    79,    80,    83,    93,    94,    95,    99,
-     118,   136,   144,   152,   160,   170,   175,   176,   177,   178,
-     180,   189
+     117,   135,   153,   171,   189,   206,   211,   212,   213,   214,
+     216,   225
 };
 #endif
 
@@ -702,7 +702,7 @@ static const yytype_int8 yydefact[] =
        4,    15,    21,     0,     0,     0,     0,     2,     7,     8,
        6,     0,    14,     0,    15,    20,     1,     3,     0,     0,
        0,     0,     5,     0,     0,     0,     0,    17,    16,    18,
-      19,    13,    12,    10,     0,     0,     0,    11,     9
+      19,    12,    11,    10,     0,     0,     0,    13,     9
 };
 
   /* YYPGOTO[NTERM-NUM].  */
@@ -758,7 +758,7 @@ static const yytype_int8 yyr1[] =
 static const yytype_int8 yyr2[] =
 {
        0,     2,     1,     2,     0,     3,     1,     1,     1,     6,
-       4,     6,     4,     4,     2,     1,     3,     3,     3,     3,
+       4,     4,     4,     6,     2,     1,     3,     3,     3,     3,
        2,     1
 };
 
@@ -1272,13 +1272,12 @@ yyreduce:
                             catch(string s){
                                 yyerror(s.c_str());
                             }
-                            symbolTable.LookUp("a").Dump();
                         }
-#line 1278 "y.tab.cpp"
+#line 1277 "y.tab.cpp"
     break;
 
   case 10:
-#line 119 "project2.y"
+#line 118 "project2.y"
                         {
                             // error checking first
                             try{
@@ -1293,92 +1292,128 @@ yyreduce:
                                 yyerror(s.c_str());
                             }
                         }
-#line 1297 "y.tab.cpp"
+#line 1296 "y.tab.cpp"
     break;
 
   case 11:
-#line 137 "project2.y"
+#line 136 "project2.y"
                         {
                             // error checking first
-                            // check VALUE_TOKEN's value type same as VALUE_TYPE
-                            // check ID is already used in this scope or not
+                            try{
+                                ID newId = ID();
+                                newId.SetToVar(*(yyvsp[-2].idName));
+                                // check ID is already used in this scope or not
+                                // insert id with name to the symbol table
+                                ID& idRef = symbolTable.Insert(newId);
 
-                            // insert id with name to the symbol table
+                                // set value type
+                                idRef.SetValueType(*(yyvsp[0].valueType));
+                            }
+                            catch(string s){
+                                yyerror(s.c_str());
+                            }
+                            
                         }
-#line 1309 "y.tab.cpp"
+#line 1318 "y.tab.cpp"
     break;
 
   case 12:
-#line 145 "project2.y"
+#line 154 "project2.y"
                         {
                             // error checking first
-                            // check ID is already used in this scope or not
+                            try{
+                                ID newId = ID();
+                                newId.SetToVar(*(yyvsp[-2].idName));
+                                // check ID is already used in this scope or not
+                                // insert id with name to the symbol table
+                                ID& idRef = symbolTable.Insert(newId);
 
-                            // insert id with name to the symbol table
-                            // set 
+                                // set type
+                                idRef.InitValue(*(yyvsp[0].value));
+                            }
+                            catch(string s){
+                                yyerror(s.c_str());
+                            }
                         }
-#line 1321 "y.tab.cpp"
+#line 1339 "y.tab.cpp"
     break;
 
   case 13:
-#line 153 "project2.y"
+#line 172 "project2.y"
                         {
                             // error checking first
-                            // check ID is already used in this scope or not
+                            try{
+                                ID newId = ID();
+                                newId.SetToVar(*(yyvsp[-4].idName));
+                                // check ID is already used in this scope or not
+                                // insert id with name to the symbol table
+                                ID& idRef = symbolTable.Insert(newId);
 
-                            // insert id with name to the symbol table
-                            // set value
+                                // check VALUE_TOKEN's value type same as VALUE_TYPE
+                                idRef.SetValueType(*(yyvsp[-2].valueType));
+                                idRef.InitValue(*(yyvsp[0].value));
+                            }
+                            catch(string s){
+                                yyerror(s.c_str());
+                            }
                         }
-#line 1333 "y.tab.cpp"
+#line 1361 "y.tab.cpp"
     break;
 
   case 14:
-#line 161 "project2.y"
+#line 190 "project2.y"
                         {
                             // error checking first
-                            // check ID is already used in this scope or not
-
-                            // insert id with name to the symbol table
+                            try{
+                                ID newId = ID();
+                                newId.SetToVar(*(yyvsp[0].idName));
+                                // check ID is already used in this scope or not
+                                // insert id with name to the symbol table
+                                ID& idRef = symbolTable.Insert(newId);
+                            }
+                            catch(string s){
+                                yyerror(s.c_str());
+                            }
                         }
-#line 1344 "y.tab.cpp"
+#line 1379 "y.tab.cpp"
     break;
 
   case 15:
-#line 170 "project2.y"
+#line 206 "project2.y"
                            {
             // find the id in the symbol table
                 VALUE idVal = symbolTable.LookUp(*(yyvsp[0].idName)).value;
                 (yyval.value) = new VALUE(idVal);
             }
-#line 1354 "y.tab.cpp"
+#line 1389 "y.tab.cpp"
     break;
 
   case 16:
-#line 175 "project2.y"
+#line 211 "project2.y"
                         {(yyval.value) = new VALUE(*(yyvsp[-2].value) + *(yyvsp[0].value));}
-#line 1360 "y.tab.cpp"
+#line 1395 "y.tab.cpp"
     break;
 
   case 17:
-#line 176 "project2.y"
+#line 212 "project2.y"
                         {(yyval.value) = new VALUE(*(yyvsp[-2].value) - *(yyvsp[0].value));}
-#line 1366 "y.tab.cpp"
+#line 1401 "y.tab.cpp"
     break;
 
   case 18:
-#line 177 "project2.y"
+#line 213 "project2.y"
                         {(yyval.value) = new VALUE(*(yyvsp[-2].value) * *(yyvsp[0].value));}
-#line 1372 "y.tab.cpp"
+#line 1407 "y.tab.cpp"
     break;
 
   case 19:
-#line 178 "project2.y"
+#line 214 "project2.y"
                         {(yyval.value) = new VALUE(*(yyvsp[-2].value) / *(yyvsp[0].value));}
-#line 1378 "y.tab.cpp"
+#line 1413 "y.tab.cpp"
     break;
 
   case 20:
-#line 180 "project2.y"
+#line 216 "project2.y"
                                  {
                 VALUE value;
                 value.valueType = (yyvsp[0].value)->valueType;
@@ -1388,11 +1423,11 @@ yyreduce:
 
                 (yyval.value) = new VALUE(oper('*', *(yyvsp[0].value), value));
             }
-#line 1392 "y.tab.cpp"
+#line 1427 "y.tab.cpp"
     break;
 
 
-#line 1396 "y.tab.cpp"
+#line 1431 "y.tab.cpp"
 
       default: break;
     }
@@ -1586,7 +1621,7 @@ yyreturn:
   return yyresult;
 }
 
-#line 194 "project2.y"
+#line 230 "project2.y"
 
 #include "lex.yy.cpp"
 
@@ -1711,7 +1746,7 @@ int main(int argc, char* argv[]) {
     if(yyin != NULL){
         // output the first start checking message
         DebugLog("========================");
-        DebugLog("Line " + to_string(yylineno) + " Start Checking");
+        DebugLog("Line " + to_string(yylineno) + " Start Checking from main");
 
         // perform parsing
         // error parsing
