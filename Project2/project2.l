@@ -103,8 +103,41 @@ real            [0-9]+"."[0-9]+([Ee][+-]?[0-9]+)?
 {logical}           {AddList(yytext);}
 {assignment}        {AddList(yytext); return yytext[0];}
 
-{keyword}           {AddList(yytext);}
-{typekeyword}       {AddList(yytext);}
+def                 { AddList(yytext); return DEF;}
+
+if                  { AddList(yytext); return IF;}
+                    
+else                { AddList(yytext); return ELSE;}
+
+for                 { AddList(yytext); return FOR;}
+
+print               { AddList(yytext); return PRINT;}
+
+println             { AddList(yytext); return PRINTLN;}
+
+return              { AddList(yytext); return RETURN;}
+
+to                  { AddList(yytext); return TO;}
+
+var                 { AddList(yytext); return VAR;}
+
+val                 { AddList(yytext); return VAL;}
+
+while               { AddList(yytext); return WHILE;}
+
+object              { AddList(yytext); return OBJECT;}
+
+
+boolean             { AddList(yytext); yylval.valueType = new VALUETYPE(VALUETYPE::BOOLEAN); return VALUE_TYPE;}
+
+float               { AddList(yytext); yylval.valueType = new VALUETYPE(VALUETYPE::FLOAT); return VALUE_TYPE;}
+
+int                 { AddList(yytext); yylval.valueType = new VALUETYPE(VALUETYPE::INT); return VALUE_TYPE;}
+
+string              { AddList(yytext); yylval.valueType = new VALUETYPE(VALUETYPE::STRING); return VALUE_TYPE;}
+
+char                { AddList(yytext); yylval.valueType = new VALUETYPE(VALUETYPE::CHAR); return VALUE_TYPE;}
+
 
 {integer}           {
                         AddList(yytext);
@@ -140,6 +173,7 @@ false               {
 {identifier}        {
                         AddList(yytext);
                         yylval.idName = new string(yytext);
+                        
                         return ID_NAME;
                     }
 

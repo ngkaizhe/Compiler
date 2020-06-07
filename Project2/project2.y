@@ -34,11 +34,21 @@ extern FILE* yyin, *yyout;
 // token came from lex with value
 %token <idName> ID_NAME
 %token <value> VALUE_TOKEN
+%token <valueType> VALUE_TYPE
 
 // token came from lex without value
-%token <valueType> VALUE_TYPE
 %token VAR
 %token VAL
+%token DEF
+%token IF
+%token ELSE
+%token FOR
+%token PRINT
+%token PRINTLN
+%token RETURN
+%token TO
+%token WHILE
+%token OBJECT
 
 %type <value> EXP
 
@@ -136,7 +146,7 @@ EXP     :   ID_NAME        {
         |   EXP '-' EXP {$$ = new VALUE(*$1 - *$3);}
         |   EXP '*' EXP {$$ = new VALUE(*$1 * *$3);}
         |   EXP '/' EXP {$$ = new VALUE(*$1 / *$3);}
-        
+
         |   '-' EXP %prec UMINUS {
                 VALUE value;
                 value.valueType = $2->valueType;
