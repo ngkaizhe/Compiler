@@ -122,11 +122,7 @@ FUNCTION_DEFINITION :   DEF ID_NAME
                             // set the functionPtr to current function
                             functionPtr = &functionRef;
                         }
-                        '(' FORMAL_ARGS ')' ':' VALUE_TYPE
-                        {
-                            // set the return type for the function
-                            functionPtr->SetReturnType(*$8);
-                        }
+                        FUNCTION_DEFINITION2
                         '{'
                         {
                             // create the scope
@@ -148,6 +144,13 @@ FUNCTION_DEFINITION :   DEF ID_NAME
                             functionPtr = NULL;
                         }
                         ;
+
+// second part of function definition (<formal_args>) <: type>
+FUNCTION_DEFINITION2    : '(' FORMAL_ARGS ')' ':' VALUE_TYPE
+                        {
+                            // set the return type for the function
+                            functionPtr->SetReturnType(*$5);
+                        }
 
 // insert all parameter into the current scope
 FORMAL_ARGS : ARG ',' FORMAL_ARGS
@@ -181,6 +184,7 @@ RETURN_STMT : RETURN EXP
 // statements
 STMTS   : STMT
         | STMT STMTS
+        |
         ;
 
 // statement
@@ -199,7 +203,6 @@ STMT            : ID_NAME '=' EXP
                 | VALDECLARATION
                 | VARDECLARATION
                 | RETURN_STMT
-                |
                 ;
 
 // constant declaration

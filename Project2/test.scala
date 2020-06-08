@@ -6,4 +6,8 @@ object example{
     {
         return a+b
     }
+
+    def main(){
+        
+    }
 }
