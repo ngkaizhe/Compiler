@@ -458,6 +458,10 @@ VALUE& VALUE::operator[](int idx) {
             answerValue.ival = ivals[idx];
         }
     }
+    else{
+        // error detected
+        throw string("[] operator can only used on array value type!");
+    }
     
     // return successful message
     DebugLog("[] operator detected......OK");

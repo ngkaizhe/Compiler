@@ -87,6 +87,8 @@ char            '([^'\\\n]|\\.)'
 <MULTICOMMENT>.       { AddList(yytext);}
 
 
+"<-"                {AddList(yytext); return FOR_SET;}
+
 {comma}             {AddList(yytext); return yytext[0];}
 {colon}             {AddList(yytext); return yytext[0];}
 {period}            {AddList(yytext); return yytext[0];}

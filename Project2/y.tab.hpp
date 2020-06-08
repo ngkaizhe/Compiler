@@ -70,16 +70,17 @@ extern int yydebug;
     TO = 271,                      /* TO  */
     WHILE = 272,                   /* WHILE  */
     OBJECT = 273,                  /* OBJECT  */
-    AND = 274,                     /* AND  */
-    OR = 275,                      /* OR  */
-    NOT = 276,                     /* NOT  */
-    LT = 277,                      /* LT  */
-    LE = 278,                      /* LE  */
-    EQ = 279,                      /* EQ  */
-    NQ = 280,                      /* NQ  */
-    GE = 281,                      /* GE  */
-    GT = 282,                      /* GT  */
-    UMINUS = 283                   /* UMINUS  */
+    FOR_SET = 274,                 /* FOR_SET  */
+    AND = 275,                     /* AND  */
+    OR = 276,                      /* OR  */
+    NOT = 277,                     /* NOT  */
+    LT = 278,                      /* LT  */
+    LE = 279,                      /* LE  */
+    EQ = 280,                      /* EQ  */
+    NQ = 281,                      /* NQ  */
+    GE = 282,                      /* GE  */
+    GT = 283,                      /* GT  */
+    UMINUS = 284                   /* UMINUS  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -103,16 +104,17 @@ extern int yydebug;
 #define TO 271
 #define WHILE 272
 #define OBJECT 273
-#define AND 274
-#define OR 275
-#define NOT 276
-#define LT 277
-#define LE 278
-#define EQ 279
-#define NQ 280
-#define GE 281
-#define GT 282
-#define UMINUS 283
+#define FOR_SET 274
+#define AND 275
+#define OR 276
+#define NOT 277
+#define LT 278
+#define LE 279
+#define EQ 280
+#define NQ 281
+#define GE 282
+#define GT 283
+#define UMINUS 284
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
@@ -130,7 +132,7 @@ union YYSTYPE
     /* value type*/
     VALUETYPE* valueType;
 
-#line 134 "y.tab.hpp"
+#line 136 "y.tab.hpp"
 
 };
 typedef union YYSTYPE YYSTYPE;

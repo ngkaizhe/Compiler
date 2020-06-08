@@ -4,7 +4,7 @@ object example{
         {
             var arr1: int [10]
             arr1[1] = 5
-        }
+        }{}{}{}{}{}{}{}{}{}{}
         return
     }
 }

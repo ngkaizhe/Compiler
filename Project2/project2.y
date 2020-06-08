@@ -54,6 +54,7 @@ int parameterIndex;
 %token TO
 %token WHILE
 %token OBJECT
+%token FOR_SET
 
 %token AND
 %token OR
@@ -256,7 +257,9 @@ STMT            : ID_NAME '=' EXP
                 {
                     symbolTable.DropSymbol();
                 }
-                
+                |   IF_STMT
+                |   WHILE_STMT
+                |   FOR_STMT
                 ;
 
 // constant declaration
@@ -478,6 +481,34 @@ FUNCTION_CALLED_ARG     : EXP
                         |
                         ;
 
+// if else
+IF_STMT                 : IF '(' EXP ')' 
+                        {
+                            // the exp must be boolean only
+                            if($3->valueType != VALUETYPE::BOOLEAN) yyerror("If Statement only accept boolean expression!");
+                            else    DebugLog("IF statement detected.......OK");
+                        } 
+                        STMT ELSE_STMT
+                        ;
+
+// else statement
+ELSE_STMT               :   ELSE STMT
+                        |
+                        ;
+
+// loops
+// while loops
+WHILE_STMT              : WHILE '(' EXP ')' 
+                        {
+                            // the exp must be boolean only
+                            if($3->valueType != VALUETYPE::BOOLEAN) yyerror("While Statement only accept boolean expression!");
+                            else    DebugLog("While statement detected.......OK");
+                        }
+                        STMT
+                        ;
+
+// for loops
+FOR_STMT                : FOR '(' ID_NAME FOR_SET EXP TO EXP ')' STMT;
 
 %%
 #include "lex.yy.cpp"
