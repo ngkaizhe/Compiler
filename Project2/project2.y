@@ -151,6 +151,12 @@ FUNCTION_DEFINITION2    : '(' FORMAL_ARGS ')' ':' VALUE_TYPE
                             // set the return type for the function
                             functionPtr->SetReturnType(*$5);
                         }
+                        | '(' FORMAL_ARGS ')'
+                        {
+                            // set the return type for the function
+                            functionPtr->SetReturnType(VALUETYPE::VOID);
+                        }
+                        ;
 
 // insert all parameter into the current scope
 FORMAL_ARGS : ARG ',' FORMAL_ARGS
@@ -167,7 +173,9 @@ ARG         : ID_NAME ':' VALUE_TYPE
 
                 // set the parameter to the function id
                 functionPtr->AddParameter(parameterID);
-            };
+            }
+            |
+            ;
 
 // return statement
 RETURN_STMT : RETURN EXP
@@ -365,7 +373,7 @@ FUNCTION_CALLED         : ID_NAME
                             ID& functionID = symbolTable.LookUp(*$1);
                             // check the id type to be function
                             if(functionID.idType == IDTYPE::FUNCTION)
-                                DebugLog("Function Called Detected......OK");
+                                DebugLog("Function Called Detected. Function name is " + functionID.IDName + "......OK");
                             else    yyerror("ID Called wasn't function!");
 
                             // initialize function ptr
@@ -402,7 +410,9 @@ FUNCTION_CALLED_ARG     : VALUE_TOKEN
                             }
                             // finish checking, add paramterIndex
                             parameterIndex++;
-                        };
+                        }
+                        |
+                        ;
 
 
 %%
