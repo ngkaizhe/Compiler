@@ -1,4 +1,5 @@
 ﻿# Compiler Project
+# Github repository -> https://github.com/ngkaizhe/Compiler/tree/master 
 ## Project 1
 ### Instruction
 1. Go to the "Project1" main folder(which have run.sh inside)
