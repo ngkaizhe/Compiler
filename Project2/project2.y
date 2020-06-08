@@ -380,16 +380,20 @@ EXP     :   ID_NAME        {
         |   EXP '/' EXP {$$ = new VALUE(*$1 / *$3);}
 
         |   '-' EXP %prec UMINUS {
-                VALUE value;
-                value.valueType = $2->valueType;
-                if(value.valueType == VALUETYPE::INT) value.ival = -1;
-                else if(value.valueType == VALUETYPE::FLOAT) value.fval = -1;
-                else yyerror("Only float and int can do the unary operation!");
-
-                $$ = new VALUE(oper('*', *$2, value));
+                $$ = new VALUE(-(*$2));
             }
         |   VALUE_TOKEN
         |   FUNCTION_CALLED
+
+        |   EXP OR EXP { $$ = new VALUE(*$1 || *$3);}
+        |   EXP AND EXP { $$ = new VALUE(*$1 && *$3);}
+        |   NOT EXP     { $$ = new VALUE(!(*$2));}
+        |   EXP LT EXP  { $$ = new VALUE(*$1 < *$3);}
+        |   EXP LE EXP  { $$ = new VALUE(*$1 <= *$3);}
+        |   EXP EQ EXP  { $$ = new VALUE(*$1 == *$3);}
+        |   EXP NQ EXP  { $$ = new VALUE(*$1 != *$3);}
+        |   EXP GE EXP  { $$ = new VALUE(*$1 >= *$3);}
+        |   EXP GT EXP  { $$ = new VALUE(*$1 > *$3);}
         ;
 
 // function called to use
