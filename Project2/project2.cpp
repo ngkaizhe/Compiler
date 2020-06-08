@@ -794,7 +794,7 @@ ID& SymbolTable::LookUp(string IDName)
     }
 
     // else look up not found
-    throw string("Error found in function SymbolTable::LookUp(string IDName)\nIDName pass in didn't found in symbol table!\n");
+    throw string("IDName pass in(" + IDName + ") didn't found in symbol table!\n");
 }
 
 ID& SymbolTable::Insert(ID id)

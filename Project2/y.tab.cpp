@@ -663,10 +663,10 @@ static const yytype_int16 yyrline[] =
        0,    90,    90,    98,    89,   119,   122,   123,   128,   139,
      127,   161,   166,   174,   175,   178,   189,   193,   203,   216,
      217,   218,   222,   233,   234,   235,   236,   237,   241,   245,
-     252,   270,   288,   306,   324,   342,   357,   387,   393,   405,
-     406,   407,   408,   410,   413,   414,   416,   417,   418,   419,
-     420,   421,   422,   423,   424,   429,   428,   455,   456,   460,
-     472
+     252,   270,   288,   306,   324,   342,   357,   382,   388,   400,
+     401,   402,   403,   405,   408,   409,   411,   412,   413,   414,
+     415,   416,   417,   418,   419,   424,   423,   450,   451,   455,
+     467
 };
 #endif
 
@@ -1670,31 +1670,26 @@ yyreduce:
                                 // set the array range for id name
                                 // and resize
                                 idRef->value = VALUE(*(yyvsp[-3].valueType), (yyvsp[-1].value)->ival);
-
-                                cout << "==========\n";
-                                cout << "Dump value type of arr : ";
-                                cout << valueTypeToString(idRef->value.valueType) << '\n';
-                                cout << "==========\n";
                             }
                             catch(string s){
                                 yyerror(s.c_str());
                             }
                         }
-#line 1684 "y.tab.cpp"
+#line 1679 "y.tab.cpp"
     break;
 
   case 37:
-#line 387 "project2.y"
+#line 382 "project2.y"
                            {
             // find the id in the symbol table
                 VALUE& idVal = symbolTable.LookUp(*(yyvsp[0].idName)).value;
                 (yyval.value) = new VALUE(idVal);
             }
-#line 1694 "y.tab.cpp"
+#line 1689 "y.tab.cpp"
     break;
 
   case 38:
-#line 394 "project2.y"
+#line 389 "project2.y"
         {
             // id name must be valid
             VALUE& arrID = symbolTable.LookUp(*(yyvsp[-5].idName)).value;
@@ -1706,97 +1701,97 @@ yyreduce:
             arrID[(yyvsp[-3].value)->ival] = *(yyvsp[0].value);
 
         }
-#line 1710 "y.tab.cpp"
+#line 1705 "y.tab.cpp"
     break;
 
   case 39:
-#line 405 "project2.y"
+#line 400 "project2.y"
                         {(yyval.value) = new VALUE(*(yyvsp[-2].value) + *(yyvsp[0].value));}
-#line 1716 "y.tab.cpp"
+#line 1711 "y.tab.cpp"
     break;
 
   case 40:
-#line 406 "project2.y"
+#line 401 "project2.y"
                         {(yyval.value) = new VALUE(*(yyvsp[-2].value) - *(yyvsp[0].value));}
-#line 1722 "y.tab.cpp"
+#line 1717 "y.tab.cpp"
     break;
 
   case 41:
-#line 407 "project2.y"
+#line 402 "project2.y"
                         {(yyval.value) = new VALUE(*(yyvsp[-2].value) * *(yyvsp[0].value));}
-#line 1728 "y.tab.cpp"
+#line 1723 "y.tab.cpp"
     break;
 
   case 42:
-#line 408 "project2.y"
+#line 403 "project2.y"
                         {(yyval.value) = new VALUE(*(yyvsp[-2].value) / *(yyvsp[0].value));}
-#line 1734 "y.tab.cpp"
+#line 1729 "y.tab.cpp"
     break;
 
   case 43:
-#line 410 "project2.y"
+#line 405 "project2.y"
                                  {
                 (yyval.value) = new VALUE(-(*(yyvsp[0].value)));
             }
-#line 1742 "y.tab.cpp"
+#line 1737 "y.tab.cpp"
     break;
 
   case 46:
-#line 416 "project2.y"
+#line 411 "project2.y"
                         { (yyval.value) = new VALUE(!(*(yyvsp[0].value)));}
-#line 1748 "y.tab.cpp"
+#line 1743 "y.tab.cpp"
     break;
 
   case 47:
-#line 417 "project2.y"
+#line 412 "project2.y"
                        { (yyval.value) = new VALUE(*(yyvsp[-2].value) || *(yyvsp[0].value));}
-#line 1754 "y.tab.cpp"
+#line 1749 "y.tab.cpp"
     break;
 
   case 48:
-#line 418 "project2.y"
+#line 413 "project2.y"
                         { (yyval.value) = new VALUE(*(yyvsp[-2].value) && *(yyvsp[0].value));}
-#line 1760 "y.tab.cpp"
+#line 1755 "y.tab.cpp"
     break;
 
   case 49:
-#line 419 "project2.y"
+#line 414 "project2.y"
                         { (yyval.value) = new VALUE(*(yyvsp[-2].value) < *(yyvsp[0].value));}
-#line 1766 "y.tab.cpp"
+#line 1761 "y.tab.cpp"
     break;
 
   case 50:
-#line 420 "project2.y"
+#line 415 "project2.y"
                         { (yyval.value) = new VALUE(*(yyvsp[-2].value) <= *(yyvsp[0].value));}
-#line 1772 "y.tab.cpp"
+#line 1767 "y.tab.cpp"
     break;
 
   case 51:
-#line 421 "project2.y"
+#line 416 "project2.y"
                         { (yyval.value) = new VALUE(*(yyvsp[-2].value) == *(yyvsp[0].value));}
-#line 1778 "y.tab.cpp"
+#line 1773 "y.tab.cpp"
     break;
 
   case 52:
-#line 422 "project2.y"
+#line 417 "project2.y"
                         { (yyval.value) = new VALUE(*(yyvsp[-2].value) != *(yyvsp[0].value));}
-#line 1784 "y.tab.cpp"
+#line 1779 "y.tab.cpp"
     break;
 
   case 53:
-#line 423 "project2.y"
+#line 418 "project2.y"
                         { (yyval.value) = new VALUE(*(yyvsp[-2].value) >= *(yyvsp[0].value));}
-#line 1790 "y.tab.cpp"
+#line 1785 "y.tab.cpp"
     break;
 
   case 54:
-#line 424 "project2.y"
+#line 419 "project2.y"
                         { (yyval.value) = new VALUE(*(yyvsp[-2].value) > *(yyvsp[0].value));}
-#line 1796 "y.tab.cpp"
+#line 1791 "y.tab.cpp"
     break;
 
   case 55:
-#line 429 "project2.y"
+#line 424 "project2.y"
                         {
                             // start to find the id name in the current scope
                             ID& functionID = symbolTable.LookUp(*(yyvsp[0].idName));
@@ -1811,11 +1806,11 @@ yyreduce:
                             // initialize function parameter index
                             parameterIndex = 0;
                         }
-#line 1815 "y.tab.cpp"
+#line 1810 "y.tab.cpp"
     break;
 
   case 56:
-#line 444 "project2.y"
+#line 439 "project2.y"
                         {   
                             // set the function return value to $$, to get change to exp
                             (yyval.value) = new VALUE(functionCalledPtr->retVal);
@@ -1824,11 +1819,11 @@ yyreduce:
                             parameterIndex = 0;
                             functionCalledPtr = NULL;
                         }
-#line 1828 "y.tab.cpp"
+#line 1823 "y.tab.cpp"
     break;
 
   case 59:
-#line 461 "project2.y"
+#line 456 "project2.y"
                         {
                             // check the value token value type against the function paramter index value type
                             if((yyvsp[0].value)->valueType != functionCalledPtr->parameters[parameterIndex]->value.valueType){
@@ -1840,11 +1835,11 @@ yyreduce:
                             // finish checking, add paramterIndex
                             parameterIndex++;
                         }
-#line 1844 "y.tab.cpp"
+#line 1839 "y.tab.cpp"
     break;
 
 
-#line 1848 "y.tab.cpp"
+#line 1843 "y.tab.cpp"
 
       default: break;
     }
@@ -2038,7 +2033,7 @@ yyreturn:
   return yyresult;
 }
 
-#line 476 "project2.y"
+#line 471 "project2.y"
 
 #include "lex.yy.cpp"
 

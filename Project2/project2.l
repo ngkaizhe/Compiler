@@ -20,7 +20,7 @@ bracket         [{}]
 arithmetic      [\+\-*\/]
 
 /*identifiers*/
-identifier      [a-zA-Z][A-za-z0-9]*
+identifier      [a-zA-Z][A-Za-z0-9]*
 /*constants*/
 integer         [0-9]+
 real            [0-9]+"."[0-9]+([Ee][+-]?[0-9]+)?
