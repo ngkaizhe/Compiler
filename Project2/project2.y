@@ -246,6 +246,17 @@ STMT            : ID_NAME '=' EXP
                 {
                     DebugLog("Read function Called!");
                 }
+                |
+
+                '{' 
+                {
+                    symbolTable.CreateSymbol();
+                }
+                STMTS '}'
+                {
+                    symbolTable.DropSymbol();
+                }
+                
                 ;
 
 // constant declaration
