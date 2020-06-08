@@ -174,10 +174,10 @@ public:
     SymbolTable() {};
 
     // create symbol if we reached a new scope
-    void CreateSymbol();
+    void CreateSymbol(bool printMess=true);
 
     // drop symbol for different scope
-    void DropSymbol();
+    void DropSymbol(bool printMess=true);
 
     // look up the id name in the current scope or the larger scope
     ID& LookUp(string IDName);

@@ -771,15 +771,16 @@ void Symbol::Dump()
     }
 }
 
-void SymbolTable::CreateSymbol()
+void SymbolTable::CreateSymbol(bool printMess)
 {
-    DebugLog("New Symbol Created! Means that we have enter a new scope......OK");
+    if(printMess)   DebugLog("New Symbol Created! Means that we have enter a new scope......OK");
     this->validSymbols.push_back(Symbol());
 }
 
-void SymbolTable::DropSymbol()
+void SymbolTable::DropSymbol(bool printMess)
 {
-    DebugLog("Symbol Dropped! Means that we have leave the current scope......OK");
+    if(printMess)   DebugLog("Symbol Dropped! Means that we have leave the current scope......OK");
+    
     Symbol symbol = this->validSymbols.back();
     this->validSymbols.pop_back();
     this->invalidSymbols.push_back(symbol);

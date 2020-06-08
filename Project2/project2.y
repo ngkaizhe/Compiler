@@ -488,11 +488,11 @@ IF_STMT                 : IF '(' EXP ')'
                             if($3->valueType != VALUETYPE::BOOLEAN) yyerror("If Statement only accept boolean expression!");
                             else    DebugLog("IF statement detected.......OK");
                         } 
-                        { symbolTable.CreateSymbol();} STMT { symbolTable.DropSymbol();} ELSE_STMT
+                        { symbolTable.CreateSymbol(false);} STMT { symbolTable.DropSymbol(false);} ELSE_STMT
                         ;
 
 // else statement
-ELSE_STMT               :   ELSE { symbolTable.CreateSymbol();} STMT { symbolTable.DropSymbol();}
+ELSE_STMT               :   ELSE { symbolTable.CreateSymbol(false);} STMT { symbolTable.DropSymbol(false);}
                         |
                         ;
 
@@ -504,7 +504,7 @@ WHILE_STMT              : WHILE '(' EXP ')'
                             if($3->valueType != VALUETYPE::BOOLEAN) yyerror("While Statement only accept boolean expression!");
                             else    DebugLog("While statement detected.......OK");
 
-                        }{ symbolTable.CreateSymbol();} STMT { symbolTable.DropSymbol();}
+                        }{ symbolTable.CreateSymbol(false);} STMT { symbolTable.DropSymbol(false);}
                         ;
 
 // for loops
@@ -518,14 +518,14 @@ FOR_STMT                : FOR '(' ID_NAME FOR_SET EXP TO EXP ')'
                                 yyerror("Terminate value of for loop only can be int!");
                             }
                             // create a new symbol first
-                            symbolTable.CreateSymbol();
+                            symbolTable.CreateSymbol(false);
 
                             ID forID;
                             forID.SetToVar(*$3);
                             forID.value = *$5;
                             symbolTable.Insert(forID);
 
-                        } STMT { symbolTable.DropSymbol();}
+                        } STMT { symbolTable.DropSymbol(false);}
                         ;
 
 %%
