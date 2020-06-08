@@ -469,6 +469,214 @@ VALUE& VALUE::operator[](int idx) {
     return answerValue;
 }
 
+VALUE operator||(const VALUE& lhs, const VALUE& rhs){
+    // only boolean value can do or operation
+    if(lhs.valueType == VALUETYPE::BOOLEAN && rhs.valueType == VALUETYPE::BOOLEAN){
+        DebugLog("<BOOLEAN> || <BOOLEAN> detected!......OK");
+        VALUE answer;
+        answer.valueType = VALUETYPE::BOOLEAN;
+        answer.bval = (lhs.bval || rhs.bval);
+        return answer;
+    }
+    else{
+        throw string("Only boolean value type can do OR operation!");
+    }
+}
+
+VALUE operator&&(const VALUE& lhs, const VALUE& rhs){
+    // only boolean value can do and operation
+    if(lhs.valueType == VALUETYPE::BOOLEAN && rhs.valueType == VALUETYPE::BOOLEAN){
+        DebugLog("<BOOLEAN> && <BOOLEAN> detected!......OK");
+        VALUE answer;
+        answer.valueType = VALUETYPE::BOOLEAN;
+        answer.bval = (lhs.bval && rhs.bval);
+        return answer;
+    }
+    else{
+        throw string("Only boolean value type can do AND operation!");
+    }
+}
+
+VALUE operator<(const VALUE& lhs, const VALUE& rhs){
+    // comparation operator must be same value type
+    if(lhs.valueType != rhs.valueType) throw string("Less than operation can only work on same value type");
+
+    if(lhs.valueType == VALUETYPE::FLOAT){
+        DebugLog("<FLAOT> < <FLOAT> detected!......OK");
+        return VALUE(lhs.fval < rhs.fval);
+    }
+
+    else if(lhs.valueType == VALUETYPE::INT){
+        DebugLog("<INT> < <INT> detected!......OK");
+        return VALUE(lhs.ival < rhs.ival);
+    }
+
+    else{
+        throw string("Only int and float can do LESS THAN operation!");
+    }
+}
+
+VALUE operator<=(const VALUE& lhs, const VALUE& rhs){
+    // comparation operator must be same value type
+    if(lhs.valueType != rhs.valueType) throw string("Less or equal than operation can only work on same value type");
+
+    if(lhs.valueType == VALUETYPE::FLOAT){
+        DebugLog("<FLAOT> <= <FLOAT> detected!......OK");
+        return VALUE(lhs.fval <= rhs.fval);
+    }
+
+    else if(lhs.valueType == VALUETYPE::INT){
+        DebugLog("<INT> <= <INT> detected!......OK");
+        return VALUE(lhs.ival <= rhs.ival);
+    }
+
+    else{
+        throw string("Only int and float can do Less or equal than operation!");
+    }
+}
+
+VALUE operator>(const VALUE& lhs, const VALUE& rhs){
+    // comparation operator must be same value type
+    if(lhs.valueType != rhs.valueType) throw string("Greater than operation can only work on same value type");
+
+    if(lhs.valueType == VALUETYPE::FLOAT){
+        DebugLog("<FLAOT> > <FLOAT> detected!......OK");
+        return VALUE(lhs.fval > rhs.fval);
+    }
+
+    else if(lhs.valueType == VALUETYPE::INT){
+        DebugLog("<INT> > <INT> detected!......OK");
+        return VALUE(lhs.ival > rhs.ival);
+    }
+
+    else{
+        throw string("Only int and float can do Greater than operation!");
+    }
+}
+
+VALUE operator>=(const VALUE& lhs, const VALUE& rhs){
+    // comparation operator must be same value type
+    if(lhs.valueType != rhs.valueType) throw string("Greater or equal than operation can only work on same value type");
+
+    if(lhs.valueType == VALUETYPE::FLOAT){
+        DebugLog("<FLAOT> >= <FLOAT> detected!......OK");
+        return VALUE(lhs.fval >= rhs.fval);
+    }
+
+    else if(lhs.valueType == VALUETYPE::INT){
+        DebugLog("<INT> >= <INT> detected!......OK");
+        return VALUE(lhs.ival >= rhs.ival);
+    }
+
+    else{
+        throw string("Only int and float can do Greater or equal than operation!");
+    }
+}
+
+VALUE operator==(const VALUE& lhs, const VALUE& rhs){
+    // comparation operator must be same value type
+    if(lhs.valueType != rhs.valueType) throw string("Equal operation can only work on same value type");
+
+    if(lhs.valueType == VALUETYPE::FLOAT){
+        DebugLog("<FLAOT> == <FLOAT> detected!......OK");
+        return VALUE(lhs.fval == rhs.fval);
+    }
+
+    else if(lhs.valueType == VALUETYPE::INT){
+        DebugLog("<INT> == <INT> detected!......OK");
+        return VALUE(lhs.ival == rhs.ival);
+    }
+
+    else if(lhs.valueType == VALUETYPE::BOOLEAN){
+        DebugLog("<BOOLEAN> == <BOOLEAN> detected!......OK");
+        return VALUE(lhs.bval == rhs.bval);
+    }
+
+    else if(lhs.valueType == VALUETYPE::STRING){
+        DebugLog("<STRING> == <STRING> detected!......OK");
+        return VALUE(lhs.sval == rhs.sval);
+    }
+
+    else if(lhs.valueType == VALUETYPE::CHAR){
+        DebugLog("<CHAR> == <CHAR> detected!......OK");
+        return VALUE(lhs.cval == rhs.cval);
+    }
+
+    else{
+        throw string("Only int, float, string, char, and boolean can do equal operation!");
+    }
+}
+
+VALUE operator!=(const VALUE& lhs, const VALUE& rhs){
+    // comparation operator must be same value type
+    if(lhs.valueType != rhs.valueType) throw string("Non Equal operation can only work on same value type");
+
+    if(lhs.valueType == VALUETYPE::FLOAT){
+        DebugLog("<FLAOT> != <FLOAT> detected!......OK");
+        return VALUE(lhs.fval != rhs.fval);
+    }
+
+    else if(lhs.valueType == VALUETYPE::INT){
+        DebugLog("<INT> != <INT> detected!......OK");
+        return VALUE(lhs.ival != rhs.ival);
+    }
+
+    else if(lhs.valueType == VALUETYPE::BOOLEAN){
+        DebugLog("<BOOLEAN> != <BOOLEAN> detected!......OK");
+        return VALUE(lhs.bval != rhs.bval);
+    }
+
+    else if(lhs.valueType == VALUETYPE::STRING){
+        DebugLog("<STRING> != <STRING> detected!......OK");
+        return VALUE(lhs.sval != rhs.sval);
+    }
+
+    else if(lhs.valueType == VALUETYPE::CHAR){
+        DebugLog("<CHAR> != <CHAR> detected!......OK");
+        return VALUE(lhs.cval != rhs.cval);
+    }
+
+    else{
+        throw string("Only int, float, string, char, and boolean can do Non Equal operation!");
+    }
+}
+
+// unary operators
+VALUE VALUE::operator-(){
+    // only float and int value can do minus unary operation
+    if(this->valueType == VALUETYPE::INT){
+        DebugLog("Value type int is doing MINUS unary operation......OK");
+        VALUE answer;
+        answer.valueType = VALUETYPE::INT;
+        answer.ival = -this->ival;
+        return answer;
+    }
+    if(this->valueType == VALUETYPE::FLOAT){
+        DebugLog("Value type float is doing MINUS unary operation......OK");
+        VALUE answer;
+        answer.valueType = VALUETYPE::FLOAT;
+        answer.fval = -this->fval;
+        return answer;
+    }
+    else{
+        throw string("Only int and float value type can do MINUS unary operation!");
+    }
+}
+
+VALUE VALUE::operator!(){
+    // only boolean value can do or operation
+    if(this->valueType == VALUETYPE::BOOLEAN){
+        DebugLog("Value type boolean is doing NOT unary operation......OK");
+        VALUE answer;
+        answer.valueType = VALUETYPE::BOOLEAN;
+        answer.bval = !this->bval;
+        return answer;
+    }
+    else{
+        throw string("Only boolean value type can do NOT unary operation!");
+    }
+}
+
 // return value type string
 string VALUE::ValueTypeString() {
     return valueTypeToString(valueType);

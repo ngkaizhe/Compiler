@@ -55,12 +55,25 @@ public:
     VALUE(VALUETYPE valueType, int range);
 
     // operator overloading
+    // mathematics
     friend VALUE operator+(const VALUE& lhs, const VALUE& rhs);
     friend VALUE operator-(const VALUE& lhs, const VALUE& rhs);
     friend VALUE operator*(const VALUE& lhs, const VALUE& rhs);
     friend VALUE operator/(const VALUE& lhs, const VALUE& rhs);
     friend VALUE operator%(const VALUE& lhs, const VALUE& rhs);
     VALUE& operator[](int idx);
+    // logical operators
+    friend VALUE operator||(const VALUE& lhs, const VALUE& rhs);
+    friend VALUE operator&&(const VALUE& lhs, const VALUE& rhs);
+    friend VALUE operator<(const VALUE& lhs, const VALUE& rhs);
+    friend VALUE operator<=(const VALUE& lhs, const VALUE& rhs);
+    friend VALUE operator>(const VALUE& lhs, const VALUE& rhs);
+    friend VALUE operator>=(const VALUE& lhs, const VALUE& rhs);
+    friend VALUE operator==(const VALUE& lhs, const VALUE& rhs);
+    friend VALUE operator!=(const VALUE& lhs, const VALUE& rhs);
+    // unary operators
+    VALUE operator-();
+    VALUE operator!();
 
     // return value type string
     string ValueTypeString();

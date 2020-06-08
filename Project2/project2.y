@@ -97,7 +97,13 @@ PROGRAM     :   OBJECT ID_NAME
                 OBJCONTENT '}'
             {
                 // check whether their are main function inside
-                // symbolTable.LookUp("main");
+                try{
+                    symbolTable.LookUp("main");
+                }
+                catch(string s){
+                    yyerror("The object content must have the main function!");
+                }
+
                 // drop the symbol table
                 symbolTable.DropSymbol();
                 DebugLog("Object definition end!");
