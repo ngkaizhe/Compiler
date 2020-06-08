@@ -510,8 +510,22 @@ WHILE_STMT              : WHILE '(' EXP ')'
 // for loops
 FOR_STMT                : FOR '(' ID_NAME FOR_SET EXP TO EXP ')' 
                         {
-                            
-                        }{ symbolTable.CreateSymbol();} STMT { symbolTable.DropSymbol();}
+                            // both exp must be only int expression
+                            if($5->valueType != VALUETYPE::INT){
+                                yyerror("Assignment of for loop only can be int!");
+                            }
+                            if($7->valueType != VALUETYPE::INT){
+                                yyerror("Terminate value of for loop only can be int!");
+                            }
+                            // create a new symbol first
+                            symbolTable.CreateSymbol();
+
+                            ID forID;
+                            forID.SetToVar(*$3);
+                            forID.value = *$5;
+                            symbolTable.Insert(forID);
+
+                        } STMT { symbolTable.DropSymbol();}
                         ;
 
 %%
