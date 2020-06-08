@@ -1916,25 +1916,25 @@ yyreduce:
 
   case 67:
 #line 491 "project2.y"
-                        { symbolTable.CreateSymbol();}
+                        { symbolTable.CreateSymbol(false);}
 #line 1921 "y.tab.cpp"
     break;
 
   case 68:
 #line 491 "project2.y"
-                                                            { symbolTable.DropSymbol();}
+                                                                 { symbolTable.DropSymbol(false);}
 #line 1927 "y.tab.cpp"
     break;
 
   case 70:
 #line 495 "project2.y"
-                                 { symbolTable.CreateSymbol();}
+                                 { symbolTable.CreateSymbol(false);}
 #line 1933 "y.tab.cpp"
     break;
 
   case 71:
 #line 495 "project2.y"
-                                                                     { symbolTable.DropSymbol();}
+                                                                          { symbolTable.DropSymbol(false);}
 #line 1939 "y.tab.cpp"
     break;
 
@@ -1951,13 +1951,13 @@ yyreduce:
 
   case 74:
 #line 507 "project2.y"
-                         { symbolTable.CreateSymbol();}
+                         { symbolTable.CreateSymbol(false);}
 #line 1956 "y.tab.cpp"
     break;
 
   case 75:
 #line 507 "project2.y"
-                                                             { symbolTable.DropSymbol();}
+                                                                  { symbolTable.DropSymbol(false);}
 #line 1962 "y.tab.cpp"
     break;
 
@@ -1972,7 +1972,7 @@ yyreduce:
                                 yyerror("Terminate value of for loop only can be int!");
                             }
                             // create a new symbol first
-                            symbolTable.CreateSymbol();
+                            symbolTable.CreateSymbol(false);
 
                             ID forID;
                             forID.SetToVar(*(yyvsp[-5].idName));
@@ -1985,7 +1985,7 @@ yyreduce:
 
   case 77:
 #line 528 "project2.y"
-                               { symbolTable.DropSymbol();}
+                               { symbolTable.DropSymbol(false);}
 #line 1990 "y.tab.cpp"
     break;
 
