@@ -72,6 +72,10 @@ int parameterIndex;
 
 /* associativity of operators */
 %right '='
+%left OR
+%left AND
+%left NOT
+%left LT LE EQ GT GE NQ
 %left '-' '+'
 %left '*' '/'
 %nonassoc UMINUS
@@ -569,9 +573,16 @@ int main(int argc, char* argv[]) {
     if(yyin != NULL){
         // perform parsing
         // error parsing
-        if(yyparse() == 1){
-            yyerror("Parsing error! ");
+        try{
+            if(yyparse() == 1)
+            {
+                yyerror("Parsing error! ");
+            }
         }
+        catch(string s){
+            yyerror(s.c_str());
+        } 
+        
 
         fclose(yyin);
         fclose(yyout);

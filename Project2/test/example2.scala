@@ -37,7 +37,7 @@ object example{
 
         // string
         s1 == s2
-        s1 != s2
+        s1 != s3
 
         // char
         c1 == c2
