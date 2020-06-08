@@ -211,6 +211,14 @@ STMT            : ID_NAME '=' EXP
                 | VALDECLARATION
                 | VARDECLARATION
                 | RETURN_STMT
+                | PRINT '(' EXP ')'
+                {
+                    DebugLog("Print function Called!");
+                }
+                | PRINTLN '(' EXP ')'
+                {
+                    DebugLog("Println function Called!");
+                }
                 ;
 
 // constant declaration
@@ -399,7 +407,7 @@ FUNCTION_CALLED_ARGS    : FUNCTION_CALLED_ARG ',' FUNCTION_CALLED_ARGS
                         ;
 
 // function called argument
-FUNCTION_CALLED_ARG     : VALUE_TOKEN
+FUNCTION_CALLED_ARG     : EXP
                         {
                             // check the value token value type against the function paramter index value type
                             if($1->valueType != functionPtr->parameters[parameterIndex]->value.valueType){
