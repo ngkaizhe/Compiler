@@ -15,6 +15,8 @@ extern FILE* yyin, *yyout;
 
 // function name to dynamic tracking current function scope
 ID* functionPtr;
+/* function called check parameter index*/
+int parameterIndex;
 %}
 
 %union{
@@ -63,6 +65,7 @@ ID* functionPtr;
 %token GT
 
 %type <value> EXP
+%type <value> FUNCTION_CALLED
 
 %token UMINUS
 
@@ -178,7 +181,6 @@ RETURN_STMT : RETURN EXP
 // statements
 STMTS   : STMT
         | STMT STMTS
-        |
         ;
 
 // statement
@@ -197,6 +199,7 @@ STMT            : ID_NAME '=' EXP
                 | VALDECLARATION
                 | VARDECLARATION
                 | RETURN_STMT
+                |
                 ;
 
 // constant declaration
@@ -349,8 +352,54 @@ EXP     :   ID_NAME        {
                 $$ = new VALUE(oper('*', *$2, value));
             }
         |   VALUE_TOKEN
+        |   FUNCTION_CALLED
         ;
 
+// function called to use
+FUNCTION_CALLED         : ID_NAME 
+                        {
+                            // start to find the id name in the current scope
+                            ID& functionID = symbolTable.LookUp(*$1);
+                            // check the id type to be function
+                            if(functionID.idType == IDTYPE::FUNCTION)
+                                DebugLog("Function Called Detected......OK");
+                            else    yyerror("ID Called wasn't function!");
+
+                            // initialize function ptr
+                            functionPtr = &functionID;
+
+                            // initialize function parameter index
+                            parameterIndex = 0;
+                        }
+                        '(' FUNCTION_CALLED_ARGS ')' 
+                        {   
+                            // set the function return value to $$, to get change to exp
+                            $$ = new VALUE(functionPtr->retVal);
+                            
+                            // finish checking all function parameter, reset the parameter index and function pointer
+                            parameterIndex = 0;
+                            functionPtr = NULL;
+                        }
+                        ;
+
+// function called arguments
+FUNCTION_CALLED_ARGS    : FUNCTION_CALLED_ARG ',' FUNCTION_CALLED_ARGS
+                        | FUNCTION_CALLED_ARG
+                        ;
+
+// function called argument
+FUNCTION_CALLED_ARG     : VALUE_TOKEN
+                        {
+                            // check the value token value type against the function paramter index value type
+                            if($1->valueType != functionPtr->parameters[parameterIndex]->value.valueType){
+                                yyerror(("Function called parameter " + to_string(parameterIndex) + ", doesn't have the correct value type!").c_str());
+                            }
+                            else{
+                                DebugLog("Function called parameter " + to_string(parameterIndex) + ", Checked......OK");
+                            }
+                            // finish checking, add paramterIndex
+                            parameterIndex++;
+                        };
 
 
 %%

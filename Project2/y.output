@@ -1,0 +1,1024 @@
+Terminals unused in grammar
+
+    IF
+    ELSE
+    FOR
+    PRINT
+    PRINTLN
+    TO
+    WHILE
+    AND
+    OR
+    NOT
+    LT
+    LE
+    EQ
+    NQ
+    GE
+    GT
+
+
+State 7 conflicts: 6 shift/reduce
+State 17 conflicts: 6 shift/reduce, 2 reduce/reduce
+State 20 conflicts: 1 shift/reduce
+State 27 conflicts: 1 shift/reduce
+State 81 conflicts: 6 shift/reduce
+
+
+Grammar
+
+    0 $accept: PROGRAM $end
+
+    1 $@1: %empty
+
+    2 $@2: %empty
+
+    3 PROGRAM: OBJECT ID_NAME $@1 '{' $@2 OBJCONTENT '}'
+
+    4 OBJCONTENT: STMTS FUNCTION_DEFINITIONS
+
+    5 FUNCTION_DEFINITIONS: FUNCTION_DEFINITION FUNCTION_DEFINITIONS
+    6                     | FUNCTION_DEFINITION
+
+    7 $@3: %empty
+
+    8 $@4: %empty
+
+    9 $@5: %empty
+
+   10 FUNCTION_DEFINITION: DEF ID_NAME $@3 '(' FORMAL_ARGS ')' ':' VALUE_TYPE $@4 '{' $@5 STMTS '}'
+
+   11 FORMAL_ARGS: ARG ',' FORMAL_ARGS
+   12            | ARG
+
+   13 ARG: ID_NAME ':' VALUE_TYPE
+
+   14 RETURN_STMT: RETURN EXP
+
+   15 STMTS: STMT
+   16      | STMT STMTS
+
+   17 STMT: ID_NAME '=' EXP
+   18     | EXP
+   19     | VALDECLARATION
+   20     | VARDECLARATION
+   21     | RETURN_STMT
+   22     | %empty
+
+   23 VALDECLARATION: VAL ID_NAME ':' VALUE_TYPE '=' VALUE_TOKEN
+   24               | VAL ID_NAME '=' VALUE_TOKEN
+
+   25 VARDECLARATION: VAR ID_NAME ':' VALUE_TYPE
+   26               | VAR ID_NAME '=' VALUE_TOKEN
+   27               | VAR ID_NAME ':' VALUE_TYPE '=' VALUE_TOKEN
+   28               | VAR ID_NAME
+   29               | VAR ID_NAME ':' VALUE_TYPE '[' VALUE_TOKEN ']'
+
+   30 EXP: ID_NAME
+   31    | EXP '+' EXP
+   32    | EXP '-' EXP
+   33    | EXP '*' EXP
+   34    | EXP '/' EXP
+   35    | '-' EXP
+   36    | VALUE_TOKEN
+   37    | FUNCTION_CALLED
+
+   38 $@6: %empty
+
+   39 FUNCTION_CALLED: ID_NAME $@6 '(' FUNCTION_CALLED_ARGS ')'
+
+   40 FUNCTION_CALLED_ARGS: FUNCTION_CALLED_ARG ',' FUNCTION_CALLED_ARGS
+   41                     | FUNCTION_CALLED_ARG
+
+   42 FUNCTION_CALLED_ARG: VALUE_TOKEN
+
+
+Terminals, with rules where they appear
+
+    $end (0) 0
+    '(' (40) 10 39
+    ')' (41) 10 39
+    '*' (42) 33
+    '+' (43) 31
+    ',' (44) 11 40
+    '-' (45) 32 35
+    '/' (47) 34
+    ':' (58) 10 13 23 25 27 29
+    '=' (61) 17 23 24 26 27
+    '[' (91) 29
+    ']' (93) 29
+    '{' (123) 3 10
+    '}' (125) 3 10
+    error (256)
+    ID_NAME <idName> (258) 3 10 13 17 23 24 25 26 27 28 29 30 39
+    VALUE_TOKEN <value> (259) 23 24 26 27 29 36 42
+    VALUE_TYPE <valueType> (260) 10 13 23 25 27 29
+    VAR (261) 25 26 27 28 29
+    VAL (262) 23 24
+    DEF (263) 10
+    IF (264)
+    ELSE (265)
+    FOR (266)
+    PRINT (267)
+    PRINTLN (268)
+    RETURN (269) 14
+    TO (270)
+    WHILE (271)
+    OBJECT (272) 3
+    AND (273)
+    OR (274)
+    NOT (275)
+    LT (276)
+    LE (277)
+    EQ (278)
+    NQ (279)
+    GE (280)
+    GT (281)
+    UMINUS (282)
+
+
+Nonterminals, with rules where they appear
+
+    $accept (41)
+        on left: 0
+    PROGRAM (42)
+        on left: 3
+        on right: 0
+    $@1 (43)
+        on left: 1
+        on right: 3
+    $@2 (44)
+        on left: 2
+        on right: 3
+    OBJCONTENT (45)
+        on left: 4
+        on right: 3
+    FUNCTION_DEFINITIONS (46)
+        on left: 5 6
+        on right: 4 5
+    FUNCTION_DEFINITION (47)
+        on left: 10
+        on right: 5 6
+    $@3 (48)
+        on left: 7
+        on right: 10
+    $@4 (49)
+        on left: 8
+        on right: 10
+    $@5 (50)
+        on left: 9
+        on right: 10
+    FORMAL_ARGS (51)
+        on left: 11 12
+        on right: 10 11
+    ARG (52)
+        on left: 13
+        on right: 11 12
+    RETURN_STMT (53)
+        on left: 14
+        on right: 21
+    STMTS (54)
+        on left: 15 16
+        on right: 4 10 16
+    STMT (55)
+        on left: 17 18 19 20 21 22
+        on right: 15 16
+    VALDECLARATION (56)
+        on left: 23 24
+        on right: 19
+    VARDECLARATION (57)
+        on left: 25 26 27 28 29
+        on right: 20
+    EXP <value> (58)
+        on left: 30 31 32 33 34 35 36 37
+        on right: 14 17 18 31 32 33 34 35
+    FUNCTION_CALLED <value> (59)
+        on left: 39
+        on right: 37
+    $@6 (60)
+        on left: 38
+        on right: 39
+    FUNCTION_CALLED_ARGS (61)
+        on left: 40 41
+        on right: 39 40
+    FUNCTION_CALLED_ARG (62)
+        on left: 42
+        on right: 40 41
+
+
+State 0
+
+    0 $accept: . PROGRAM $end
+
+    OBJECT  shift, and go to state 1
+
+    PROGRAM  go to state 2
+
+
+State 1
+
+    3 PROGRAM: OBJECT . ID_NAME $@1 '{' $@2 OBJCONTENT '}'
+
+    ID_NAME  shift, and go to state 3
+
+
+State 2
+
+    0 $accept: PROGRAM . $end
+
+    $end  shift, and go to state 4
+
+
+State 3
+
+    3 PROGRAM: OBJECT ID_NAME . $@1 '{' $@2 OBJCONTENT '}'
+
+    $default  reduce using rule 1 ($@1)
+
+    $@1  go to state 5
+
+
+State 4
+
+    0 $accept: PROGRAM $end .
+
+    $default  accept
+
+
+State 5
+
+    3 PROGRAM: OBJECT ID_NAME $@1 . '{' $@2 OBJCONTENT '}'
+
+    '{'  shift, and go to state 6
+
+
+State 6
+
+    3 PROGRAM: OBJECT ID_NAME $@1 '{' . $@2 OBJCONTENT '}'
+
+    $default  reduce using rule 2 ($@2)
+
+    $@2  go to state 7
+
+
+State 7
+
+    3 PROGRAM: OBJECT ID_NAME $@1 '{' $@2 . OBJCONTENT '}'
+
+    ID_NAME      shift, and go to state 8
+    VALUE_TOKEN  shift, and go to state 9
+    VAR          shift, and go to state 10
+    VAL          shift, and go to state 11
+    RETURN       shift, and go to state 12
+    '-'          shift, and go to state 13
+
+    ID_NAME      [reduce using rule 22 (STMT)]
+    VALUE_TOKEN  [reduce using rule 22 (STMT)]
+    VAR          [reduce using rule 22 (STMT)]
+    VAL          [reduce using rule 22 (STMT)]
+    RETURN       [reduce using rule 22 (STMT)]
+    '-'          [reduce using rule 22 (STMT)]
+    $default     reduce using rule 22 (STMT)
+
+    OBJCONTENT       go to state 14
+    RETURN_STMT      go to state 15
+    STMTS            go to state 16
+    STMT             go to state 17
+    VALDECLARATION   go to state 18
+    VARDECLARATION   go to state 19
+    EXP              go to state 20
+    FUNCTION_CALLED  go to state 21
+
+
+State 8
+
+   17 STMT: ID_NAME . '=' EXP
+   30 EXP: ID_NAME .
+   39 FUNCTION_CALLED: ID_NAME . $@6 '(' FUNCTION_CALLED_ARGS ')'
+
+    '='  shift, and go to state 22
+
+    '('       reduce using rule 38 ($@6)
+    $default  reduce using rule 30 (EXP)
+
+    $@6  go to state 23
+
+
+State 9
+
+   36 EXP: VALUE_TOKEN .
+
+    $default  reduce using rule 36 (EXP)
+
+
+State 10
+
+   25 VARDECLARATION: VAR . ID_NAME ':' VALUE_TYPE
+   26               | VAR . ID_NAME '=' VALUE_TOKEN
+   27               | VAR . ID_NAME ':' VALUE_TYPE '=' VALUE_TOKEN
+   28               | VAR . ID_NAME
+   29               | VAR . ID_NAME ':' VALUE_TYPE '[' VALUE_TOKEN ']'
+
+    ID_NAME  shift, and go to state 24
+
+
+State 11
+
+   23 VALDECLARATION: VAL . ID_NAME ':' VALUE_TYPE '=' VALUE_TOKEN
+   24               | VAL . ID_NAME '=' VALUE_TOKEN
+
+    ID_NAME  shift, and go to state 25
+
+
+State 12
+
+   14 RETURN_STMT: RETURN . EXP
+
+    ID_NAME      shift, and go to state 26
+    VALUE_TOKEN  shift, and go to state 9
+    '-'          shift, and go to state 13
+
+    EXP              go to state 27
+    FUNCTION_CALLED  go to state 21
+
+
+State 13
+
+   35 EXP: '-' . EXP
+
+    ID_NAME      shift, and go to state 26
+    VALUE_TOKEN  shift, and go to state 9
+    '-'          shift, and go to state 13
+
+    EXP              go to state 28
+    FUNCTION_CALLED  go to state 21
+
+
+State 14
+
+    3 PROGRAM: OBJECT ID_NAME $@1 '{' $@2 OBJCONTENT . '}'
+
+    '}'  shift, and go to state 29
+
+
+State 15
+
+   21 STMT: RETURN_STMT .
+
+    $default  reduce using rule 21 (STMT)
+
+
+State 16
+
+    4 OBJCONTENT: STMTS . FUNCTION_DEFINITIONS
+
+    DEF  shift, and go to state 30
+
+    FUNCTION_DEFINITIONS  go to state 31
+    FUNCTION_DEFINITION   go to state 32
+
+
+State 17
+
+   15 STMTS: STMT .
+   16      | STMT . STMTS
+
+    ID_NAME      shift, and go to state 8
+    VALUE_TOKEN  shift, and go to state 9
+    VAR          shift, and go to state 10
+    VAL          shift, and go to state 11
+    RETURN       shift, and go to state 12
+    '-'          shift, and go to state 13
+
+    ID_NAME      [reduce using rule 22 (STMT)]
+    VALUE_TOKEN  [reduce using rule 22 (STMT)]
+    VAR          [reduce using rule 22 (STMT)]
+    VAL          [reduce using rule 22 (STMT)]
+    DEF          reduce using rule 15 (STMTS)
+    DEF          [reduce using rule 22 (STMT)]
+    RETURN       [reduce using rule 22 (STMT)]
+    '-'          [reduce using rule 22 (STMT)]
+    '}'          reduce using rule 15 (STMTS)
+    '}'          [reduce using rule 22 (STMT)]
+    $default     reduce using rule 15 (STMTS)
+
+    RETURN_STMT      go to state 15
+    STMTS            go to state 33
+    STMT             go to state 17
+    VALDECLARATION   go to state 18
+    VARDECLARATION   go to state 19
+    EXP              go to state 20
+    FUNCTION_CALLED  go to state 21
+
+
+State 18
+
+   19 STMT: VALDECLARATION .
+
+    $default  reduce using rule 19 (STMT)
+
+
+State 19
+
+   20 STMT: VARDECLARATION .
+
+    $default  reduce using rule 20 (STMT)
+
+
+State 20
+
+   18 STMT: EXP .
+   31 EXP: EXP . '+' EXP
+   32    | EXP . '-' EXP
+   33    | EXP . '*' EXP
+   34    | EXP . '/' EXP
+
+    '-'  shift, and go to state 34
+    '+'  shift, and go to state 35
+    '*'  shift, and go to state 36
+    '/'  shift, and go to state 37
+
+    '-'       [reduce using rule 18 (STMT)]
+    $default  reduce using rule 18 (STMT)
+
+
+State 21
+
+   37 EXP: FUNCTION_CALLED .
+
+    $default  reduce using rule 37 (EXP)
+
+
+State 22
+
+   17 STMT: ID_NAME '=' . EXP
+
+    ID_NAME      shift, and go to state 26
+    VALUE_TOKEN  shift, and go to state 9
+    '-'          shift, and go to state 13
+
+    EXP              go to state 38
+    FUNCTION_CALLED  go to state 21
+
+
+State 23
+
+   39 FUNCTION_CALLED: ID_NAME $@6 . '(' FUNCTION_CALLED_ARGS ')'
+
+    '('  shift, and go to state 39
+
+
+State 24
+
+   25 VARDECLARATION: VAR ID_NAME . ':' VALUE_TYPE
+   26               | VAR ID_NAME . '=' VALUE_TOKEN
+   27               | VAR ID_NAME . ':' VALUE_TYPE '=' VALUE_TOKEN
+   28               | VAR ID_NAME .
+   29               | VAR ID_NAME . ':' VALUE_TYPE '[' VALUE_TOKEN ']'
+
+    '='  shift, and go to state 40
+    ':'  shift, and go to state 41
+
+    $default  reduce using rule 28 (VARDECLARATION)
+
+
+State 25
+
+   23 VALDECLARATION: VAL ID_NAME . ':' VALUE_TYPE '=' VALUE_TOKEN
+   24               | VAL ID_NAME . '=' VALUE_TOKEN
+
+    '='  shift, and go to state 42
+    ':'  shift, and go to state 43
+
+
+State 26
+
+   30 EXP: ID_NAME .
+   39 FUNCTION_CALLED: ID_NAME . $@6 '(' FUNCTION_CALLED_ARGS ')'
+
+    '('       reduce using rule 38 ($@6)
+    $default  reduce using rule 30 (EXP)
+
+    $@6  go to state 23
+
+
+State 27
+
+   14 RETURN_STMT: RETURN EXP .
+   31 EXP: EXP . '+' EXP
+   32    | EXP . '-' EXP
+   33    | EXP . '*' EXP
+   34    | EXP . '/' EXP
+
+    '-'  shift, and go to state 34
+    '+'  shift, and go to state 35
+    '*'  shift, and go to state 36
+    '/'  shift, and go to state 37
+
+    '-'       [reduce using rule 14 (RETURN_STMT)]
+    $default  reduce using rule 14 (RETURN_STMT)
+
+
+State 28
+
+   31 EXP: EXP . '+' EXP
+   32    | EXP . '-' EXP
+   33    | EXP . '*' EXP
+   34    | EXP . '/' EXP
+   35    | '-' EXP .
+
+    $default  reduce using rule 35 (EXP)
+
+
+State 29
+
+    3 PROGRAM: OBJECT ID_NAME $@1 '{' $@2 OBJCONTENT '}' .
+
+    $default  reduce using rule 3 (PROGRAM)
+
+
+State 30
+
+   10 FUNCTION_DEFINITION: DEF . ID_NAME $@3 '(' FORMAL_ARGS ')' ':' VALUE_TYPE $@4 '{' $@5 STMTS '}'
+
+    ID_NAME  shift, and go to state 44
+
+
+State 31
+
+    4 OBJCONTENT: STMTS FUNCTION_DEFINITIONS .
+
+    $default  reduce using rule 4 (OBJCONTENT)
+
+
+State 32
+
+    5 FUNCTION_DEFINITIONS: FUNCTION_DEFINITION . FUNCTION_DEFINITIONS
+    6                     | FUNCTION_DEFINITION .
+
+    DEF  shift, and go to state 30
+
+    $default  reduce using rule 6 (FUNCTION_DEFINITIONS)
+
+    FUNCTION_DEFINITIONS  go to state 45
+    FUNCTION_DEFINITION   go to state 32
+
+
+State 33
+
+   16 STMTS: STMT STMTS .
+
+    $default  reduce using rule 16 (STMTS)
+
+
+State 34
+
+   32 EXP: EXP '-' . EXP
+
+    ID_NAME      shift, and go to state 26
+    VALUE_TOKEN  shift, and go to state 9
+    '-'          shift, and go to state 13
+
+    EXP              go to state 46
+    FUNCTION_CALLED  go to state 21
+
+
+State 35
+
+   31 EXP: EXP '+' . EXP
+
+    ID_NAME      shift, and go to state 26
+    VALUE_TOKEN  shift, and go to state 9
+    '-'          shift, and go to state 13
+
+    EXP              go to state 47
+    FUNCTION_CALLED  go to state 21
+
+
+State 36
+
+   33 EXP: EXP '*' . EXP
+
+    ID_NAME      shift, and go to state 26
+    VALUE_TOKEN  shift, and go to state 9
+    '-'          shift, and go to state 13
+
+    EXP              go to state 48
+    FUNCTION_CALLED  go to state 21
+
+
+State 37
+
+   34 EXP: EXP '/' . EXP
+
+    ID_NAME      shift, and go to state 26
+    VALUE_TOKEN  shift, and go to state 9
+    '-'          shift, and go to state 13
+
+    EXP              go to state 49
+    FUNCTION_CALLED  go to state 21
+
+
+State 38
+
+   17 STMT: ID_NAME '=' EXP .
+   31 EXP: EXP . '+' EXP
+   32    | EXP . '-' EXP
+   33    | EXP . '*' EXP
+   34    | EXP . '/' EXP
+
+    '-'  shift, and go to state 34
+    '+'  shift, and go to state 35
+    '*'  shift, and go to state 36
+    '/'  shift, and go to state 37
+
+    $default  reduce using rule 17 (STMT)
+
+
+State 39
+
+   39 FUNCTION_CALLED: ID_NAME $@6 '(' . FUNCTION_CALLED_ARGS ')'
+
+    VALUE_TOKEN  shift, and go to state 50
+
+    FUNCTION_CALLED_ARGS  go to state 51
+    FUNCTION_CALLED_ARG   go to state 52
+
+
+State 40
+
+   26 VARDECLARATION: VAR ID_NAME '=' . VALUE_TOKEN
+
+    VALUE_TOKEN  shift, and go to state 53
+
+
+State 41
+
+   25 VARDECLARATION: VAR ID_NAME ':' . VALUE_TYPE
+   27               | VAR ID_NAME ':' . VALUE_TYPE '=' VALUE_TOKEN
+   29               | VAR ID_NAME ':' . VALUE_TYPE '[' VALUE_TOKEN ']'
+
+    VALUE_TYPE  shift, and go to state 54
+
+
+State 42
+
+   24 VALDECLARATION: VAL ID_NAME '=' . VALUE_TOKEN
+
+    VALUE_TOKEN  shift, and go to state 55
+
+
+State 43
+
+   23 VALDECLARATION: VAL ID_NAME ':' . VALUE_TYPE '=' VALUE_TOKEN
+
+    VALUE_TYPE  shift, and go to state 56
+
+
+State 44
+
+   10 FUNCTION_DEFINITION: DEF ID_NAME . $@3 '(' FORMAL_ARGS ')' ':' VALUE_TYPE $@4 '{' $@5 STMTS '}'
+
+    $default  reduce using rule 7 ($@3)
+
+    $@3  go to state 57
+
+
+State 45
+
+    5 FUNCTION_DEFINITIONS: FUNCTION_DEFINITION FUNCTION_DEFINITIONS .
+
+    $default  reduce using rule 5 (FUNCTION_DEFINITIONS)
+
+
+State 46
+
+   31 EXP: EXP . '+' EXP
+   32    | EXP . '-' EXP
+   32    | EXP '-' EXP .
+   33    | EXP . '*' EXP
+   34    | EXP . '/' EXP
+
+    '*'  shift, and go to state 36
+    '/'  shift, and go to state 37
+
+    $default  reduce using rule 32 (EXP)
+
+
+State 47
+
+   31 EXP: EXP . '+' EXP
+   31    | EXP '+' EXP .
+   32    | EXP . '-' EXP
+   33    | EXP . '*' EXP
+   34    | EXP . '/' EXP
+
+    '*'  shift, and go to state 36
+    '/'  shift, and go to state 37
+
+    $default  reduce using rule 31 (EXP)
+
+
+State 48
+
+   31 EXP: EXP . '+' EXP
+   32    | EXP . '-' EXP
+   33    | EXP . '*' EXP
+   33    | EXP '*' EXP .
+   34    | EXP . '/' EXP
+
+    $default  reduce using rule 33 (EXP)
+
+
+State 49
+
+   31 EXP: EXP . '+' EXP
+   32    | EXP . '-' EXP
+   33    | EXP . '*' EXP
+   34    | EXP . '/' EXP
+   34    | EXP '/' EXP .
+
+    $default  reduce using rule 34 (EXP)
+
+
+State 50
+
+   42 FUNCTION_CALLED_ARG: VALUE_TOKEN .
+
+    $default  reduce using rule 42 (FUNCTION_CALLED_ARG)
+
+
+State 51
+
+   39 FUNCTION_CALLED: ID_NAME $@6 '(' FUNCTION_CALLED_ARGS . ')'
+
+    ')'  shift, and go to state 58
+
+
+State 52
+
+   40 FUNCTION_CALLED_ARGS: FUNCTION_CALLED_ARG . ',' FUNCTION_CALLED_ARGS
+   41                     | FUNCTION_CALLED_ARG .
+
+    ','  shift, and go to state 59
+
+    $default  reduce using rule 41 (FUNCTION_CALLED_ARGS)
+
+
+State 53
+
+   26 VARDECLARATION: VAR ID_NAME '=' VALUE_TOKEN .
+
+    $default  reduce using rule 26 (VARDECLARATION)
+
+
+State 54
+
+   25 VARDECLARATION: VAR ID_NAME ':' VALUE_TYPE .
+   27               | VAR ID_NAME ':' VALUE_TYPE . '=' VALUE_TOKEN
+   29               | VAR ID_NAME ':' VALUE_TYPE . '[' VALUE_TOKEN ']'
+
+    '='  shift, and go to state 60
+    '['  shift, and go to state 61
+
+    $default  reduce using rule 25 (VARDECLARATION)
+
+
+State 55
+
+   24 VALDECLARATION: VAL ID_NAME '=' VALUE_TOKEN .
+
+    $default  reduce using rule 24 (VALDECLARATION)
+
+
+State 56
+
+   23 VALDECLARATION: VAL ID_NAME ':' VALUE_TYPE . '=' VALUE_TOKEN
+
+    '='  shift, and go to state 62
+
+
+State 57
+
+   10 FUNCTION_DEFINITION: DEF ID_NAME $@3 . '(' FORMAL_ARGS ')' ':' VALUE_TYPE $@4 '{' $@5 STMTS '}'
+
+    '('  shift, and go to state 63
+
+
+State 58
+
+   39 FUNCTION_CALLED: ID_NAME $@6 '(' FUNCTION_CALLED_ARGS ')' .
+
+    $default  reduce using rule 39 (FUNCTION_CALLED)
+
+
+State 59
+
+   40 FUNCTION_CALLED_ARGS: FUNCTION_CALLED_ARG ',' . FUNCTION_CALLED_ARGS
+
+    VALUE_TOKEN  shift, and go to state 50
+
+    FUNCTION_CALLED_ARGS  go to state 64
+    FUNCTION_CALLED_ARG   go to state 52
+
+
+State 60
+
+   27 VARDECLARATION: VAR ID_NAME ':' VALUE_TYPE '=' . VALUE_TOKEN
+
+    VALUE_TOKEN  shift, and go to state 65
+
+
+State 61
+
+   29 VARDECLARATION: VAR ID_NAME ':' VALUE_TYPE '[' . VALUE_TOKEN ']'
+
+    VALUE_TOKEN  shift, and go to state 66
+
+
+State 62
+
+   23 VALDECLARATION: VAL ID_NAME ':' VALUE_TYPE '=' . VALUE_TOKEN
+
+    VALUE_TOKEN  shift, and go to state 67
+
+
+State 63
+
+   10 FUNCTION_DEFINITION: DEF ID_NAME $@3 '(' . FORMAL_ARGS ')' ':' VALUE_TYPE $@4 '{' $@5 STMTS '}'
+
+    ID_NAME  shift, and go to state 68
+
+    FORMAL_ARGS  go to state 69
+    ARG          go to state 70
+
+
+State 64
+
+   40 FUNCTION_CALLED_ARGS: FUNCTION_CALLED_ARG ',' FUNCTION_CALLED_ARGS .
+
+    $default  reduce using rule 40 (FUNCTION_CALLED_ARGS)
+
+
+State 65
+
+   27 VARDECLARATION: VAR ID_NAME ':' VALUE_TYPE '=' VALUE_TOKEN .
+
+    $default  reduce using rule 27 (VARDECLARATION)
+
+
+State 66
+
+   29 VARDECLARATION: VAR ID_NAME ':' VALUE_TYPE '[' VALUE_TOKEN . ']'
+
+    ']'  shift, and go to state 71
+
+
+State 67
+
+   23 VALDECLARATION: VAL ID_NAME ':' VALUE_TYPE '=' VALUE_TOKEN .
+
+    $default  reduce using rule 23 (VALDECLARATION)
+
+
+State 68
+
+   13 ARG: ID_NAME . ':' VALUE_TYPE
+
+    ':'  shift, and go to state 72
+
+
+State 69
+
+   10 FUNCTION_DEFINITION: DEF ID_NAME $@3 '(' FORMAL_ARGS . ')' ':' VALUE_TYPE $@4 '{' $@5 STMTS '}'
+
+    ')'  shift, and go to state 73
+
+
+State 70
+
+   11 FORMAL_ARGS: ARG . ',' FORMAL_ARGS
+   12            | ARG .
+
+    ','  shift, and go to state 74
+
+    $default  reduce using rule 12 (FORMAL_ARGS)
+
+
+State 71
+
+   29 VARDECLARATION: VAR ID_NAME ':' VALUE_TYPE '[' VALUE_TOKEN ']' .
+
+    $default  reduce using rule 29 (VARDECLARATION)
+
+
+State 72
+
+   13 ARG: ID_NAME ':' . VALUE_TYPE
+
+    VALUE_TYPE  shift, and go to state 75
+
+
+State 73
+
+   10 FUNCTION_DEFINITION: DEF ID_NAME $@3 '(' FORMAL_ARGS ')' . ':' VALUE_TYPE $@4 '{' $@5 STMTS '}'
+
+    ':'  shift, and go to state 76
+
+
+State 74
+
+   11 FORMAL_ARGS: ARG ',' . FORMAL_ARGS
+
+    ID_NAME  shift, and go to state 68
+
+    FORMAL_ARGS  go to state 77
+    ARG          go to state 70
+
+
+State 75
+
+   13 ARG: ID_NAME ':' VALUE_TYPE .
+
+    $default  reduce using rule 13 (ARG)
+
+
+State 76
+
+   10 FUNCTION_DEFINITION: DEF ID_NAME $@3 '(' FORMAL_ARGS ')' ':' . VALUE_TYPE $@4 '{' $@5 STMTS '}'
+
+    VALUE_TYPE  shift, and go to state 78
+
+
+State 77
+
+   11 FORMAL_ARGS: ARG ',' FORMAL_ARGS .
+
+    $default  reduce using rule 11 (FORMAL_ARGS)
+
+
+State 78
+
+   10 FUNCTION_DEFINITION: DEF ID_NAME $@3 '(' FORMAL_ARGS ')' ':' VALUE_TYPE . $@4 '{' $@5 STMTS '}'
+
+    $default  reduce using rule 8 ($@4)
+
+    $@4  go to state 79
+
+
+State 79
+
+   10 FUNCTION_DEFINITION: DEF ID_NAME $@3 '(' FORMAL_ARGS ')' ':' VALUE_TYPE $@4 . '{' $@5 STMTS '}'
+
+    '{'  shift, and go to state 80
+
+
+State 80
+
+   10 FUNCTION_DEFINITION: DEF ID_NAME $@3 '(' FORMAL_ARGS ')' ':' VALUE_TYPE $@4 '{' . $@5 STMTS '}'
+
+    $default  reduce using rule 9 ($@5)
+
+    $@5  go to state 81
+
+
+State 81
+
+   10 FUNCTION_DEFINITION: DEF ID_NAME $@3 '(' FORMAL_ARGS ')' ':' VALUE_TYPE $@4 '{' $@5 . STMTS '}'
+
+    ID_NAME      shift, and go to state 8
+    VALUE_TOKEN  shift, and go to state 9
+    VAR          shift, and go to state 10
+    VAL          shift, and go to state 11
+    RETURN       shift, and go to state 12
+    '-'          shift, and go to state 13
+
+    ID_NAME      [reduce using rule 22 (STMT)]
+    VALUE_TOKEN  [reduce using rule 22 (STMT)]
+    VAR          [reduce using rule 22 (STMT)]
+    VAL          [reduce using rule 22 (STMT)]
+    RETURN       [reduce using rule 22 (STMT)]
+    '-'          [reduce using rule 22 (STMT)]
+    $default     reduce using rule 22 (STMT)
+
+    RETURN_STMT      go to state 15
+    STMTS            go to state 82
+    STMT             go to state 17
+    VALDECLARATION   go to state 18
+    VARDECLARATION   go to state 19
+    EXP              go to state 20
+    FUNCTION_CALLED  go to state 21
+
+
+State 82
+
+   10 FUNCTION_DEFINITION: DEF ID_NAME $@3 '(' FORMAL_ARGS ')' ':' VALUE_TYPE $@4 '{' $@5 STMTS . '}'
+
+    '}'  shift, and go to state 83
+
+
+State 83
+
+   10 FUNCTION_DEFINITION: DEF ID_NAME $@3 '(' FORMAL_ARGS ')' ':' VALUE_TYPE $@4 '{' $@5 STMTS '}' .
+
+    $default  reduce using rule 10 (FUNCTION_DEFINITION)
