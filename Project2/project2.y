@@ -14,8 +14,9 @@ extern int yyparse();
 extern FILE* yyin, *yyout;
 
 // function name to dynamic tracking current function scope
-ID* functionPtr;
+ID* functionScopedPtr;
 /* function called check parameter index*/
+ID* functionCalledPtr;
 int parameterIndex;
 %}
 
@@ -119,8 +120,8 @@ FUNCTION_DEFINITION :   DEF ID_NAME
                             functionID.SetToFunction(*$2);
 
                             ID& functionRef = symbolTable.Insert(functionID);
-                            // set the functionPtr to current function
-                            functionPtr = &functionRef;
+                            // set the functionScopedPtr to current function
+                            functionScopedPtr = &functionRef;
                         }
                         FUNCTION_DEFINITION2
                         '{'
@@ -129,19 +130,19 @@ FUNCTION_DEFINITION :   DEF ID_NAME
                             symbolTable.CreateSymbol();
 
                             // put all parameter into the current scope
-                            for(int i=0; i< functionPtr->parameters.size(); i++){
-                                symbolTable.Insert(*(functionPtr->parameters[i]));
+                            for(int i=0; i< functionScopedPtr->parameters.size(); i++){
+                                symbolTable.Insert(*(functionScopedPtr->parameters[i]));
                             }
                         }
                         STMTS
                         '}'
                         {
                             // dump to check that we set the correct function
-                            // functionPtr->Dump();
+                            // functionScopedPtr->Dump();
                             // drop the current scope
                             symbolTable.DropSymbol();
-                            // set the functionPtr to null
-                            functionPtr = NULL;
+                            // set the functionScopedPtr to null
+                            functionScopedPtr = NULL;
                         }
                         ;
 
@@ -149,12 +150,12 @@ FUNCTION_DEFINITION :   DEF ID_NAME
 FUNCTION_DEFINITION2    : '(' FORMAL_ARGS ')' ':' VALUE_TYPE
                         {
                             // set the return type for the function
-                            functionPtr->SetReturnType(*$5);
+                            functionScopedPtr->SetReturnType(*$5);
                         }
                         | '(' FORMAL_ARGS ')'
                         {
                             // set the return type for the function
-                            functionPtr->SetReturnType(VALUETYPE::VOID);
+                            functionScopedPtr->SetReturnType(VALUETYPE::VOID);
                         }
                         ;
 
@@ -172,7 +173,7 @@ ARG         : ID_NAME ':' VALUE_TYPE
                 parameterID.SetValueType(*$3);
 
                 // set the parameter to the function id
-                functionPtr->AddParameter(parameterID);
+                functionScopedPtr->AddParameter(parameterID);
             }
             |
             ;
@@ -181,13 +182,24 @@ ARG         : ID_NAME ':' VALUE_TYPE
 RETURN_STMT : RETURN EXP
             {
                 // check whether we are in the function scope
-                if(functionPtr == NULL) 
+                if(functionScopedPtr == NULL) 
                     yyerror("Return can only called inside the function scope!");
 
                 // check whether the return exp's type is same as the current function type
-                if($2->valueType != functionPtr->retVal.valueType) 
+                if($2->valueType != functionScopedPtr->retVal.valueType) 
                     yyerror("The function return type definition is different as the function return type declaration!"); 
             }
+            | RETURN
+            {
+                // check whether we are in the function scope
+                if(functionScopedPtr == NULL) 
+                    yyerror("Return can only called inside the function scope!");
+
+                // check whether the return exp's type is same as the current function type
+                if(VALUETYPE::VOID != functionScopedPtr->retVal.valueType) 
+                    yyerror("The function return type is void!"); 
+            }
+            ;
 
 // statements
 STMTS   : STMT
@@ -385,7 +397,7 @@ FUNCTION_CALLED         : ID_NAME
                             else    yyerror("ID Called wasn't function!");
 
                             // initialize function ptr
-                            functionPtr = &functionID;
+                            functionCalledPtr = &functionID;
 
                             // initialize function parameter index
                             parameterIndex = 0;
@@ -393,11 +405,11 @@ FUNCTION_CALLED         : ID_NAME
                         '(' FUNCTION_CALLED_ARGS ')' 
                         {   
                             // set the function return value to $$, to get change to exp
-                            $$ = new VALUE(functionPtr->retVal);
+                            $$ = new VALUE(functionCalledPtr->retVal);
                             
                             // finish checking all function parameter, reset the parameter index and function pointer
                             parameterIndex = 0;
-                            functionPtr = NULL;
+                            functionCalledPtr = NULL;
                         }
                         ;
 
@@ -410,7 +422,7 @@ FUNCTION_CALLED_ARGS    : FUNCTION_CALLED_ARG ',' FUNCTION_CALLED_ARGS
 FUNCTION_CALLED_ARG     : EXP
                         {
                             // check the value token value type against the function paramter index value type
-                            if($1->valueType != functionPtr->parameters[parameterIndex]->value.valueType){
+                            if($1->valueType != functionCalledPtr->parameters[parameterIndex]->value.valueType){
                                 yyerror(("Function called parameter " + to_string(parameterIndex) + ", doesn't have the correct value type!").c_str());
                             }
                             else{

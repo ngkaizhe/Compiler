@@ -84,11 +84,12 @@ extern int yyparse();
 extern FILE* yyin, *yyout;
 
 // function name to dynamic tracking current function scope
-ID* functionPtr;
+ID* functionScopedPtr;
 /* function called check parameter index*/
+ID* functionCalledPtr;
 int parameterIndex;
 
-#line 92 "y.tab.cpp"
+#line 93 "y.tab.cpp"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -194,7 +195,7 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 22 "project2.y"
+#line 23 "project2.y"
 
 
     /* id name */
@@ -206,7 +207,7 @@ union YYSTYPE
     /* value type*/
     VALUETYPE* valueType;
 
-#line 210 "y.tab.cpp"
+#line 211 "y.tab.cpp"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -603,7 +604,7 @@ union yyalloc
 /* YYNNTS -- Number of nonterminals.  */
 #define YYNNTS  22
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  48
+#define YYNRULES  49
 /* YYNSTATES -- Number of states.  */
 #define YYNSTATES  92
 
@@ -656,11 +657,11 @@ static const yytype_int8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int16 yyrline[] =
 {
-       0,    84,    84,    92,    83,   107,   110,   111,   116,   127,
-     115,   149,   154,   162,   163,   166,   177,   181,   193,   194,
-     195,   199,   210,   211,   212,   213,   214,   218,   225,   243,
-     261,   279,   297,   315,   330,   354,   359,   360,   361,   362,
-     364,   373,   374,   379,   378,   405,   406,   410,   422
+       0,    85,    85,    93,    84,   108,   111,   112,   117,   128,
+     116,   150,   155,   163,   164,   167,   178,   182,   192,   205,
+     206,   207,   211,   222,   223,   224,   225,   226,   230,   237,
+     255,   273,   291,   309,   327,   342,   366,   371,   372,   373,
+     374,   376,   385,   386,   391,   390,   417,   418,   422,   434
 };
 #endif
 
@@ -713,7 +714,7 @@ static const yytype_int16 yytoknum[] =
 #define yypact_value_is_default(Yyn) \
   ((Yyn) == YYPACT_NINF)
 
-#define YYTABLE_NINF (-44)
+#define YYTABLE_NINF (-45)
 
 #define yytable_value_is_error(Yyn) \
   0
@@ -739,15 +740,15 @@ static const yytype_int8 yypact[] =
      means the default is an error.  */
 static const yytype_int8 yydefact[] =
 {
-       0,     0,     0,     2,     1,     0,     3,    20,    35,    41,
-       0,     0,     0,     0,     0,     0,     0,    25,     0,    18,
-      23,    24,    22,    42,     0,     0,    33,     0,     0,     0,
-      35,    17,    40,     4,     0,     5,     7,    19,     0,     0,
-       0,     0,    21,    48,     0,     0,     0,     0,     0,     0,
-       8,     6,    37,    36,    38,    39,    47,     0,    46,    31,
-      30,    29,     0,    26,    27,     0,    44,    48,     0,     0,
-       0,    16,     0,    45,    32,     0,    28,     0,     0,    14,
-       9,    34,     0,    12,    16,    20,    15,     0,    13,     0,
+       0,     0,     0,     2,     1,     0,     3,    21,    36,    42,
+       0,     0,     0,     0,    18,     0,     0,    26,     0,    19,
+      24,    25,    23,    43,     0,     0,    34,     0,     0,     0,
+      36,    17,    41,     4,     0,     5,     7,    20,     0,     0,
+       0,     0,    22,    49,     0,     0,     0,     0,     0,     0,
+       8,     6,    38,    37,    39,    40,    48,     0,    47,    32,
+      31,    30,     0,    27,    28,     0,    45,    49,     0,     0,
+       0,    16,     0,    46,    33,     0,    29,     0,     0,    14,
+       9,    35,     0,    12,    16,    21,    15,     0,    13,     0,
       11,    10
 };
 
@@ -776,8 +777,8 @@ static const yytype_int8 yytable[] =
       68,    42,    12,    13,    14,    48,    49,    38,    39,    40,
       41,    69,    44,    46,    63,    52,    53,    54,    55,    15,
       56,    45,    47,     1,    15,    38,    39,    40,    41,    24,
-      40,    41,    64,     4,    26,     6,   -43,    38,    39,    40,
-      41,    27,    28,    33,    56,    29,    43,    34,   -43,    50,
+      40,    41,    64,     4,    26,     6,   -44,    38,    39,    40,
+      41,    27,    28,    33,    56,    29,    43,    34,   -44,    50,
       60,    59,    61,    66,    62,    70,    89,    67,    71,    74,
       75,    76,    77,    80,    81,    82,    86,    84,    83,    90,
       91,    87,    88,    51,     0,     0,     0,     0,     0,    73
@@ -816,20 +817,20 @@ static const yytype_int8 yystos[] =
 static const yytype_int8 yyr1[] =
 {
        0,    41,    43,    44,    42,    45,    46,    46,    48,    49,
-      47,    50,    50,    51,    51,    52,    52,    53,    54,    54,
-      54,    55,    55,    55,    55,    55,    55,    55,    56,    56,
-      57,    57,    57,    57,    57,    58,    58,    58,    58,    58,
-      58,    58,    58,    60,    59,    61,    61,    62,    62
+      47,    50,    50,    51,    51,    52,    52,    53,    53,    54,
+      54,    54,    55,    55,    55,    55,    55,    55,    55,    56,
+      56,    57,    57,    57,    57,    57,    58,    58,    58,    58,
+      58,    58,    58,    58,    60,    59,    61,    61,    62,    62
 };
 
   /* YYR2[YYN] -- Number of symbols on the right hand side of rule YYN.  */
 static const yytype_int8 yyr2[] =
 {
        0,     2,     0,     0,     7,     2,     2,     1,     0,     0,
-       8,     5,     3,     3,     1,     3,     0,     2,     1,     2,
-       0,     3,     1,     1,     1,     1,     4,     4,     6,     4,
-       4,     4,     6,     2,     7,     1,     3,     3,     3,     3,
-       2,     1,     1,     0,     5,     3,     1,     1,     0
+       8,     5,     3,     3,     1,     3,     0,     2,     1,     1,
+       2,     0,     3,     1,     1,     1,     1,     4,     4,     6,
+       4,     4,     4,     6,     2,     7,     1,     3,     3,     3,
+       3,     2,     1,     1,     0,     5,     3,     1,     1,     0
 };
 
 
@@ -1310,7 +1311,7 @@ yyreduce:
   switch (yyn)
     {
   case 2:
-#line 84 "project2.y"
+#line 85 "project2.y"
             {
                 DebugLog("Object definition start!");
                 ID objectId = ID();
@@ -1318,20 +1319,20 @@ yyreduce:
                 objectId.idType = IDTYPE::OBJECTID;
                 symbolTable.Insert(objectId);
             }
-#line 1322 "y.tab.cpp"
+#line 1323 "y.tab.cpp"
     break;
 
   case 3:
-#line 92 "project2.y"
+#line 93 "project2.y"
             {
                 // create new scope
                 symbolTable.CreateSymbol();
             }
-#line 1331 "y.tab.cpp"
+#line 1332 "y.tab.cpp"
     break;
 
   case 4:
-#line 97 "project2.y"
+#line 98 "project2.y"
             {
                 // check whether their are main function inside
                 // symbolTable.LookUp("main");
@@ -1339,70 +1340,70 @@ yyreduce:
                 symbolTable.DropSymbol();
                 DebugLog("Object definition end!");
             }
-#line 1343 "y.tab.cpp"
+#line 1344 "y.tab.cpp"
     break;
 
   case 8:
-#line 116 "project2.y"
+#line 117 "project2.y"
                         {
                             // insert function name
                             ID functionID = ID();
                             functionID.SetToFunction(*(yyvsp[0].idName));
 
                             ID& functionRef = symbolTable.Insert(functionID);
-                            // set the functionPtr to current function
-                            functionPtr = &functionRef;
+                            // set the functionScopedPtr to current function
+                            functionScopedPtr = &functionRef;
                         }
-#line 1357 "y.tab.cpp"
+#line 1358 "y.tab.cpp"
     break;
 
   case 9:
-#line 127 "project2.y"
+#line 128 "project2.y"
                         {
                             // create the scope
                             symbolTable.CreateSymbol();
 
                             // put all parameter into the current scope
-                            for(int i=0; i< functionPtr->parameters.size(); i++){
-                                symbolTable.Insert(*(functionPtr->parameters[i]));
+                            for(int i=0; i< functionScopedPtr->parameters.size(); i++){
+                                symbolTable.Insert(*(functionScopedPtr->parameters[i]));
                             }
                         }
-#line 1371 "y.tab.cpp"
+#line 1372 "y.tab.cpp"
     break;
 
   case 10:
-#line 138 "project2.y"
+#line 139 "project2.y"
                         {
                             // dump to check that we set the correct function
-                            // functionPtr->Dump();
+                            // functionScopedPtr->Dump();
                             // drop the current scope
                             symbolTable.DropSymbol();
-                            // set the functionPtr to null
-                            functionPtr = NULL;
+                            // set the functionScopedPtr to null
+                            functionScopedPtr = NULL;
                         }
-#line 1384 "y.tab.cpp"
+#line 1385 "y.tab.cpp"
     break;
 
   case 11:
-#line 150 "project2.y"
+#line 151 "project2.y"
                         {
                             // set the return type for the function
-                            functionPtr->SetReturnType(*(yyvsp[0].valueType));
+                            functionScopedPtr->SetReturnType(*(yyvsp[0].valueType));
                         }
-#line 1393 "y.tab.cpp"
+#line 1394 "y.tab.cpp"
     break;
 
   case 12:
-#line 155 "project2.y"
+#line 156 "project2.y"
                         {
                             // set the return type for the function
-                            functionPtr->SetReturnType(VALUETYPE::VOID);
+                            functionScopedPtr->SetReturnType(VALUETYPE::VOID);
                         }
-#line 1402 "y.tab.cpp"
+#line 1403 "y.tab.cpp"
     break;
 
   case 15:
-#line 167 "project2.y"
+#line 168 "project2.y"
             {
                 // recreate a new ID as the function parameter
                 ID parameterID = ID();
@@ -1411,27 +1412,41 @@ yyreduce:
                 parameterID.SetValueType(*(yyvsp[0].valueType));
 
                 // set the parameter to the function id
-                functionPtr->AddParameter(parameterID);
+                functionScopedPtr->AddParameter(parameterID);
             }
-#line 1417 "y.tab.cpp"
+#line 1418 "y.tab.cpp"
     break;
 
   case 17:
-#line 182 "project2.y"
+#line 183 "project2.y"
             {
                 // check whether we are in the function scope
-                if(functionPtr == NULL) 
+                if(functionScopedPtr == NULL) 
                     yyerror("Return can only called inside the function scope!");
 
                 // check whether the return exp's type is same as the current function type
-                if((yyvsp[0].value)->valueType != functionPtr->retVal.valueType) 
+                if((yyvsp[0].value)->valueType != functionScopedPtr->retVal.valueType) 
                     yyerror("The function return type definition is different as the function return type declaration!"); 
             }
-#line 1431 "y.tab.cpp"
+#line 1432 "y.tab.cpp"
     break;
 
-  case 21:
-#line 200 "project2.y"
+  case 18:
+#line 193 "project2.y"
+            {
+                // check whether we are in the function scope
+                if(functionScopedPtr == NULL) 
+                    yyerror("Return can only called inside the function scope!");
+
+                // check whether the return exp's type is same as the current function type
+                if(VALUETYPE::VOID != functionScopedPtr->retVal.valueType) 
+                    yyerror("The function return type is void!"); 
+            }
+#line 1446 "y.tab.cpp"
+    break;
+
+  case 22:
+#line 212 "project2.y"
                 {
                     // check whether the exp has the same value type with the id name
                     VALUE rvalue = symbolTable.LookUp(*(yyvsp[-2].idName)).value;
@@ -1442,27 +1457,27 @@ yyreduce:
                         yyerror("Different type of value can't do the assignment operation!");
                     }
                 }
-#line 1446 "y.tab.cpp"
-    break;
-
-  case 26:
-#line 215 "project2.y"
-                {
-                    DebugLog("Print function Called!");
-                }
-#line 1454 "y.tab.cpp"
+#line 1461 "y.tab.cpp"
     break;
 
   case 27:
-#line 219 "project2.y"
+#line 227 "project2.y"
                 {
-                    DebugLog("Println function Called!");
+                    DebugLog("Print function Called!");
                 }
-#line 1462 "y.tab.cpp"
+#line 1469 "y.tab.cpp"
     break;
 
   case 28:
-#line 226 "project2.y"
+#line 231 "project2.y"
+                {
+                    DebugLog("Println function Called!");
+                }
+#line 1477 "y.tab.cpp"
+    break;
+
+  case 29:
+#line 238 "project2.y"
                         {
                             // error checking first
                             try{
@@ -1480,11 +1495,11 @@ yyreduce:
                                 yyerror(s.c_str());
                             }
                         }
-#line 1484 "y.tab.cpp"
+#line 1499 "y.tab.cpp"
     break;
 
-  case 29:
-#line 244 "project2.y"
+  case 30:
+#line 256 "project2.y"
                         {
                             // error checking first
                             try{
@@ -1499,11 +1514,11 @@ yyreduce:
                                 yyerror(s.c_str());
                             }
                         }
-#line 1503 "y.tab.cpp"
+#line 1518 "y.tab.cpp"
     break;
 
-  case 30:
-#line 262 "project2.y"
+  case 31:
+#line 274 "project2.y"
                         {
                             // error checking first
                             try{
@@ -1521,11 +1536,11 @@ yyreduce:
                             }
                             
                         }
-#line 1525 "y.tab.cpp"
+#line 1540 "y.tab.cpp"
     break;
 
-  case 31:
-#line 280 "project2.y"
+  case 32:
+#line 292 "project2.y"
                         {
                             // error checking first
                             try{
@@ -1542,11 +1557,11 @@ yyreduce:
                                 yyerror(s.c_str());
                             }
                         }
-#line 1546 "y.tab.cpp"
+#line 1561 "y.tab.cpp"
     break;
 
-  case 32:
-#line 298 "project2.y"
+  case 33:
+#line 310 "project2.y"
                         {
                             // error checking first
                             try{
@@ -1564,11 +1579,11 @@ yyreduce:
                                 yyerror(s.c_str());
                             }
                         }
-#line 1568 "y.tab.cpp"
+#line 1583 "y.tab.cpp"
     break;
 
-  case 33:
-#line 316 "project2.y"
+  case 34:
+#line 328 "project2.y"
                         {
                             // error checking first
                             try{
@@ -1583,11 +1598,11 @@ yyreduce:
                                 yyerror(s.c_str());
                             }
                         }
-#line 1587 "y.tab.cpp"
+#line 1602 "y.tab.cpp"
     break;
 
-  case 34:
-#line 331 "project2.y"
+  case 35:
+#line 343 "project2.y"
                         {
                             
                             // error checking first
@@ -1608,45 +1623,45 @@ yyreduce:
                                 yyerror(s.c_str());
                             }
                         }
-#line 1612 "y.tab.cpp"
+#line 1627 "y.tab.cpp"
     break;
 
-  case 35:
-#line 354 "project2.y"
+  case 36:
+#line 366 "project2.y"
                            {
             // find the id in the symbol table
                 VALUE idVal = symbolTable.LookUp(*(yyvsp[0].idName)).value;
                 (yyval.value) = new VALUE(idVal);
             }
-#line 1622 "y.tab.cpp"
-    break;
-
-  case 36:
-#line 359 "project2.y"
-                        {(yyval.value) = new VALUE(*(yyvsp[-2].value) + *(yyvsp[0].value));}
-#line 1628 "y.tab.cpp"
+#line 1637 "y.tab.cpp"
     break;
 
   case 37:
-#line 360 "project2.y"
-                        {(yyval.value) = new VALUE(*(yyvsp[-2].value) - *(yyvsp[0].value));}
-#line 1634 "y.tab.cpp"
+#line 371 "project2.y"
+                        {(yyval.value) = new VALUE(*(yyvsp[-2].value) + *(yyvsp[0].value));}
+#line 1643 "y.tab.cpp"
     break;
 
   case 38:
-#line 361 "project2.y"
-                        {(yyval.value) = new VALUE(*(yyvsp[-2].value) * *(yyvsp[0].value));}
-#line 1640 "y.tab.cpp"
+#line 372 "project2.y"
+                        {(yyval.value) = new VALUE(*(yyvsp[-2].value) - *(yyvsp[0].value));}
+#line 1649 "y.tab.cpp"
     break;
 
   case 39:
-#line 362 "project2.y"
-                        {(yyval.value) = new VALUE(*(yyvsp[-2].value) / *(yyvsp[0].value));}
-#line 1646 "y.tab.cpp"
+#line 373 "project2.y"
+                        {(yyval.value) = new VALUE(*(yyvsp[-2].value) * *(yyvsp[0].value));}
+#line 1655 "y.tab.cpp"
     break;
 
   case 40:
-#line 364 "project2.y"
+#line 374 "project2.y"
+                        {(yyval.value) = new VALUE(*(yyvsp[-2].value) / *(yyvsp[0].value));}
+#line 1661 "y.tab.cpp"
+    break;
+
+  case 41:
+#line 376 "project2.y"
                                  {
                 VALUE value;
                 value.valueType = (yyvsp[0].value)->valueType;
@@ -1656,11 +1671,11 @@ yyreduce:
 
                 (yyval.value) = new VALUE(oper('*', *(yyvsp[0].value), value));
             }
-#line 1660 "y.tab.cpp"
+#line 1675 "y.tab.cpp"
     break;
 
-  case 43:
-#line 379 "project2.y"
+  case 44:
+#line 391 "project2.y"
                         {
                             // start to find the id name in the current scope
                             ID& functionID = symbolTable.LookUp(*(yyvsp[0].idName));
@@ -1670,32 +1685,32 @@ yyreduce:
                             else    yyerror("ID Called wasn't function!");
 
                             // initialize function ptr
-                            functionPtr = &functionID;
+                            functionCalledPtr = &functionID;
 
                             // initialize function parameter index
                             parameterIndex = 0;
                         }
-#line 1679 "y.tab.cpp"
+#line 1694 "y.tab.cpp"
     break;
 
-  case 44:
-#line 394 "project2.y"
+  case 45:
+#line 406 "project2.y"
                         {   
                             // set the function return value to $$, to get change to exp
-                            (yyval.value) = new VALUE(functionPtr->retVal);
+                            (yyval.value) = new VALUE(functionCalledPtr->retVal);
                             
                             // finish checking all function parameter, reset the parameter index and function pointer
                             parameterIndex = 0;
-                            functionPtr = NULL;
+                            functionCalledPtr = NULL;
                         }
-#line 1692 "y.tab.cpp"
+#line 1707 "y.tab.cpp"
     break;
 
-  case 47:
-#line 411 "project2.y"
+  case 48:
+#line 423 "project2.y"
                         {
                             // check the value token value type against the function paramter index value type
-                            if((yyvsp[0].value)->valueType != functionPtr->parameters[parameterIndex]->value.valueType){
+                            if((yyvsp[0].value)->valueType != functionCalledPtr->parameters[parameterIndex]->value.valueType){
                                 yyerror(("Function called parameter " + to_string(parameterIndex) + ", doesn't have the correct value type!").c_str());
                             }
                             else{
@@ -1704,11 +1719,11 @@ yyreduce:
                             // finish checking, add paramterIndex
                             parameterIndex++;
                         }
-#line 1708 "y.tab.cpp"
+#line 1723 "y.tab.cpp"
     break;
 
 
-#line 1712 "y.tab.cpp"
+#line 1727 "y.tab.cpp"
 
       default: break;
     }
@@ -1902,7 +1917,7 @@ yyreturn:
   return yyresult;
 }
 
-#line 426 "project2.y"
+#line 438 "project2.y"
 
 #include "lex.yy.cpp"
 

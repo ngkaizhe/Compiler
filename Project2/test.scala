@@ -12,5 +12,6 @@ object example{
     def main(){
         c = add(a, 10)
         println (c)
+        return
     }
 }
