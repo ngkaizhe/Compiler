@@ -65,20 +65,21 @@ extern int yydebug;
     FOR = 266,                     /* FOR  */
     PRINT = 267,                   /* PRINT  */
     PRINTLN = 268,                 /* PRINTLN  */
-    RETURN = 269,                  /* RETURN  */
-    TO = 270,                      /* TO  */
-    WHILE = 271,                   /* WHILE  */
-    OBJECT = 272,                  /* OBJECT  */
-    AND = 273,                     /* AND  */
-    OR = 274,                      /* OR  */
-    NOT = 275,                     /* NOT  */
-    LT = 276,                      /* LT  */
-    LE = 277,                      /* LE  */
-    EQ = 278,                      /* EQ  */
-    NQ = 279,                      /* NQ  */
-    GE = 280,                      /* GE  */
-    GT = 281,                      /* GT  */
-    UMINUS = 282                   /* UMINUS  */
+    READ = 269,                    /* READ  */
+    RETURN = 270,                  /* RETURN  */
+    TO = 271,                      /* TO  */
+    WHILE = 272,                   /* WHILE  */
+    OBJECT = 273,                  /* OBJECT  */
+    AND = 274,                     /* AND  */
+    OR = 275,                      /* OR  */
+    NOT = 276,                     /* NOT  */
+    LT = 277,                      /* LT  */
+    LE = 278,                      /* LE  */
+    EQ = 279,                      /* EQ  */
+    NQ = 280,                      /* NQ  */
+    GE = 281,                      /* GE  */
+    GT = 282,                      /* GT  */
+    UMINUS = 283                   /* UMINUS  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -97,20 +98,21 @@ extern int yydebug;
 #define FOR 266
 #define PRINT 267
 #define PRINTLN 268
-#define RETURN 269
-#define TO 270
-#define WHILE 271
-#define OBJECT 272
-#define AND 273
-#define OR 274
-#define NOT 275
-#define LT 276
-#define LE 277
-#define EQ 278
-#define NQ 279
-#define GE 280
-#define GT 281
-#define UMINUS 282
+#define READ 269
+#define RETURN 270
+#define TO 271
+#define WHILE 272
+#define OBJECT 273
+#define AND 274
+#define OR 275
+#define NOT 276
+#define LT 277
+#define LE 278
+#define EQ 279
+#define NQ 280
+#define GE 281
+#define GT 282
+#define UMINUS 283
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
@@ -128,7 +130,7 @@ union YYSTYPE
     /* value type*/
     VALUETYPE* valueType;
 
-#line 132 "y.tab.hpp"
+#line 134 "y.tab.hpp"
 
 };
 typedef union YYSTYPE YYSTYPE;

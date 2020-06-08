@@ -49,6 +49,7 @@ int parameterIndex;
 %token FOR
 %token PRINT
 %token PRINTLN
+%token READ
 %token RETURN
 %token TO
 %token WHILE
@@ -241,6 +242,10 @@ STMT            : ID_NAME '=' EXP
                 {
                     DebugLog("Println function Called!");
                 }
+                | READ ID_NAME
+                {
+                    DebugLog("Read function Called!");
+                }
                 ;
 
 // constant declaration
@@ -349,7 +354,7 @@ VARDECLARATION  :       VAR ID_NAME ':' VALUE_TYPE
                                 yyerror(s.c_str());
                             }
                         }
-                |       VAR ID_NAME ':' VALUE_TYPE '[' VALUE_TOKEN ']'
+                |       VAR ID_NAME ':' VALUE_TYPE '[' EXP ']'
                         {
                             
                             // error checking first
@@ -359,12 +364,13 @@ VARDECLARATION  :       VAR ID_NAME ':' VALUE_TYPE
                                 
                                 // check ID is already used in this scope or not
                                 // insert id with name to the symbol table
-                                ID& idRef = symbolTable.Insert(newId);
+                                ID* idRef = &symbolTable.Insert(newId);
 
                                 // the value_token must be type int
                                 if($6->valueType != VALUETYPE::INT) yyerror("array declaration's number value must be integer!");
                                 // set the array range for id name
-                                idRef.value = VALUE(*$4, $6->ival);
+                                // and resize
+                                idRef->value = VALUE(*$4, $6->ival);
                             }
                             catch(string s){
                                 yyerror(s.c_str());
@@ -375,9 +381,22 @@ VARDECLARATION  :       VAR ID_NAME ':' VALUE_TYPE
 // expression
 EXP     :   ID_NAME        {
             // find the id in the symbol table
-                VALUE idVal = symbolTable.LookUp(*$1).value;
+                VALUE& idVal = symbolTable.LookUp(*$1).value;
                 $$ = new VALUE(idVal);
             }
+
+        |   ID_NAME '[' EXP ']' '=' EXP
+        {
+            // id name must be valid
+            VALUE& arrID = symbolTable.LookUp(*$1).value;
+
+            // 1st exp should only be int type
+            if($3->valueType != VALUETYPE::INT) yyerror("Array index must be integer type!");
+
+            // set value to the array content
+            arrID[$3->ival] = *$6;
+
+        }
         |   EXP '+' EXP {$$ = new VALUE(*$1 + *$3);}
         |   EXP '-' EXP {$$ = new VALUE(*$1 - *$3);}
         |   EXP '*' EXP {$$ = new VALUE(*$1 * *$3);}
@@ -389,9 +408,9 @@ EXP     :   ID_NAME        {
         |   VALUE_TOKEN
         |   FUNCTION_CALLED
 
+        |   NOT EXP     { $$ = new VALUE(!(*$2));}
         |   EXP OR EXP { $$ = new VALUE(*$1 || *$3);}
         |   EXP AND EXP { $$ = new VALUE(*$1 && *$3);}
-        |   NOT EXP     { $$ = new VALUE(!(*$2));}
         |   EXP LT EXP  { $$ = new VALUE(*$1 < *$3);}
         |   EXP LE EXP  { $$ = new VALUE(*$1 <= *$3);}
         |   EXP EQ EXP  { $$ = new VALUE(*$1 == *$3);}

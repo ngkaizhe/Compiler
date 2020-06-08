@@ -5,26 +5,12 @@ Terminals unused in grammar
     FOR
     TO
     WHILE
-    AND
-    NOT
-    LT
-    LE
-    EQ
-    NQ
-    GE
-    GT
 
 
-State 14 conflicts: 3 shift/reduce
-State 19 conflicts: 2 reduce/reduce
-State 22 conflicts: 1 shift/reduce
-State 31 conflicts: 1 shift/reduce
-State 32 conflicts: 1 shift/reduce
-State 53 conflicts: 5 shift/reduce
-State 54 conflicts: 1 shift/reduce
-State 55 conflicts: 1 shift/reduce
-State 56 conflicts: 1 shift/reduce
-State 57 conflicts: 1 shift/reduce
+State 14 conflicts: 4 shift/reduce
+State 20 conflicts: 2 reduce/reduce
+State 23 conflicts: 1 shift/reduce
+State 33 conflicts: 1 shift/reduce
 
 
 Grammar
@@ -82,45 +68,54 @@ Grammar
    34               | VAR ID_NAME ':' VALUE_TYPE '[' VALUE_TOKEN ']'
 
    35 EXP: ID_NAME
-   36    | EXP '+' EXP
-   37    | EXP '-' EXP
-   38    | EXP '*' EXP
-   39    | EXP '/' EXP
-   40    | '-' EXP
-   41    | VALUE_TOKEN
-   42    | FUNCTION_CALLED
-   43    | EXP OR EXP
+   36    | ID_NAME '[' VALUE_TOKEN ']' '=' VALUE_TOKEN
+   37    | EXP '+' EXP
+   38    | EXP '-' EXP
+   39    | EXP '*' EXP
+   40    | EXP '/' EXP
+   41    | '-' EXP
+   42    | VALUE_TOKEN
+   43    | FUNCTION_CALLED
+   44    | NOT EXP
+   45    | EXP OR EXP
+   46    | EXP AND EXP
+   47    | EXP LT EXP
+   48    | EXP LE EXP
+   49    | EXP EQ EXP
+   50    | EXP NQ EXP
+   51    | EXP GE EXP
+   52    | EXP GT EXP
 
-   44 $@5: %empty
+   53 $@5: %empty
 
-   45 FUNCTION_CALLED: ID_NAME $@5 '(' FUNCTION_CALLED_ARGS ')'
+   54 FUNCTION_CALLED: ID_NAME $@5 '(' FUNCTION_CALLED_ARGS ')'
 
-   46 FUNCTION_CALLED_ARGS: FUNCTION_CALLED_ARG ',' FUNCTION_CALLED_ARGS
-   47                     | FUNCTION_CALLED_ARG
+   55 FUNCTION_CALLED_ARGS: FUNCTION_CALLED_ARG ',' FUNCTION_CALLED_ARGS
+   56                     | FUNCTION_CALLED_ARG
 
-   48 FUNCTION_CALLED_ARG: EXP
-   49                    | %empty
+   57 FUNCTION_CALLED_ARG: EXP
+   58                    | %empty
 
 
 Terminals, with rules where they appear
 
     $end (0) 0
-    '(' (40) 10 11 26 27 45
-    ')' (41) 10 11 26 27 45
-    '*' (42) 38
-    '+' (43) 36
-    ',' (44) 12 46
-    '-' (45) 37 40
-    '/' (47) 39
+    '(' (40) 10 11 26 27 54
+    ')' (41) 10 11 26 27 54
+    '*' (42) 39
+    '+' (43) 37
+    ',' (44) 12 55
+    '-' (45) 38 41
+    '/' (47) 40
     ':' (58) 10 14 28 30 32 34
-    '=' (61) 21 28 29 31 32
-    '[' (91) 34
-    ']' (93) 34
+    '=' (61) 21 28 29 31 32 36
+    '[' (91) 34 36
+    ']' (93) 34 36
     '{' (123) 3 9
     '}' (125) 3 9
     error (256)
-    ID_NAME <idName> (258) 3 9 14 21 28 29 30 31 32 33 34 35 45
-    VALUE_TOKEN <value> (259) 28 29 31 32 34 41
+    ID_NAME <idName> (258) 3 9 14 21 28 29 30 31 32 33 34 35 36 54
+    VALUE_TOKEN <value> (259) 28 29 31 32 34 36 42
     VALUE_TYPE <valueType> (260) 10 14 28 30 32 34
     VAR (261) 30 31 32 33 34
     VAL (262) 28 29
@@ -134,15 +129,15 @@ Terminals, with rules where they appear
     TO (270)
     WHILE (271)
     OBJECT (272) 3
-    AND (273)
-    OR (274) 43
-    NOT (275)
-    LT (276)
-    LE (277)
-    EQ (278)
-    NQ (279)
-    GE (280)
-    GT (281)
+    AND (273) 46
+    OR (274) 45
+    NOT (275) 44
+    LT (276) 47
+    LE (277) 48
+    EQ (278) 49
+    NQ (279) 50
+    GE (280) 51
+    GT (281) 52
     UMINUS (282)
 
 
@@ -199,20 +194,20 @@ Nonterminals, with rules where they appear
         on left: 30 31 32 33 34
         on right: 24
     EXP <value> (58)
-        on left: 35 36 37 38 39 40 41 42 43
-        on right: 16 21 22 26 27 36 37 38 39 40 43 48
+        on left: 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52
+        on right: 16 21 22 26 27 37 38 39 40 41 44 45 46 47 48 49 50 51 52 57
     FUNCTION_CALLED <value> (59)
-        on left: 45
-        on right: 42
+        on left: 54
+        on right: 43
     $@5 (60)
-        on left: 44
-        on right: 45
+        on left: 53
+        on right: 54
     FUNCTION_CALLED_ARGS (61)
-        on left: 46 47
-        on right: 45 46
+        on left: 55 56
+        on right: 54 55
     FUNCTION_CALLED_ARG (62)
-        on left: 48 49
-        on right: 46 47
+        on left: 57 58
+        on right: 55 56
 
 
 State 0
@@ -281,39 +276,42 @@ State 7
     PRINT        shift, and go to state 12
     PRINTLN      shift, and go to state 13
     RETURN       shift, and go to state 14
-    '-'          shift, and go to state 15
+    NOT          shift, and go to state 15
+    '-'          shift, and go to state 16
 
     $default  reduce using rule 20 (STMTS)
 
-    OBJCONTENT       go to state 16
-    RETURN_STMT      go to state 17
-    STMTS            go to state 18
-    STMT             go to state 19
-    VALDECLARATION   go to state 20
-    VARDECLARATION   go to state 21
-    EXP              go to state 22
-    FUNCTION_CALLED  go to state 23
+    OBJCONTENT       go to state 17
+    RETURN_STMT      go to state 18
+    STMTS            go to state 19
+    STMT             go to state 20
+    VALDECLARATION   go to state 21
+    VARDECLARATION   go to state 22
+    EXP              go to state 23
+    FUNCTION_CALLED  go to state 24
 
 
 State 8
 
    21 STMT: ID_NAME . '=' EXP
    35 EXP: ID_NAME .
-   45 FUNCTION_CALLED: ID_NAME . $@5 '(' FUNCTION_CALLED_ARGS ')'
+   36    | ID_NAME . '[' VALUE_TOKEN ']' '=' VALUE_TOKEN
+   54 FUNCTION_CALLED: ID_NAME . $@5 '(' FUNCTION_CALLED_ARGS ')'
 
-    '='  shift, and go to state 24
+    '='  shift, and go to state 25
+    '['  shift, and go to state 26
 
-    '('       reduce using rule 44 ($@5)
+    '('       reduce using rule 53 ($@5)
     $default  reduce using rule 35 (EXP)
 
-    $@5  go to state 25
+    $@5  go to state 27
 
 
 State 9
 
-   41 EXP: VALUE_TOKEN .
+   42 EXP: VALUE_TOKEN .
 
-    $default  reduce using rule 41 (EXP)
+    $default  reduce using rule 42 (EXP)
 
 
 State 10
@@ -324,7 +322,7 @@ State 10
    33               | VAR . ID_NAME
    34               | VAR . ID_NAME ':' VALUE_TYPE '[' VALUE_TOKEN ']'
 
-    ID_NAME  shift, and go to state 26
+    ID_NAME  shift, and go to state 28
 
 
 State 11
@@ -332,21 +330,21 @@ State 11
    28 VALDECLARATION: VAL . ID_NAME ':' VALUE_TYPE '=' VALUE_TOKEN
    29               | VAL . ID_NAME '=' VALUE_TOKEN
 
-    ID_NAME  shift, and go to state 27
+    ID_NAME  shift, and go to state 29
 
 
 State 12
 
    26 STMT: PRINT . '(' EXP ')'
 
-    '('  shift, and go to state 28
+    '('  shift, and go to state 30
 
 
 State 13
 
    27 STMT: PRINTLN . '(' EXP ')'
 
-    '('  shift, and go to state 29
+    '('  shift, and go to state 31
 
 
 State 14
@@ -354,56 +352,72 @@ State 14
    16 RETURN_STMT: RETURN . EXP
    17            | RETURN .
 
-    ID_NAME      shift, and go to state 30
+    ID_NAME      shift, and go to state 32
     VALUE_TOKEN  shift, and go to state 9
-    '-'          shift, and go to state 15
+    NOT          shift, and go to state 15
+    '-'          shift, and go to state 16
 
     ID_NAME      [reduce using rule 17 (RETURN_STMT)]
     VALUE_TOKEN  [reduce using rule 17 (RETURN_STMT)]
+    NOT          [reduce using rule 17 (RETURN_STMT)]
     '-'          [reduce using rule 17 (RETURN_STMT)]
     $default     reduce using rule 17 (RETURN_STMT)
 
-    EXP              go to state 31
-    FUNCTION_CALLED  go to state 23
+    EXP              go to state 33
+    FUNCTION_CALLED  go to state 24
 
 
 State 15
 
-   40 EXP: '-' . EXP
+   44 EXP: NOT . EXP
 
-    ID_NAME      shift, and go to state 30
+    ID_NAME      shift, and go to state 32
     VALUE_TOKEN  shift, and go to state 9
-    '-'          shift, and go to state 15
+    NOT          shift, and go to state 15
+    '-'          shift, and go to state 16
 
-    EXP              go to state 32
-    FUNCTION_CALLED  go to state 23
+    EXP              go to state 34
+    FUNCTION_CALLED  go to state 24
 
 
 State 16
 
-    3 PROGRAM: OBJECT ID_NAME $@1 '{' $@2 OBJCONTENT . '}'
+   41 EXP: '-' . EXP
 
-    '}'  shift, and go to state 33
+    ID_NAME      shift, and go to state 32
+    VALUE_TOKEN  shift, and go to state 9
+    NOT          shift, and go to state 15
+    '-'          shift, and go to state 16
+
+    EXP              go to state 35
+    FUNCTION_CALLED  go to state 24
 
 
 State 17
+
+    3 PROGRAM: OBJECT ID_NAME $@1 '{' $@2 OBJCONTENT . '}'
+
+    '}'  shift, and go to state 36
+
+
+State 18
 
    25 STMT: RETURN_STMT .
 
     $default  reduce using rule 25 (STMT)
 
 
-State 18
+State 19
 
     4 OBJCONTENT: STMTS . FUNCTION_DEFINITIONS
 
-    DEF  shift, and go to state 34
+    DEF  shift, and go to state 37
 
-    FUNCTION_DEFINITIONS  go to state 35
-    FUNCTION_DEFINITION   go to state 36
+    FUNCTION_DEFINITIONS  go to state 38
+    FUNCTION_DEFINITION   go to state 39
 
 
-State 19
+State 20
 
    18 STMTS: STMT .
    19      | STMT . STMTS
@@ -415,7 +429,8 @@ State 19
     PRINT        shift, and go to state 12
     PRINTLN      shift, and go to state 13
     RETURN       shift, and go to state 14
-    '-'          shift, and go to state 15
+    NOT          shift, and go to state 15
+    '-'          shift, and go to state 16
 
     DEF       reduce using rule 18 (STMTS)
     DEF       [reduce using rule 20 (STMTS)]
@@ -423,75 +438,97 @@ State 19
     '}'       [reduce using rule 20 (STMTS)]
     $default  reduce using rule 18 (STMTS)
 
-    RETURN_STMT      go to state 17
-    STMTS            go to state 37
-    STMT             go to state 19
-    VALDECLARATION   go to state 20
-    VARDECLARATION   go to state 21
-    EXP              go to state 22
-    FUNCTION_CALLED  go to state 23
+    RETURN_STMT      go to state 18
+    STMTS            go to state 40
+    STMT             go to state 20
+    VALDECLARATION   go to state 21
+    VARDECLARATION   go to state 22
+    EXP              go to state 23
+    FUNCTION_CALLED  go to state 24
 
 
-State 20
+State 21
 
    23 STMT: VALDECLARATION .
 
     $default  reduce using rule 23 (STMT)
 
 
-State 21
+State 22
 
    24 STMT: VARDECLARATION .
 
     $default  reduce using rule 24 (STMT)
 
 
-State 22
+State 23
 
    22 STMT: EXP .
-   36 EXP: EXP . '+' EXP
-   37    | EXP . '-' EXP
-   38    | EXP . '*' EXP
-   39    | EXP . '/' EXP
-   43    | EXP . OR EXP
+   37 EXP: EXP . '+' EXP
+   38    | EXP . '-' EXP
+   39    | EXP . '*' EXP
+   40    | EXP . '/' EXP
+   45    | EXP . OR EXP
+   46    | EXP . AND EXP
+   47    | EXP . LT EXP
+   48    | EXP . LE EXP
+   49    | EXP . EQ EXP
+   50    | EXP . NQ EXP
+   51    | EXP . GE EXP
+   52    | EXP . GT EXP
 
-    OR   shift, and go to state 38
-    '-'  shift, and go to state 39
-    '+'  shift, and go to state 40
-    '*'  shift, and go to state 41
-    '/'  shift, and go to state 42
+    AND  shift, and go to state 41
+    OR   shift, and go to state 42
+    LT   shift, and go to state 43
+    LE   shift, and go to state 44
+    EQ   shift, and go to state 45
+    NQ   shift, and go to state 46
+    GE   shift, and go to state 47
+    GT   shift, and go to state 48
+    '-'  shift, and go to state 49
+    '+'  shift, and go to state 50
+    '*'  shift, and go to state 51
+    '/'  shift, and go to state 52
 
     '-'       [reduce using rule 22 (STMT)]
     $default  reduce using rule 22 (STMT)
 
 
-State 23
-
-   42 EXP: FUNCTION_CALLED .
-
-    $default  reduce using rule 42 (EXP)
-
-
 State 24
 
-   21 STMT: ID_NAME '=' . EXP
+   43 EXP: FUNCTION_CALLED .
 
-    ID_NAME      shift, and go to state 30
-    VALUE_TOKEN  shift, and go to state 9
-    '-'          shift, and go to state 15
-
-    EXP              go to state 43
-    FUNCTION_CALLED  go to state 23
+    $default  reduce using rule 43 (EXP)
 
 
 State 25
 
-   45 FUNCTION_CALLED: ID_NAME $@5 . '(' FUNCTION_CALLED_ARGS ')'
+   21 STMT: ID_NAME '=' . EXP
 
-    '('  shift, and go to state 44
+    ID_NAME      shift, and go to state 32
+    VALUE_TOKEN  shift, and go to state 9
+    NOT          shift, and go to state 15
+    '-'          shift, and go to state 16
+
+    EXP              go to state 53
+    FUNCTION_CALLED  go to state 24
 
 
 State 26
+
+   36 EXP: ID_NAME '[' . VALUE_TOKEN ']' '=' VALUE_TOKEN
+
+    VALUE_TOKEN  shift, and go to state 54
+
+
+State 27
+
+   54 FUNCTION_CALLED: ID_NAME $@5 . '(' FUNCTION_CALLED_ARGS ')'
+
+    '('  shift, and go to state 55
+
+
+State 28
 
    30 VARDECLARATION: VAR ID_NAME . ':' VALUE_TYPE
    31               | VAR ID_NAME . '=' VALUE_TOKEN
@@ -499,646 +536,1081 @@ State 26
    33               | VAR ID_NAME .
    34               | VAR ID_NAME . ':' VALUE_TYPE '[' VALUE_TOKEN ']'
 
-    '='  shift, and go to state 45
-    ':'  shift, and go to state 46
+    '='  shift, and go to state 56
+    ':'  shift, and go to state 57
 
     $default  reduce using rule 33 (VARDECLARATION)
 
 
-State 27
+State 29
 
    28 VALDECLARATION: VAL ID_NAME . ':' VALUE_TYPE '=' VALUE_TOKEN
    29               | VAL ID_NAME . '=' VALUE_TOKEN
 
-    '='  shift, and go to state 47
-    ':'  shift, and go to state 48
-
-
-State 28
-
-   26 STMT: PRINT '(' . EXP ')'
-
-    ID_NAME      shift, and go to state 30
-    VALUE_TOKEN  shift, and go to state 9
-    '-'          shift, and go to state 15
-
-    EXP              go to state 49
-    FUNCTION_CALLED  go to state 23
-
-
-State 29
-
-   27 STMT: PRINTLN '(' . EXP ')'
-
-    ID_NAME      shift, and go to state 30
-    VALUE_TOKEN  shift, and go to state 9
-    '-'          shift, and go to state 15
-
-    EXP              go to state 50
-    FUNCTION_CALLED  go to state 23
+    '='  shift, and go to state 58
+    ':'  shift, and go to state 59
 
 
 State 30
 
-   35 EXP: ID_NAME .
-   45 FUNCTION_CALLED: ID_NAME . $@5 '(' FUNCTION_CALLED_ARGS ')'
+   26 STMT: PRINT '(' . EXP ')'
 
-    '('       reduce using rule 44 ($@5)
-    $default  reduce using rule 35 (EXP)
+    ID_NAME      shift, and go to state 32
+    VALUE_TOKEN  shift, and go to state 9
+    NOT          shift, and go to state 15
+    '-'          shift, and go to state 16
 
-    $@5  go to state 25
+    EXP              go to state 60
+    FUNCTION_CALLED  go to state 24
 
 
 State 31
 
-   16 RETURN_STMT: RETURN EXP .
-   36 EXP: EXP . '+' EXP
-   37    | EXP . '-' EXP
-   38    | EXP . '*' EXP
-   39    | EXP . '/' EXP
-   43    | EXP . OR EXP
+   27 STMT: PRINTLN '(' . EXP ')'
 
-    OR   shift, and go to state 38
-    '-'  shift, and go to state 39
-    '+'  shift, and go to state 40
-    '*'  shift, and go to state 41
-    '/'  shift, and go to state 42
+    ID_NAME      shift, and go to state 32
+    VALUE_TOKEN  shift, and go to state 9
+    NOT          shift, and go to state 15
+    '-'          shift, and go to state 16
+
+    EXP              go to state 61
+    FUNCTION_CALLED  go to state 24
+
+
+State 32
+
+   35 EXP: ID_NAME .
+   36    | ID_NAME . '[' VALUE_TOKEN ']' '=' VALUE_TOKEN
+   54 FUNCTION_CALLED: ID_NAME . $@5 '(' FUNCTION_CALLED_ARGS ')'
+
+    '['  shift, and go to state 26
+
+    '('       reduce using rule 53 ($@5)
+    $default  reduce using rule 35 (EXP)
+
+    $@5  go to state 27
+
+
+State 33
+
+   16 RETURN_STMT: RETURN EXP .
+   37 EXP: EXP . '+' EXP
+   38    | EXP . '-' EXP
+   39    | EXP . '*' EXP
+   40    | EXP . '/' EXP
+   45    | EXP . OR EXP
+   46    | EXP . AND EXP
+   47    | EXP . LT EXP
+   48    | EXP . LE EXP
+   49    | EXP . EQ EXP
+   50    | EXP . NQ EXP
+   51    | EXP . GE EXP
+   52    | EXP . GT EXP
+
+    AND  shift, and go to state 41
+    OR   shift, and go to state 42
+    LT   shift, and go to state 43
+    LE   shift, and go to state 44
+    EQ   shift, and go to state 45
+    NQ   shift, and go to state 46
+    GE   shift, and go to state 47
+    GT   shift, and go to state 48
+    '-'  shift, and go to state 49
+    '+'  shift, and go to state 50
+    '*'  shift, and go to state 51
+    '/'  shift, and go to state 52
 
     '-'       [reduce using rule 16 (RETURN_STMT)]
     $default  reduce using rule 16 (RETURN_STMT)
 
 
-State 32
+State 34
 
-   36 EXP: EXP . '+' EXP
-   37    | EXP . '-' EXP
-   38    | EXP . '*' EXP
-   39    | EXP . '/' EXP
-   40    | '-' EXP .
-   43    | EXP . OR EXP
+   37 EXP: EXP . '+' EXP
+   38    | EXP . '-' EXP
+   39    | EXP . '*' EXP
+   40    | EXP . '/' EXP
+   44    | NOT EXP .
+   45    | EXP . OR EXP
+   46    | EXP . AND EXP
+   47    | EXP . LT EXP
+   48    | EXP . LE EXP
+   49    | EXP . EQ EXP
+   50    | EXP . NQ EXP
+   51    | EXP . GE EXP
+   52    | EXP . GT EXP
 
-    OR  shift, and go to state 38
+    LT   shift, and go to state 43
+    LE   shift, and go to state 44
+    EQ   shift, and go to state 45
+    NQ   shift, and go to state 46
+    GE   shift, and go to state 47
+    GT   shift, and go to state 48
+    '-'  shift, and go to state 49
+    '+'  shift, and go to state 50
+    '*'  shift, and go to state 51
+    '/'  shift, and go to state 52
 
-    OR        [reduce using rule 40 (EXP)]
-    $default  reduce using rule 40 (EXP)
+    $default  reduce using rule 44 (EXP)
 
 
-State 33
+State 35
+
+   37 EXP: EXP . '+' EXP
+   38    | EXP . '-' EXP
+   39    | EXP . '*' EXP
+   40    | EXP . '/' EXP
+   41    | '-' EXP .
+   45    | EXP . OR EXP
+   46    | EXP . AND EXP
+   47    | EXP . LT EXP
+   48    | EXP . LE EXP
+   49    | EXP . EQ EXP
+   50    | EXP . NQ EXP
+   51    | EXP . GE EXP
+   52    | EXP . GT EXP
+
+    $default  reduce using rule 41 (EXP)
+
+
+State 36
 
     3 PROGRAM: OBJECT ID_NAME $@1 '{' $@2 OBJCONTENT '}' .
 
     $default  reduce using rule 3 (PROGRAM)
 
 
-State 34
+State 37
 
     9 FUNCTION_DEFINITION: DEF . ID_NAME $@3 FUNCTION_DEFINITION2 '{' $@4 STMTS '}'
 
-    ID_NAME  shift, and go to state 51
+    ID_NAME  shift, and go to state 62
 
 
-State 35
+State 38
 
     4 OBJCONTENT: STMTS FUNCTION_DEFINITIONS .
 
     $default  reduce using rule 4 (OBJCONTENT)
 
 
-State 36
+State 39
 
     5 FUNCTION_DEFINITIONS: FUNCTION_DEFINITION . FUNCTION_DEFINITIONS
     6                     | FUNCTION_DEFINITION .
 
-    DEF  shift, and go to state 34
+    DEF  shift, and go to state 37
 
     $default  reduce using rule 6 (FUNCTION_DEFINITIONS)
 
-    FUNCTION_DEFINITIONS  go to state 52
-    FUNCTION_DEFINITION   go to state 36
+    FUNCTION_DEFINITIONS  go to state 63
+    FUNCTION_DEFINITION   go to state 39
 
 
-State 37
+State 40
 
    19 STMTS: STMT STMTS .
 
     $default  reduce using rule 19 (STMTS)
 
 
-State 38
-
-   43 EXP: EXP OR . EXP
-
-    ID_NAME      shift, and go to state 30
-    VALUE_TOKEN  shift, and go to state 9
-    '-'          shift, and go to state 15
-
-    EXP              go to state 53
-    FUNCTION_CALLED  go to state 23
-
-
-State 39
-
-   37 EXP: EXP '-' . EXP
-
-    ID_NAME      shift, and go to state 30
-    VALUE_TOKEN  shift, and go to state 9
-    '-'          shift, and go to state 15
-
-    EXP              go to state 54
-    FUNCTION_CALLED  go to state 23
-
-
-State 40
-
-   36 EXP: EXP '+' . EXP
-
-    ID_NAME      shift, and go to state 30
-    VALUE_TOKEN  shift, and go to state 9
-    '-'          shift, and go to state 15
-
-    EXP              go to state 55
-    FUNCTION_CALLED  go to state 23
-
-
 State 41
 
-   38 EXP: EXP '*' . EXP
+   46 EXP: EXP AND . EXP
 
-    ID_NAME      shift, and go to state 30
+    ID_NAME      shift, and go to state 32
     VALUE_TOKEN  shift, and go to state 9
-    '-'          shift, and go to state 15
+    NOT          shift, and go to state 15
+    '-'          shift, and go to state 16
 
-    EXP              go to state 56
-    FUNCTION_CALLED  go to state 23
+    EXP              go to state 64
+    FUNCTION_CALLED  go to state 24
 
 
 State 42
 
-   39 EXP: EXP '/' . EXP
+   45 EXP: EXP OR . EXP
 
-    ID_NAME      shift, and go to state 30
+    ID_NAME      shift, and go to state 32
     VALUE_TOKEN  shift, and go to state 9
-    '-'          shift, and go to state 15
+    NOT          shift, and go to state 15
+    '-'          shift, and go to state 16
 
-    EXP              go to state 57
-    FUNCTION_CALLED  go to state 23
+    EXP              go to state 65
+    FUNCTION_CALLED  go to state 24
 
 
 State 43
 
-   21 STMT: ID_NAME '=' EXP .
-   36 EXP: EXP . '+' EXP
-   37    | EXP . '-' EXP
-   38    | EXP . '*' EXP
-   39    | EXP . '/' EXP
-   43    | EXP . OR EXP
+   47 EXP: EXP LT . EXP
 
-    OR   shift, and go to state 38
-    '-'  shift, and go to state 39
-    '+'  shift, and go to state 40
-    '*'  shift, and go to state 41
-    '/'  shift, and go to state 42
+    ID_NAME      shift, and go to state 32
+    VALUE_TOKEN  shift, and go to state 9
+    NOT          shift, and go to state 15
+    '-'          shift, and go to state 16
 
-    $default  reduce using rule 21 (STMT)
+    EXP              go to state 66
+    FUNCTION_CALLED  go to state 24
 
 
 State 44
 
-   45 FUNCTION_CALLED: ID_NAME $@5 '(' . FUNCTION_CALLED_ARGS ')'
+   48 EXP: EXP LE . EXP
 
-    ID_NAME      shift, and go to state 30
+    ID_NAME      shift, and go to state 32
     VALUE_TOKEN  shift, and go to state 9
-    '-'          shift, and go to state 15
+    NOT          shift, and go to state 15
+    '-'          shift, and go to state 16
 
-    $default  reduce using rule 49 (FUNCTION_CALLED_ARG)
-
-    EXP                   go to state 58
-    FUNCTION_CALLED       go to state 23
-    FUNCTION_CALLED_ARGS  go to state 59
-    FUNCTION_CALLED_ARG   go to state 60
+    EXP              go to state 67
+    FUNCTION_CALLED  go to state 24
 
 
 State 45
 
-   31 VARDECLARATION: VAR ID_NAME '=' . VALUE_TOKEN
+   49 EXP: EXP EQ . EXP
 
-    VALUE_TOKEN  shift, and go to state 61
+    ID_NAME      shift, and go to state 32
+    VALUE_TOKEN  shift, and go to state 9
+    NOT          shift, and go to state 15
+    '-'          shift, and go to state 16
+
+    EXP              go to state 68
+    FUNCTION_CALLED  go to state 24
 
 
 State 46
+
+   50 EXP: EXP NQ . EXP
+
+    ID_NAME      shift, and go to state 32
+    VALUE_TOKEN  shift, and go to state 9
+    NOT          shift, and go to state 15
+    '-'          shift, and go to state 16
+
+    EXP              go to state 69
+    FUNCTION_CALLED  go to state 24
+
+
+State 47
+
+   51 EXP: EXP GE . EXP
+
+    ID_NAME      shift, and go to state 32
+    VALUE_TOKEN  shift, and go to state 9
+    NOT          shift, and go to state 15
+    '-'          shift, and go to state 16
+
+    EXP              go to state 70
+    FUNCTION_CALLED  go to state 24
+
+
+State 48
+
+   52 EXP: EXP GT . EXP
+
+    ID_NAME      shift, and go to state 32
+    VALUE_TOKEN  shift, and go to state 9
+    NOT          shift, and go to state 15
+    '-'          shift, and go to state 16
+
+    EXP              go to state 71
+    FUNCTION_CALLED  go to state 24
+
+
+State 49
+
+   38 EXP: EXP '-' . EXP
+
+    ID_NAME      shift, and go to state 32
+    VALUE_TOKEN  shift, and go to state 9
+    NOT          shift, and go to state 15
+    '-'          shift, and go to state 16
+
+    EXP              go to state 72
+    FUNCTION_CALLED  go to state 24
+
+
+State 50
+
+   37 EXP: EXP '+' . EXP
+
+    ID_NAME      shift, and go to state 32
+    VALUE_TOKEN  shift, and go to state 9
+    NOT          shift, and go to state 15
+    '-'          shift, and go to state 16
+
+    EXP              go to state 73
+    FUNCTION_CALLED  go to state 24
+
+
+State 51
+
+   39 EXP: EXP '*' . EXP
+
+    ID_NAME      shift, and go to state 32
+    VALUE_TOKEN  shift, and go to state 9
+    NOT          shift, and go to state 15
+    '-'          shift, and go to state 16
+
+    EXP              go to state 74
+    FUNCTION_CALLED  go to state 24
+
+
+State 52
+
+   40 EXP: EXP '/' . EXP
+
+    ID_NAME      shift, and go to state 32
+    VALUE_TOKEN  shift, and go to state 9
+    NOT          shift, and go to state 15
+    '-'          shift, and go to state 16
+
+    EXP              go to state 75
+    FUNCTION_CALLED  go to state 24
+
+
+State 53
+
+   21 STMT: ID_NAME '=' EXP .
+   37 EXP: EXP . '+' EXP
+   38    | EXP . '-' EXP
+   39    | EXP . '*' EXP
+   40    | EXP . '/' EXP
+   45    | EXP . OR EXP
+   46    | EXP . AND EXP
+   47    | EXP . LT EXP
+   48    | EXP . LE EXP
+   49    | EXP . EQ EXP
+   50    | EXP . NQ EXP
+   51    | EXP . GE EXP
+   52    | EXP . GT EXP
+
+    AND  shift, and go to state 41
+    OR   shift, and go to state 42
+    LT   shift, and go to state 43
+    LE   shift, and go to state 44
+    EQ   shift, and go to state 45
+    NQ   shift, and go to state 46
+    GE   shift, and go to state 47
+    GT   shift, and go to state 48
+    '-'  shift, and go to state 49
+    '+'  shift, and go to state 50
+    '*'  shift, and go to state 51
+    '/'  shift, and go to state 52
+
+    $default  reduce using rule 21 (STMT)
+
+
+State 54
+
+   36 EXP: ID_NAME '[' VALUE_TOKEN . ']' '=' VALUE_TOKEN
+
+    ']'  shift, and go to state 76
+
+
+State 55
+
+   54 FUNCTION_CALLED: ID_NAME $@5 '(' . FUNCTION_CALLED_ARGS ')'
+
+    ID_NAME      shift, and go to state 32
+    VALUE_TOKEN  shift, and go to state 9
+    NOT          shift, and go to state 15
+    '-'          shift, and go to state 16
+
+    $default  reduce using rule 58 (FUNCTION_CALLED_ARG)
+
+    EXP                   go to state 77
+    FUNCTION_CALLED       go to state 24
+    FUNCTION_CALLED_ARGS  go to state 78
+    FUNCTION_CALLED_ARG   go to state 79
+
+
+State 56
+
+   31 VARDECLARATION: VAR ID_NAME '=' . VALUE_TOKEN
+
+    VALUE_TOKEN  shift, and go to state 80
+
+
+State 57
 
    30 VARDECLARATION: VAR ID_NAME ':' . VALUE_TYPE
    32               | VAR ID_NAME ':' . VALUE_TYPE '=' VALUE_TOKEN
    34               | VAR ID_NAME ':' . VALUE_TYPE '[' VALUE_TOKEN ']'
 
-    VALUE_TYPE  shift, and go to state 62
+    VALUE_TYPE  shift, and go to state 81
 
 
-State 47
+State 58
 
    29 VALDECLARATION: VAL ID_NAME '=' . VALUE_TOKEN
 
-    VALUE_TOKEN  shift, and go to state 63
+    VALUE_TOKEN  shift, and go to state 82
 
 
-State 48
+State 59
 
    28 VALDECLARATION: VAL ID_NAME ':' . VALUE_TYPE '=' VALUE_TOKEN
 
-    VALUE_TYPE  shift, and go to state 64
+    VALUE_TYPE  shift, and go to state 83
 
 
-State 49
+State 60
 
    26 STMT: PRINT '(' EXP . ')'
-   36 EXP: EXP . '+' EXP
-   37    | EXP . '-' EXP
-   38    | EXP . '*' EXP
-   39    | EXP . '/' EXP
-   43    | EXP . OR EXP
+   37 EXP: EXP . '+' EXP
+   38    | EXP . '-' EXP
+   39    | EXP . '*' EXP
+   40    | EXP . '/' EXP
+   45    | EXP . OR EXP
+   46    | EXP . AND EXP
+   47    | EXP . LT EXP
+   48    | EXP . LE EXP
+   49    | EXP . EQ EXP
+   50    | EXP . NQ EXP
+   51    | EXP . GE EXP
+   52    | EXP . GT EXP
 
-    OR   shift, and go to state 38
-    '-'  shift, and go to state 39
-    '+'  shift, and go to state 40
-    '*'  shift, and go to state 41
-    '/'  shift, and go to state 42
-    ')'  shift, and go to state 65
+    AND  shift, and go to state 41
+    OR   shift, and go to state 42
+    LT   shift, and go to state 43
+    LE   shift, and go to state 44
+    EQ   shift, and go to state 45
+    NQ   shift, and go to state 46
+    GE   shift, and go to state 47
+    GT   shift, and go to state 48
+    '-'  shift, and go to state 49
+    '+'  shift, and go to state 50
+    '*'  shift, and go to state 51
+    '/'  shift, and go to state 52
+    ')'  shift, and go to state 84
 
 
-State 50
+State 61
 
    27 STMT: PRINTLN '(' EXP . ')'
-   36 EXP: EXP . '+' EXP
-   37    | EXP . '-' EXP
-   38    | EXP . '*' EXP
-   39    | EXP . '/' EXP
-   43    | EXP . OR EXP
+   37 EXP: EXP . '+' EXP
+   38    | EXP . '-' EXP
+   39    | EXP . '*' EXP
+   40    | EXP . '/' EXP
+   45    | EXP . OR EXP
+   46    | EXP . AND EXP
+   47    | EXP . LT EXP
+   48    | EXP . LE EXP
+   49    | EXP . EQ EXP
+   50    | EXP . NQ EXP
+   51    | EXP . GE EXP
+   52    | EXP . GT EXP
 
-    OR   shift, and go to state 38
-    '-'  shift, and go to state 39
-    '+'  shift, and go to state 40
-    '*'  shift, and go to state 41
-    '/'  shift, and go to state 42
-    ')'  shift, and go to state 66
+    AND  shift, and go to state 41
+    OR   shift, and go to state 42
+    LT   shift, and go to state 43
+    LE   shift, and go to state 44
+    EQ   shift, and go to state 45
+    NQ   shift, and go to state 46
+    GE   shift, and go to state 47
+    GT   shift, and go to state 48
+    '-'  shift, and go to state 49
+    '+'  shift, and go to state 50
+    '*'  shift, and go to state 51
+    '/'  shift, and go to state 52
+    ')'  shift, and go to state 85
 
 
-State 51
+State 62
 
     9 FUNCTION_DEFINITION: DEF ID_NAME . $@3 FUNCTION_DEFINITION2 '{' $@4 STMTS '}'
 
     $default  reduce using rule 7 ($@3)
 
-    $@3  go to state 67
+    $@3  go to state 86
 
 
-State 52
+State 63
 
     5 FUNCTION_DEFINITIONS: FUNCTION_DEFINITION FUNCTION_DEFINITIONS .
 
     $default  reduce using rule 5 (FUNCTION_DEFINITIONS)
 
 
-State 53
+State 64
 
-   36 EXP: EXP . '+' EXP
-   37    | EXP . '-' EXP
-   38    | EXP . '*' EXP
-   39    | EXP . '/' EXP
-   43    | EXP . OR EXP
-   43    | EXP OR EXP .
+   37 EXP: EXP . '+' EXP
+   38    | EXP . '-' EXP
+   39    | EXP . '*' EXP
+   40    | EXP . '/' EXP
+   45    | EXP . OR EXP
+   46    | EXP . AND EXP
+   46    | EXP AND EXP .
+   47    | EXP . LT EXP
+   48    | EXP . LE EXP
+   49    | EXP . EQ EXP
+   50    | EXP . NQ EXP
+   51    | EXP . GE EXP
+   52    | EXP . GT EXP
 
-    OR   shift, and go to state 38
-    '-'  shift, and go to state 39
-    '+'  shift, and go to state 40
-    '*'  shift, and go to state 41
-    '/'  shift, and go to state 42
+    LT   shift, and go to state 43
+    LE   shift, and go to state 44
+    EQ   shift, and go to state 45
+    NQ   shift, and go to state 46
+    GE   shift, and go to state 47
+    GT   shift, and go to state 48
+    '-'  shift, and go to state 49
+    '+'  shift, and go to state 50
+    '*'  shift, and go to state 51
+    '/'  shift, and go to state 52
 
-    OR        [reduce using rule 43 (EXP)]
-    '-'       [reduce using rule 43 (EXP)]
-    '+'       [reduce using rule 43 (EXP)]
-    '*'       [reduce using rule 43 (EXP)]
-    '/'       [reduce using rule 43 (EXP)]
-    $default  reduce using rule 43 (EXP)
-
-
-State 54
-
-   36 EXP: EXP . '+' EXP
-   37    | EXP . '-' EXP
-   37    | EXP '-' EXP .
-   38    | EXP . '*' EXP
-   39    | EXP . '/' EXP
-   43    | EXP . OR EXP
-
-    OR   shift, and go to state 38
-    '*'  shift, and go to state 41
-    '/'  shift, and go to state 42
-
-    OR        [reduce using rule 37 (EXP)]
-    $default  reduce using rule 37 (EXP)
+    $default  reduce using rule 46 (EXP)
 
 
-State 55
+State 65
 
-   36 EXP: EXP . '+' EXP
-   36    | EXP '+' EXP .
-   37    | EXP . '-' EXP
-   38    | EXP . '*' EXP
-   39    | EXP . '/' EXP
-   43    | EXP . OR EXP
+   37 EXP: EXP . '+' EXP
+   38    | EXP . '-' EXP
+   39    | EXP . '*' EXP
+   40    | EXP . '/' EXP
+   45    | EXP . OR EXP
+   45    | EXP OR EXP .
+   46    | EXP . AND EXP
+   47    | EXP . LT EXP
+   48    | EXP . LE EXP
+   49    | EXP . EQ EXP
+   50    | EXP . NQ EXP
+   51    | EXP . GE EXP
+   52    | EXP . GT EXP
 
-    OR   shift, and go to state 38
-    '*'  shift, and go to state 41
-    '/'  shift, and go to state 42
+    AND  shift, and go to state 41
+    LT   shift, and go to state 43
+    LE   shift, and go to state 44
+    EQ   shift, and go to state 45
+    NQ   shift, and go to state 46
+    GE   shift, and go to state 47
+    GT   shift, and go to state 48
+    '-'  shift, and go to state 49
+    '+'  shift, and go to state 50
+    '*'  shift, and go to state 51
+    '/'  shift, and go to state 52
 
-    OR        [reduce using rule 36 (EXP)]
-    $default  reduce using rule 36 (EXP)
+    $default  reduce using rule 45 (EXP)
 
 
-State 56
+State 66
 
-   36 EXP: EXP . '+' EXP
-   37    | EXP . '-' EXP
-   38    | EXP . '*' EXP
-   38    | EXP '*' EXP .
-   39    | EXP . '/' EXP
-   43    | EXP . OR EXP
+   37 EXP: EXP . '+' EXP
+   38    | EXP . '-' EXP
+   39    | EXP . '*' EXP
+   40    | EXP . '/' EXP
+   45    | EXP . OR EXP
+   46    | EXP . AND EXP
+   47    | EXP . LT EXP
+   47    | EXP LT EXP .
+   48    | EXP . LE EXP
+   49    | EXP . EQ EXP
+   50    | EXP . NQ EXP
+   51    | EXP . GE EXP
+   52    | EXP . GT EXP
 
-    OR  shift, and go to state 38
+    '-'  shift, and go to state 49
+    '+'  shift, and go to state 50
+    '*'  shift, and go to state 51
+    '/'  shift, and go to state 52
 
-    OR        [reduce using rule 38 (EXP)]
+    $default  reduce using rule 47 (EXP)
+
+
+State 67
+
+   37 EXP: EXP . '+' EXP
+   38    | EXP . '-' EXP
+   39    | EXP . '*' EXP
+   40    | EXP . '/' EXP
+   45    | EXP . OR EXP
+   46    | EXP . AND EXP
+   47    | EXP . LT EXP
+   48    | EXP . LE EXP
+   48    | EXP LE EXP .
+   49    | EXP . EQ EXP
+   50    | EXP . NQ EXP
+   51    | EXP . GE EXP
+   52    | EXP . GT EXP
+
+    '-'  shift, and go to state 49
+    '+'  shift, and go to state 50
+    '*'  shift, and go to state 51
+    '/'  shift, and go to state 52
+
+    $default  reduce using rule 48 (EXP)
+
+
+State 68
+
+   37 EXP: EXP . '+' EXP
+   38    | EXP . '-' EXP
+   39    | EXP . '*' EXP
+   40    | EXP . '/' EXP
+   45    | EXP . OR EXP
+   46    | EXP . AND EXP
+   47    | EXP . LT EXP
+   48    | EXP . LE EXP
+   49    | EXP . EQ EXP
+   49    | EXP EQ EXP .
+   50    | EXP . NQ EXP
+   51    | EXP . GE EXP
+   52    | EXP . GT EXP
+
+    '-'  shift, and go to state 49
+    '+'  shift, and go to state 50
+    '*'  shift, and go to state 51
+    '/'  shift, and go to state 52
+
+    $default  reduce using rule 49 (EXP)
+
+
+State 69
+
+   37 EXP: EXP . '+' EXP
+   38    | EXP . '-' EXP
+   39    | EXP . '*' EXP
+   40    | EXP . '/' EXP
+   45    | EXP . OR EXP
+   46    | EXP . AND EXP
+   47    | EXP . LT EXP
+   48    | EXP . LE EXP
+   49    | EXP . EQ EXP
+   50    | EXP . NQ EXP
+   50    | EXP NQ EXP .
+   51    | EXP . GE EXP
+   52    | EXP . GT EXP
+
+    '-'  shift, and go to state 49
+    '+'  shift, and go to state 50
+    '*'  shift, and go to state 51
+    '/'  shift, and go to state 52
+
+    $default  reduce using rule 50 (EXP)
+
+
+State 70
+
+   37 EXP: EXP . '+' EXP
+   38    | EXP . '-' EXP
+   39    | EXP . '*' EXP
+   40    | EXP . '/' EXP
+   45    | EXP . OR EXP
+   46    | EXP . AND EXP
+   47    | EXP . LT EXP
+   48    | EXP . LE EXP
+   49    | EXP . EQ EXP
+   50    | EXP . NQ EXP
+   51    | EXP . GE EXP
+   51    | EXP GE EXP .
+   52    | EXP . GT EXP
+
+    '-'  shift, and go to state 49
+    '+'  shift, and go to state 50
+    '*'  shift, and go to state 51
+    '/'  shift, and go to state 52
+
+    $default  reduce using rule 51 (EXP)
+
+
+State 71
+
+   37 EXP: EXP . '+' EXP
+   38    | EXP . '-' EXP
+   39    | EXP . '*' EXP
+   40    | EXP . '/' EXP
+   45    | EXP . OR EXP
+   46    | EXP . AND EXP
+   47    | EXP . LT EXP
+   48    | EXP . LE EXP
+   49    | EXP . EQ EXP
+   50    | EXP . NQ EXP
+   51    | EXP . GE EXP
+   52    | EXP . GT EXP
+   52    | EXP GT EXP .
+
+    '-'  shift, and go to state 49
+    '+'  shift, and go to state 50
+    '*'  shift, and go to state 51
+    '/'  shift, and go to state 52
+
+    $default  reduce using rule 52 (EXP)
+
+
+State 72
+
+   37 EXP: EXP . '+' EXP
+   38    | EXP . '-' EXP
+   38    | EXP '-' EXP .
+   39    | EXP . '*' EXP
+   40    | EXP . '/' EXP
+   45    | EXP . OR EXP
+   46    | EXP . AND EXP
+   47    | EXP . LT EXP
+   48    | EXP . LE EXP
+   49    | EXP . EQ EXP
+   50    | EXP . NQ EXP
+   51    | EXP . GE EXP
+   52    | EXP . GT EXP
+
+    '*'  shift, and go to state 51
+    '/'  shift, and go to state 52
+
     $default  reduce using rule 38 (EXP)
 
 
-State 57
+State 73
 
-   36 EXP: EXP . '+' EXP
-   37    | EXP . '-' EXP
-   38    | EXP . '*' EXP
-   39    | EXP . '/' EXP
-   39    | EXP '/' EXP .
-   43    | EXP . OR EXP
+   37 EXP: EXP . '+' EXP
+   37    | EXP '+' EXP .
+   38    | EXP . '-' EXP
+   39    | EXP . '*' EXP
+   40    | EXP . '/' EXP
+   45    | EXP . OR EXP
+   46    | EXP . AND EXP
+   47    | EXP . LT EXP
+   48    | EXP . LE EXP
+   49    | EXP . EQ EXP
+   50    | EXP . NQ EXP
+   51    | EXP . GE EXP
+   52    | EXP . GT EXP
 
-    OR  shift, and go to state 38
+    '*'  shift, and go to state 51
+    '/'  shift, and go to state 52
 
-    OR        [reduce using rule 39 (EXP)]
+    $default  reduce using rule 37 (EXP)
+
+
+State 74
+
+   37 EXP: EXP . '+' EXP
+   38    | EXP . '-' EXP
+   39    | EXP . '*' EXP
+   39    | EXP '*' EXP .
+   40    | EXP . '/' EXP
+   45    | EXP . OR EXP
+   46    | EXP . AND EXP
+   47    | EXP . LT EXP
+   48    | EXP . LE EXP
+   49    | EXP . EQ EXP
+   50    | EXP . NQ EXP
+   51    | EXP . GE EXP
+   52    | EXP . GT EXP
+
     $default  reduce using rule 39 (EXP)
 
 
-State 58
+State 75
 
-   36 EXP: EXP . '+' EXP
-   37    | EXP . '-' EXP
-   38    | EXP . '*' EXP
-   39    | EXP . '/' EXP
-   43    | EXP . OR EXP
-   48 FUNCTION_CALLED_ARG: EXP .
+   37 EXP: EXP . '+' EXP
+   38    | EXP . '-' EXP
+   39    | EXP . '*' EXP
+   40    | EXP . '/' EXP
+   40    | EXP '/' EXP .
+   45    | EXP . OR EXP
+   46    | EXP . AND EXP
+   47    | EXP . LT EXP
+   48    | EXP . LE EXP
+   49    | EXP . EQ EXP
+   50    | EXP . NQ EXP
+   51    | EXP . GE EXP
+   52    | EXP . GT EXP
 
-    OR   shift, and go to state 38
-    '-'  shift, and go to state 39
-    '+'  shift, and go to state 40
-    '*'  shift, and go to state 41
-    '/'  shift, and go to state 42
-
-    $default  reduce using rule 48 (FUNCTION_CALLED_ARG)
-
-
-State 59
-
-   45 FUNCTION_CALLED: ID_NAME $@5 '(' FUNCTION_CALLED_ARGS . ')'
-
-    ')'  shift, and go to state 68
+    $default  reduce using rule 40 (EXP)
 
 
-State 60
+State 76
 
-   46 FUNCTION_CALLED_ARGS: FUNCTION_CALLED_ARG . ',' FUNCTION_CALLED_ARGS
-   47                     | FUNCTION_CALLED_ARG .
+   36 EXP: ID_NAME '[' VALUE_TOKEN ']' . '=' VALUE_TOKEN
 
-    ','  shift, and go to state 69
-
-    $default  reduce using rule 47 (FUNCTION_CALLED_ARGS)
+    '='  shift, and go to state 87
 
 
-State 61
+State 77
+
+   37 EXP: EXP . '+' EXP
+   38    | EXP . '-' EXP
+   39    | EXP . '*' EXP
+   40    | EXP . '/' EXP
+   45    | EXP . OR EXP
+   46    | EXP . AND EXP
+   47    | EXP . LT EXP
+   48    | EXP . LE EXP
+   49    | EXP . EQ EXP
+   50    | EXP . NQ EXP
+   51    | EXP . GE EXP
+   52    | EXP . GT EXP
+   57 FUNCTION_CALLED_ARG: EXP .
+
+    AND  shift, and go to state 41
+    OR   shift, and go to state 42
+    LT   shift, and go to state 43
+    LE   shift, and go to state 44
+    EQ   shift, and go to state 45
+    NQ   shift, and go to state 46
+    GE   shift, and go to state 47
+    GT   shift, and go to state 48
+    '-'  shift, and go to state 49
+    '+'  shift, and go to state 50
+    '*'  shift, and go to state 51
+    '/'  shift, and go to state 52
+
+    $default  reduce using rule 57 (FUNCTION_CALLED_ARG)
+
+
+State 78
+
+   54 FUNCTION_CALLED: ID_NAME $@5 '(' FUNCTION_CALLED_ARGS . ')'
+
+    ')'  shift, and go to state 88
+
+
+State 79
+
+   55 FUNCTION_CALLED_ARGS: FUNCTION_CALLED_ARG . ',' FUNCTION_CALLED_ARGS
+   56                     | FUNCTION_CALLED_ARG .
+
+    ','  shift, and go to state 89
+
+    $default  reduce using rule 56 (FUNCTION_CALLED_ARGS)
+
+
+State 80
 
    31 VARDECLARATION: VAR ID_NAME '=' VALUE_TOKEN .
 
     $default  reduce using rule 31 (VARDECLARATION)
 
 
-State 62
+State 81
 
    30 VARDECLARATION: VAR ID_NAME ':' VALUE_TYPE .
    32               | VAR ID_NAME ':' VALUE_TYPE . '=' VALUE_TOKEN
    34               | VAR ID_NAME ':' VALUE_TYPE . '[' VALUE_TOKEN ']'
 
-    '='  shift, and go to state 70
-    '['  shift, and go to state 71
+    '='  shift, and go to state 90
+    '['  shift, and go to state 91
 
     $default  reduce using rule 30 (VARDECLARATION)
 
 
-State 63
+State 82
 
    29 VALDECLARATION: VAL ID_NAME '=' VALUE_TOKEN .
 
     $default  reduce using rule 29 (VALDECLARATION)
 
 
-State 64
+State 83
 
    28 VALDECLARATION: VAL ID_NAME ':' VALUE_TYPE . '=' VALUE_TOKEN
 
-    '='  shift, and go to state 72
+    '='  shift, and go to state 92
 
 
-State 65
+State 84
 
    26 STMT: PRINT '(' EXP ')' .
 
     $default  reduce using rule 26 (STMT)
 
 
-State 66
+State 85
 
    27 STMT: PRINTLN '(' EXP ')' .
 
     $default  reduce using rule 27 (STMT)
 
 
-State 67
+State 86
 
     9 FUNCTION_DEFINITION: DEF ID_NAME $@3 . FUNCTION_DEFINITION2 '{' $@4 STMTS '}'
 
-    '('  shift, and go to state 73
+    '('  shift, and go to state 93
 
-    FUNCTION_DEFINITION2  go to state 74
-
-
-State 68
-
-   45 FUNCTION_CALLED: ID_NAME $@5 '(' FUNCTION_CALLED_ARGS ')' .
-
-    $default  reduce using rule 45 (FUNCTION_CALLED)
+    FUNCTION_DEFINITION2  go to state 94
 
 
-State 69
+State 87
 
-   46 FUNCTION_CALLED_ARGS: FUNCTION_CALLED_ARG ',' . FUNCTION_CALLED_ARGS
+   36 EXP: ID_NAME '[' VALUE_TOKEN ']' '=' . VALUE_TOKEN
 
-    ID_NAME      shift, and go to state 30
+    VALUE_TOKEN  shift, and go to state 95
+
+
+State 88
+
+   54 FUNCTION_CALLED: ID_NAME $@5 '(' FUNCTION_CALLED_ARGS ')' .
+
+    $default  reduce using rule 54 (FUNCTION_CALLED)
+
+
+State 89
+
+   55 FUNCTION_CALLED_ARGS: FUNCTION_CALLED_ARG ',' . FUNCTION_CALLED_ARGS
+
+    ID_NAME      shift, and go to state 32
     VALUE_TOKEN  shift, and go to state 9
-    '-'          shift, and go to state 15
+    NOT          shift, and go to state 15
+    '-'          shift, and go to state 16
 
-    $default  reduce using rule 49 (FUNCTION_CALLED_ARG)
+    $default  reduce using rule 58 (FUNCTION_CALLED_ARG)
 
-    EXP                   go to state 58
-    FUNCTION_CALLED       go to state 23
-    FUNCTION_CALLED_ARGS  go to state 75
-    FUNCTION_CALLED_ARG   go to state 60
+    EXP                   go to state 77
+    FUNCTION_CALLED       go to state 24
+    FUNCTION_CALLED_ARGS  go to state 96
+    FUNCTION_CALLED_ARG   go to state 79
 
 
-State 70
+State 90
 
    32 VARDECLARATION: VAR ID_NAME ':' VALUE_TYPE '=' . VALUE_TOKEN
 
-    VALUE_TOKEN  shift, and go to state 76
+    VALUE_TOKEN  shift, and go to state 97
 
 
-State 71
+State 91
 
    34 VARDECLARATION: VAR ID_NAME ':' VALUE_TYPE '[' . VALUE_TOKEN ']'
 
-    VALUE_TOKEN  shift, and go to state 77
+    VALUE_TOKEN  shift, and go to state 98
 
 
-State 72
+State 92
 
    28 VALDECLARATION: VAL ID_NAME ':' VALUE_TYPE '=' . VALUE_TOKEN
 
-    VALUE_TOKEN  shift, and go to state 78
+    VALUE_TOKEN  shift, and go to state 99
 
 
-State 73
+State 93
 
    10 FUNCTION_DEFINITION2: '(' . FORMAL_ARGS ')' ':' VALUE_TYPE
    11                     | '(' . FORMAL_ARGS ')'
 
-    ID_NAME  shift, and go to state 79
+    ID_NAME  shift, and go to state 100
 
     $default  reduce using rule 15 (ARG)
 
-    FORMAL_ARGS  go to state 80
-    ARG          go to state 81
+    FORMAL_ARGS  go to state 101
+    ARG          go to state 102
 
 
-State 74
+State 94
 
     9 FUNCTION_DEFINITION: DEF ID_NAME $@3 FUNCTION_DEFINITION2 . '{' $@4 STMTS '}'
 
-    '{'  shift, and go to state 82
+    '{'  shift, and go to state 103
 
 
-State 75
+State 95
 
-   46 FUNCTION_CALLED_ARGS: FUNCTION_CALLED_ARG ',' FUNCTION_CALLED_ARGS .
+   36 EXP: ID_NAME '[' VALUE_TOKEN ']' '=' VALUE_TOKEN .
 
-    $default  reduce using rule 46 (FUNCTION_CALLED_ARGS)
+    $default  reduce using rule 36 (EXP)
 
 
-State 76
+State 96
+
+   55 FUNCTION_CALLED_ARGS: FUNCTION_CALLED_ARG ',' FUNCTION_CALLED_ARGS .
+
+    $default  reduce using rule 55 (FUNCTION_CALLED_ARGS)
+
+
+State 97
 
    32 VARDECLARATION: VAR ID_NAME ':' VALUE_TYPE '=' VALUE_TOKEN .
 
     $default  reduce using rule 32 (VARDECLARATION)
 
 
-State 77
+State 98
 
    34 VARDECLARATION: VAR ID_NAME ':' VALUE_TYPE '[' VALUE_TOKEN . ']'
 
-    ']'  shift, and go to state 83
+    ']'  shift, and go to state 104
 
 
-State 78
+State 99
 
    28 VALDECLARATION: VAL ID_NAME ':' VALUE_TYPE '=' VALUE_TOKEN .
 
     $default  reduce using rule 28 (VALDECLARATION)
 
 
-State 79
+State 100
 
    14 ARG: ID_NAME . ':' VALUE_TYPE
 
-    ':'  shift, and go to state 84
+    ':'  shift, and go to state 105
 
 
-State 80
+State 101
 
    10 FUNCTION_DEFINITION2: '(' FORMAL_ARGS . ')' ':' VALUE_TYPE
    11                     | '(' FORMAL_ARGS . ')'
 
-    ')'  shift, and go to state 85
+    ')'  shift, and go to state 106
 
 
-State 81
+State 102
 
    12 FORMAL_ARGS: ARG . ',' FORMAL_ARGS
    13            | ARG .
 
-    ','  shift, and go to state 86
+    ','  shift, and go to state 107
 
     $default  reduce using rule 13 (FORMAL_ARGS)
 
 
-State 82
+State 103
 
     9 FUNCTION_DEFINITION: DEF ID_NAME $@3 FUNCTION_DEFINITION2 '{' . $@4 STMTS '}'
 
     $default  reduce using rule 8 ($@4)
 
-    $@4  go to state 87
+    $@4  go to state 108
 
 
-State 83
+State 104
 
    34 VARDECLARATION: VAR ID_NAME ':' VALUE_TYPE '[' VALUE_TOKEN ']' .
 
     $default  reduce using rule 34 (VARDECLARATION)
 
 
-State 84
+State 105
 
    14 ARG: ID_NAME ':' . VALUE_TYPE
 
-    VALUE_TYPE  shift, and go to state 88
+    VALUE_TYPE  shift, and go to state 109
 
 
-State 85
+State 106
 
    10 FUNCTION_DEFINITION2: '(' FORMAL_ARGS ')' . ':' VALUE_TYPE
    11                     | '(' FORMAL_ARGS ')' .
 
-    ':'  shift, and go to state 89
+    ':'  shift, and go to state 110
 
     $default  reduce using rule 11 (FUNCTION_DEFINITION2)
 
 
-State 86
+State 107
 
    12 FORMAL_ARGS: ARG ',' . FORMAL_ARGS
 
-    ID_NAME  shift, and go to state 79
+    ID_NAME  shift, and go to state 100
 
     $default  reduce using rule 15 (ARG)
 
-    FORMAL_ARGS  go to state 90
-    ARG          go to state 81
+    FORMAL_ARGS  go to state 111
+    ARG          go to state 102
 
 
-State 87
+State 108
 
     9 FUNCTION_DEFINITION: DEF ID_NAME $@3 FUNCTION_DEFINITION2 '{' $@4 . STMTS '}'
 
@@ -1149,55 +1621,56 @@ State 87
     PRINT        shift, and go to state 12
     PRINTLN      shift, and go to state 13
     RETURN       shift, and go to state 14
-    '-'          shift, and go to state 15
+    NOT          shift, and go to state 15
+    '-'          shift, and go to state 16
 
     $default  reduce using rule 20 (STMTS)
 
-    RETURN_STMT      go to state 17
-    STMTS            go to state 91
-    STMT             go to state 19
-    VALDECLARATION   go to state 20
-    VARDECLARATION   go to state 21
-    EXP              go to state 22
-    FUNCTION_CALLED  go to state 23
+    RETURN_STMT      go to state 18
+    STMTS            go to state 112
+    STMT             go to state 20
+    VALDECLARATION   go to state 21
+    VARDECLARATION   go to state 22
+    EXP              go to state 23
+    FUNCTION_CALLED  go to state 24
 
 
-State 88
+State 109
 
    14 ARG: ID_NAME ':' VALUE_TYPE .
 
     $default  reduce using rule 14 (ARG)
 
 
-State 89
+State 110
 
    10 FUNCTION_DEFINITION2: '(' FORMAL_ARGS ')' ':' . VALUE_TYPE
 
-    VALUE_TYPE  shift, and go to state 92
+    VALUE_TYPE  shift, and go to state 113
 
 
-State 90
+State 111
 
    12 FORMAL_ARGS: ARG ',' FORMAL_ARGS .
 
     $default  reduce using rule 12 (FORMAL_ARGS)
 
 
-State 91
+State 112
 
     9 FUNCTION_DEFINITION: DEF ID_NAME $@3 FUNCTION_DEFINITION2 '{' $@4 STMTS . '}'
 
-    '}'  shift, and go to state 93
+    '}'  shift, and go to state 114
 
 
-State 92
+State 113
 
    10 FUNCTION_DEFINITION2: '(' FORMAL_ARGS ')' ':' VALUE_TYPE .
 
     $default  reduce using rule 10 (FUNCTION_DEFINITION2)
 
 
-State 93
+State 114
 
     9 FUNCTION_DEFINITION: DEF ID_NAME $@3 FUNCTION_DEFINITION2 '{' $@4 STMTS '}' .
 

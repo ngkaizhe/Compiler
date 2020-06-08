@@ -62,13 +62,8 @@ void ID::SetToVar(string idName)
 void ID::Dump()
 {
     cout << "ID Dump Starts!\n";
-    string idTypeString;
-    if (this->idType == IDTYPE::INVALID) idTypeString = "invalid";
-    if (this->idType == IDTYPE::CONSTVAR) idTypeString = "const var";
-    if (this->idType == IDTYPE::FUNCTION) idTypeString = "function";
-    if (this->idType == IDTYPE::VARIABLE) idTypeString = "variable";
 
-    cout << "IDName -> " << this->IDName << ",\tIDType -> " << idTypeString;
+    cout << "IDName -> " << this->IDName << ",\tIDType -> " << IdTypeToString(this->idType) << "|";
 
     // function
     if (this->idType == IDTYPE::FUNCTION) {
@@ -295,28 +290,28 @@ VALUE::VALUE(VALUETYPE valueType, int range) {
 
     // set vector size
     // char vector
-    if (valueType == VALUETYPE::CHAR) {
-        valueType = VALUETYPE::ARRCHAR;
+    if (this->valueType == VALUETYPE::CHAR) {
+        this->valueType = VALUETYPE::ARRCHAR;
         cvals.resize((size_t)range);
     }
     // boolean vector
-    else if (valueType == VALUETYPE::BOOLEAN) {
-        valueType = VALUETYPE::ARRBOOLEAN;
+    else if (this->valueType == VALUETYPE::BOOLEAN) {
+        this->valueType = VALUETYPE::ARRBOOLEAN;
         bvals.resize((size_t)range);
     }
     // string vector
-    else if (valueType == VALUETYPE::STRING) {
-        valueType = VALUETYPE::ARRSTRING;
+    else if (this->valueType == VALUETYPE::STRING) {
+        this->valueType = VALUETYPE::ARRSTRING;
         svals.resize((size_t)range);
     }
     // int vector
-    else if (valueType == VALUETYPE::INT) {
-        valueType = VALUETYPE::ARRINT;
+    else if (this->valueType == VALUETYPE::INT) {
+        this->valueType = VALUETYPE::ARRINT;
         ivals.resize((size_t)range);
     }
     // float vector
-    else if (valueType == VALUETYPE::FLOAT) {
-        valueType = VALUETYPE::ARRFLOAT;
+    else if (this->valueType == VALUETYPE::FLOAT) {
+        this->valueType = VALUETYPE::ARRFLOAT;
         fvals.resize((size_t)range);
     }
     // this shouldn't be called
@@ -684,7 +679,9 @@ string VALUE::ValueTypeString() {
 
 void VALUE::Dump()
 {
-    if (valueType == VALUETYPE::INVALID);
+    if (valueType == VALUETYPE::INVALID){
+        cout << "ValueType -> Invalid\n";
+    }
     else if (valueType == VALUETYPE::ARRBOOLEAN) {
         cout << "ValueType -> Arr Boolean";
         cout << " | ValueValue -> (";
@@ -854,6 +851,9 @@ string IdTypeToString(IDTYPE idtype) {
         break;
     case IDTYPE::FUNCTION:
         return "Function";
+        break;
+    case IDTYPE::OBJECTID:
+        return "Object";
         break;
 
     default:

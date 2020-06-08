@@ -594,16 +594,16 @@ union yyalloc
 /* YYFINAL -- State number of the termination state.  */
 #define YYFINAL  4
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   92
+#define YYLAST   151
 
 /* YYNTOKENS -- Number of terminals.  */
 #define YYNTOKENS  41
 /* YYNNTS -- Number of nonterminals.  */
 #define YYNNTS  22
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  50
+#define YYNRULES  59
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  94
+#define YYNSTATES  115
 
 #define YYMAXUTOK   282
 
@@ -654,12 +654,12 @@ static const yytype_int8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int16 yyrline[] =
 {
-       0,    85,    85,    93,    84,   114,   117,   118,   123,   134,
-     122,   156,   161,   169,   170,   173,   184,   188,   198,   211,
-     212,   213,   217,   228,   229,   230,   231,   232,   236,   243,
-     261,   279,   297,   315,   333,   348,   372,   377,   378,   379,
-     380,   382,   385,   386,   388,   393,   392,   419,   420,   424,
-     436
+       0,    89,    89,    97,    88,   118,   121,   122,   127,   138,
+     126,   160,   165,   173,   174,   177,   188,   192,   202,   215,
+     216,   217,   221,   232,   233,   234,   235,   236,   240,   247,
+     265,   283,   301,   319,   337,   352,   376,   382,   386,   387,
+     388,   389,   391,   394,   395,   397,   398,   399,   400,   401,
+     402,   403,   404,   405,   410,   409,   436,   437,   441,   453
 };
 #endif
 
@@ -707,30 +707,32 @@ static const yytype_int16 yytoknum[] =
 };
 #endif
 
-#define YYPACT_NINF (-26)
+#define YYPACT_NINF (-21)
 
 #define yypact_value_is_default(Yyn) \
   ((Yyn) == YYPACT_NINF)
 
-#define YYTABLE_NINF (-46)
+#define YYTABLE_NINF (-55)
 
 #define yytable_value_is_error(Yyn) \
   0
 
   /* YYPACT[STATE-NUM] -- Index in YYTABLE of the portion describing
      STATE-NUM.  */
-static const yytype_int8 yypact[] =
+static const yytype_int16 yypact[] =
 {
-     -11,     4,    22,   -26,   -26,   -10,   -26,     6,    19,   -26,
-      33,    35,    20,    27,     1,     1,     5,   -26,    16,     6,
-     -26,   -26,    29,   -26,     1,    28,   -20,     9,     1,     1,
-      30,    29,    45,   -26,    38,   -26,    16,   -26,     1,     1,
-       1,     1,     1,    29,     1,    62,    64,    63,    65,    13,
-      21,   -26,   -26,    29,     2,     2,    45,    45,    29,    36,
-      37,   -26,   -25,   -26,    43,   -26,   -26,    39,   -26,     1,
-      69,    72,    73,    75,    46,   -26,   -26,    40,   -26,    44,
-      47,    48,   -26,   -26,    77,    50,    75,     6,   -26,    79,
-     -26,    51,   -26,   -26
+       2,     1,    21,   -21,   -21,   -10,   -21,    37,    19,   -21,
+      45,    50,    -8,    25,    42,    42,    42,    22,   -21,    51,
+      37,   -21,   -21,    92,   -21,    42,    59,    30,    24,    27,
+      42,    42,   -15,    92,   -16,   -21,   -21,    69,   -21,    51,
+     -21,    42,    42,    42,    42,    42,    42,    42,    42,    42,
+      42,    42,    42,    92,    33,    42,    70,    72,    71,    75,
+      60,    76,   -21,   -21,   -16,   107,    38,    38,    38,    38,
+      38,    38,    -6,    -6,   -21,   -21,    65,    92,    67,    49,
+     -21,   -17,   -21,    81,   -21,   -21,    84,   100,   -21,    42,
+     116,   122,   123,   131,   102,   -21,   -21,   -21,   101,   -21,
+     103,   106,   105,   -21,   -21,   139,   108,   131,    37,   -21,
+     141,   -21,   113,   -21,   -21
 };
 
   /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -738,32 +740,34 @@ static const yytype_int8 yypact[] =
      means the default is an error.  */
 static const yytype_int8 yydefact[] =
 {
-       0,     0,     0,     2,     1,     0,     3,    21,    36,    42,
-       0,     0,     0,     0,    18,     0,     0,    26,     0,    19,
-      24,    25,    23,    43,     0,     0,    34,     0,     0,     0,
-      36,    17,    41,     4,     0,     5,     7,    20,     0,     0,
-       0,     0,     0,    22,    50,     0,     0,     0,     0,     0,
-       0,     8,     6,    44,    38,    37,    39,    40,    49,     0,
-      48,    32,    31,    30,     0,    27,    28,     0,    46,    50,
-       0,     0,     0,    16,     0,    47,    33,     0,    29,     0,
-       0,    14,     9,    35,     0,    12,    16,    21,    15,     0,
-      13,     0,    11,    10
+       0,     0,     0,     2,     1,     0,     3,    21,    36,    43,
+       0,     0,     0,     0,    18,     0,     0,     0,    26,     0,
+      19,    24,    25,    23,    44,     0,     0,     0,    34,     0,
+       0,     0,    36,    17,    45,    42,     4,     0,     5,     7,
+      20,     0,     0,     0,     0,     0,     0,     0,     0,     0,
+       0,     0,     0,    22,     0,    59,     0,     0,     0,     0,
+       0,     0,     8,     6,    47,    46,    48,    49,    50,    51,
+      52,    53,    39,    38,    40,    41,     0,    58,     0,    57,
+      32,    31,    30,     0,    27,    28,     0,     0,    55,    59,
+       0,     0,     0,    16,     0,    37,    56,    33,     0,    29,
+       0,     0,    14,     9,    35,     0,    12,    16,    21,    15,
+       0,    13,     0,    11,    10
 };
 
   /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-     -26,   -26,   -26,   -26,   -26,    52,   -26,   -26,   -26,   -26,
-       3,   -26,   -26,   -19,   -26,   -26,   -26,   -13,   -26,   -26,
-      23,   -26
+     -21,   -21,   -21,   -21,   -21,   109,   -21,   -21,   -21,   -21,
+      43,   -21,   -21,   -20,   -21,   -21,   -21,   -13,   -21,   -21,
+      62,   -21
 };
 
   /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
-      -1,     2,     5,     7,    16,    35,    36,    67,    87,    74,
-      80,    81,    17,    18,    19,    20,    21,    22,    23,    25,
-      59,    60
+      -1,     2,     5,     7,    17,    38,    39,    86,   108,    94,
+     101,   102,    18,    19,    20,    21,    22,    23,    24,    27,
+      78,    79
 };
 
   /* YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
@@ -771,30 +775,42 @@ static const yytype_int8 yydefgoto[] =
      number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_int8 yytable[] =
 {
-      37,    31,    32,    70,    30,     9,     1,     3,    45,     8,
-       9,    43,    10,    11,    71,    49,    50,    46,    12,    13,
-      14,    38,     4,     6,    34,    53,    54,    55,    56,    57,
-      15,    58,    38,    41,    42,    15,    26,    47,    27,    33,
-      38,    51,    39,    40,    41,    42,    48,    24,    38,    65,
-      39,    40,    41,    42,   -45,    28,    58,    66,    39,    40,
-      41,    42,    29,    44,    38,   -45,    61,    63,    91,    62,
-      64,    72,    68,    76,    73,    69,    77,    78,    79,    82,
-      83,    84,    88,    85,    92,    93,    86,    89,    52,    90,
-       0,     0,    75
+      40,    33,    34,    35,     3,    43,    44,    45,    46,    47,
+      48,    90,    53,    49,    50,    51,    52,    60,    61,     1,
+     -54,     4,    91,     6,    26,    51,    52,    30,    64,    65,
+      66,    67,    68,    69,    70,    71,    72,    73,    74,    75,
+       8,     9,    77,    10,    11,    32,     9,    25,    28,    12,
+      13,    14,    56,    29,   -54,    58,    36,    15,    26,    37,
+      31,    57,    15,    54,    59,    55,    16,    49,    50,    51,
+      52,    16,    62,    76,    80,    82,    77,    81,    41,    42,
+      83,    43,    44,    45,    46,    47,    48,    89,   112,    49,
+      50,    51,    52,    87,    41,    42,    84,    43,    44,    45,
+      46,    47,    48,    88,    95,    49,    50,    51,    52,    92,
+      41,    42,    85,    43,    44,    45,    46,    47,    48,    93,
+      97,    49,    50,    51,    52,    41,    98,    99,    43,    44,
+      45,    46,    47,    48,   100,   103,    49,    50,    51,    52,
+     105,   104,   106,   107,   109,   110,   113,   114,    63,     0,
+     111,    96
 };
 
 static const yytype_int8 yycheck[] =
 {
-      19,    14,    15,    28,     3,     4,    17,     3,    28,     3,
-       4,    24,     6,     7,    39,    28,    29,    37,    12,    13,
-      14,    19,     0,    33,     8,    38,    39,    40,    41,    42,
-      29,    44,    19,    31,    32,    29,     3,    28,     3,    34,
-      19,     3,    29,    30,    31,    32,    37,    28,    19,    36,
-      29,    30,    31,    32,    35,    35,    69,    36,    29,    30,
-      31,    32,    35,    35,    19,    35,     4,     4,    87,     5,
-       5,    28,    36,     4,    35,    38,     4,     4,     3,    33,
-      40,    37,     5,    36,     5,    34,    38,    37,    36,    86,
-      -1,    -1,    69
+      20,    14,    15,    16,     3,    21,    22,    23,    24,    25,
+      26,    28,    25,    29,    30,    31,    32,    30,    31,    17,
+      35,     0,    39,    33,    39,    31,    32,    35,    41,    42,
+      43,    44,    45,    46,    47,    48,    49,    50,    51,    52,
+       3,     4,    55,     6,     7,     3,     4,    28,     3,    12,
+      13,    14,    28,     3,    35,    28,    34,    20,    39,     8,
+      35,    37,    20,     4,    37,    35,    29,    29,    30,    31,
+      32,    29,     3,    40,     4,     4,    89,     5,    18,    19,
+       5,    21,    22,    23,    24,    25,    26,    38,   108,    29,
+      30,    31,    32,    28,    18,    19,    36,    21,    22,    23,
+      24,    25,    26,    36,     4,    29,    30,    31,    32,    28,
+      18,    19,    36,    21,    22,    23,    24,    25,    26,    35,
+       4,    29,    30,    31,    32,    18,     4,     4,    21,    22,
+      23,    24,    25,    26,     3,    33,    29,    30,    31,    32,
+      37,    40,    36,    38,     5,    37,     5,    34,    39,    -1,
+     107,    89
 };
 
   /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
@@ -802,15 +818,17 @@ static const yytype_int8 yycheck[] =
 static const yytype_int8 yystos[] =
 {
        0,    17,    42,     3,     0,    43,    33,    44,     3,     4,
-       6,     7,    12,    13,    14,    29,    45,    53,    54,    55,
-      56,    57,    58,    59,    28,    60,     3,     3,    35,    35,
-       3,    58,    58,    34,     8,    46,    47,    54,    19,    29,
-      30,    31,    32,    58,    35,    28,    37,    28,    37,    58,
-      58,     3,    46,    58,    58,    58,    58,    58,    58,    61,
-      62,     4,     5,     4,     5,    36,    36,    48,    36,    38,
-      28,    39,    28,    35,    50,    61,     4,     4,     4,     3,
-      51,    52,    33,    40,    37,    36,    38,    49,     5,    37,
-      51,    54,     5,    34
+       6,     7,    12,    13,    14,    20,    29,    45,    53,    54,
+      55,    56,    57,    58,    59,    28,    39,    60,     3,     3,
+      35,    35,     3,    58,    58,    58,    34,     8,    46,    47,
+      54,    18,    19,    21,    22,    23,    24,    25,    26,    29,
+      30,    31,    32,    58,     4,    35,    28,    37,    28,    37,
+      58,    58,     3,    46,    58,    58,    58,    58,    58,    58,
+      58,    58,    58,    58,    58,    58,    40,    58,    61,    62,
+       4,     5,     4,     5,    36,    36,    48,    28,    36,    38,
+      28,    39,    28,    35,    50,     4,    61,     4,     4,     4,
+       3,    51,    52,    33,    40,    37,    36,    38,    49,     5,
+      37,    51,    54,     5,    34
 };
 
   /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
@@ -820,8 +838,8 @@ static const yytype_int8 yyr1[] =
       47,    50,    50,    51,    51,    52,    52,    53,    53,    54,
       54,    54,    55,    55,    55,    55,    55,    55,    55,    56,
       56,    57,    57,    57,    57,    57,    58,    58,    58,    58,
-      58,    58,    58,    58,    58,    60,    59,    61,    61,    62,
-      62
+      58,    58,    58,    58,    58,    58,    58,    58,    58,    58,
+      58,    58,    58,    58,    60,    59,    61,    61,    62,    62
 };
 
   /* YYR2[YYN] -- Number of symbols on the right hand side of rule YYN.  */
@@ -830,9 +848,9 @@ static const yytype_int8 yyr2[] =
        0,     2,     0,     0,     7,     2,     2,     1,     0,     0,
        8,     5,     3,     3,     1,     3,     0,     2,     1,     1,
        2,     0,     3,     1,     1,     1,     1,     4,     4,     6,
-       4,     4,     4,     6,     2,     7,     1,     3,     3,     3,
-       3,     2,     1,     1,     3,     0,     5,     3,     1,     1,
-       0
+       4,     4,     4,     6,     2,     7,     1,     6,     3,     3,
+       3,     3,     2,     1,     1,     2,     3,     3,     3,     3,
+       3,     3,     3,     3,     0,     5,     3,     1,     1,     0
 };
 
 
@@ -1313,7 +1331,7 @@ yyreduce:
   switch (yyn)
     {
   case 2:
-#line 85 "project2.y"
+#line 89 "project2.y"
             {
                 DebugLog("Object definition start!");
                 ID objectId = ID();
@@ -1321,20 +1339,20 @@ yyreduce:
                 objectId.idType = IDTYPE::OBJECTID;
                 symbolTable.Insert(objectId);
             }
-#line 1325 "y.tab.c"
+#line 1343 "y.tab.c"
     break;
 
   case 3:
-#line 93 "project2.y"
+#line 97 "project2.y"
             {
                 // create new scope
                 symbolTable.CreateSymbol();
             }
-#line 1334 "y.tab.c"
+#line 1352 "y.tab.c"
     break;
 
   case 4:
-#line 98 "project2.y"
+#line 102 "project2.y"
             {
                 // check whether their are main function inside
                 try{
@@ -1348,11 +1366,11 @@ yyreduce:
                 symbolTable.DropSymbol();
                 DebugLog("Object definition end!");
             }
-#line 1352 "y.tab.c"
+#line 1370 "y.tab.c"
     break;
 
   case 8:
-#line 123 "project2.y"
+#line 127 "project2.y"
                         {
                             // insert function name
                             ID functionID = ID();
@@ -1362,11 +1380,11 @@ yyreduce:
                             // set the functionScopedPtr to current function
                             functionScopedPtr = &functionRef;
                         }
-#line 1366 "y.tab.c"
+#line 1384 "y.tab.c"
     break;
 
   case 9:
-#line 134 "project2.y"
+#line 138 "project2.y"
                         {
                             // create the scope
                             symbolTable.CreateSymbol();
@@ -1376,11 +1394,11 @@ yyreduce:
                                 symbolTable.Insert(*(functionScopedPtr->parameters[i]));
                             }
                         }
-#line 1380 "y.tab.c"
+#line 1398 "y.tab.c"
     break;
 
   case 10:
-#line 145 "project2.y"
+#line 149 "project2.y"
                         {
                             // dump to check that we set the correct function
                             // functionScopedPtr->Dump();
@@ -1389,29 +1407,29 @@ yyreduce:
                             // set the functionScopedPtr to null
                             functionScopedPtr = NULL;
                         }
-#line 1393 "y.tab.c"
+#line 1411 "y.tab.c"
     break;
 
   case 11:
-#line 157 "project2.y"
+#line 161 "project2.y"
                         {
                             // set the return type for the function
                             functionScopedPtr->SetReturnType(*(yyvsp[0].valueType));
                         }
-#line 1402 "y.tab.c"
+#line 1420 "y.tab.c"
     break;
 
   case 12:
-#line 162 "project2.y"
+#line 166 "project2.y"
                         {
                             // set the return type for the function
                             functionScopedPtr->SetReturnType(VALUETYPE::VOID);
                         }
-#line 1411 "y.tab.c"
+#line 1429 "y.tab.c"
     break;
 
   case 15:
-#line 174 "project2.y"
+#line 178 "project2.y"
             {
                 // recreate a new ID as the function parameter
                 ID parameterID = ID();
@@ -1422,11 +1440,11 @@ yyreduce:
                 // set the parameter to the function id
                 functionScopedPtr->AddParameter(parameterID);
             }
-#line 1426 "y.tab.c"
+#line 1444 "y.tab.c"
     break;
 
   case 17:
-#line 189 "project2.y"
+#line 193 "project2.y"
             {
                 // check whether we are in the function scope
                 if(functionScopedPtr == NULL) 
@@ -1436,11 +1454,11 @@ yyreduce:
                 if((yyvsp[0].value)->valueType != functionScopedPtr->retVal.valueType) 
                     yyerror("The function return type definition is different as the function return type declaration!"); 
             }
-#line 1440 "y.tab.c"
+#line 1458 "y.tab.c"
     break;
 
   case 18:
-#line 199 "project2.y"
+#line 203 "project2.y"
             {
                 // check whether we are in the function scope
                 if(functionScopedPtr == NULL) 
@@ -1450,11 +1468,11 @@ yyreduce:
                 if(VALUETYPE::VOID != functionScopedPtr->retVal.valueType) 
                     yyerror("The function return type is void!"); 
             }
-#line 1454 "y.tab.c"
+#line 1472 "y.tab.c"
     break;
 
   case 22:
-#line 218 "project2.y"
+#line 222 "project2.y"
                 {
                     // check whether the exp has the same value type with the id name
                     VALUE rvalue = symbolTable.LookUp(*(yyvsp[-2].idName)).value;
@@ -1465,27 +1483,27 @@ yyreduce:
                         yyerror("Different type of value can't do the assignment operation!");
                     }
                 }
-#line 1469 "y.tab.c"
+#line 1487 "y.tab.c"
     break;
 
   case 27:
-#line 233 "project2.y"
+#line 237 "project2.y"
                 {
                     DebugLog("Print function Called!");
                 }
-#line 1477 "y.tab.c"
+#line 1495 "y.tab.c"
     break;
 
   case 28:
-#line 237 "project2.y"
+#line 241 "project2.y"
                 {
                     DebugLog("Println function Called!");
                 }
-#line 1485 "y.tab.c"
+#line 1503 "y.tab.c"
     break;
 
   case 29:
-#line 244 "project2.y"
+#line 248 "project2.y"
                         {
                             // error checking first
                             try{
@@ -1503,11 +1521,11 @@ yyreduce:
                                 yyerror(s.c_str());
                             }
                         }
-#line 1507 "y.tab.c"
+#line 1525 "y.tab.c"
     break;
 
   case 30:
-#line 262 "project2.y"
+#line 266 "project2.y"
                         {
                             // error checking first
                             try{
@@ -1522,11 +1540,11 @@ yyreduce:
                                 yyerror(s.c_str());
                             }
                         }
-#line 1526 "y.tab.c"
+#line 1544 "y.tab.c"
     break;
 
   case 31:
-#line 280 "project2.y"
+#line 284 "project2.y"
                         {
                             // error checking first
                             try{
@@ -1544,11 +1562,11 @@ yyreduce:
                             }
                             
                         }
-#line 1548 "y.tab.c"
+#line 1566 "y.tab.c"
     break;
 
   case 32:
-#line 298 "project2.y"
+#line 302 "project2.y"
                         {
                             // error checking first
                             try{
@@ -1565,11 +1583,11 @@ yyreduce:
                                 yyerror(s.c_str());
                             }
                         }
-#line 1569 "y.tab.c"
+#line 1587 "y.tab.c"
     break;
 
   case 33:
-#line 316 "project2.y"
+#line 320 "project2.y"
                         {
                             // error checking first
                             try{
@@ -1587,11 +1605,11 @@ yyreduce:
                                 yyerror(s.c_str());
                             }
                         }
-#line 1591 "y.tab.c"
+#line 1609 "y.tab.c"
     break;
 
   case 34:
-#line 334 "project2.y"
+#line 338 "project2.y"
                         {
                             // error checking first
                             try{
@@ -1606,11 +1624,11 @@ yyreduce:
                                 yyerror(s.c_str());
                             }
                         }
-#line 1610 "y.tab.c"
+#line 1628 "y.tab.c"
     break;
 
   case 35:
-#line 349 "project2.y"
+#line 353 "project2.y"
                         {
                             
                             // error checking first
@@ -1631,59 +1649,115 @@ yyreduce:
                                 yyerror(s.c_str());
                             }
                         }
-#line 1635 "y.tab.c"
+#line 1653 "y.tab.c"
     break;
 
   case 36:
-#line 372 "project2.y"
+#line 376 "project2.y"
                            {
             // find the id in the symbol table
                 VALUE idVal = symbolTable.LookUp(*(yyvsp[0].idName)).value;
                 (yyval.value) = new VALUE(idVal);
             }
-#line 1645 "y.tab.c"
-    break;
-
-  case 37:
-#line 377 "project2.y"
-                        {(yyval.value) = new VALUE(*(yyvsp[-2].value) + *(yyvsp[0].value));}
-#line 1651 "y.tab.c"
-    break;
-
-  case 38:
-#line 378 "project2.y"
-                        {(yyval.value) = new VALUE(*(yyvsp[-2].value) - *(yyvsp[0].value));}
-#line 1657 "y.tab.c"
-    break;
-
-  case 39:
-#line 379 "project2.y"
-                        {(yyval.value) = new VALUE(*(yyvsp[-2].value) * *(yyvsp[0].value));}
 #line 1663 "y.tab.c"
     break;
 
-  case 40:
-#line 380 "project2.y"
-                        {(yyval.value) = new VALUE(*(yyvsp[-2].value) / *(yyvsp[0].value));}
-#line 1669 "y.tab.c"
+  case 37:
+#line 383 "project2.y"
+        {
+
+        }
+#line 1671 "y.tab.c"
     break;
 
-  case 41:
-#line 382 "project2.y"
-                                 {
-                (yyval.value) = new VALUE(-(*(yyvsp[0].value)));
-            }
+  case 38:
+#line 386 "project2.y"
+                        {(yyval.value) = new VALUE(*(yyvsp[-2].value) + *(yyvsp[0].value));}
 #line 1677 "y.tab.c"
     break;
 
-  case 44:
-#line 388 "project2.y"
-                       { (yyval.value) = new VALUE(*(yyvsp[-2].value) || *(yyvsp[0].value));}
+  case 39:
+#line 387 "project2.y"
+                        {(yyval.value) = new VALUE(*(yyvsp[-2].value) - *(yyvsp[0].value));}
 #line 1683 "y.tab.c"
     break;
 
+  case 40:
+#line 388 "project2.y"
+                        {(yyval.value) = new VALUE(*(yyvsp[-2].value) * *(yyvsp[0].value));}
+#line 1689 "y.tab.c"
+    break;
+
+  case 41:
+#line 389 "project2.y"
+                        {(yyval.value) = new VALUE(*(yyvsp[-2].value) / *(yyvsp[0].value));}
+#line 1695 "y.tab.c"
+    break;
+
+  case 42:
+#line 391 "project2.y"
+                                 {
+                (yyval.value) = new VALUE(-(*(yyvsp[0].value)));
+            }
+#line 1703 "y.tab.c"
+    break;
+
   case 45:
-#line 393 "project2.y"
+#line 397 "project2.y"
+                        { (yyval.value) = new VALUE(!(*(yyvsp[0].value)));}
+#line 1709 "y.tab.c"
+    break;
+
+  case 46:
+#line 398 "project2.y"
+                       { (yyval.value) = new VALUE(*(yyvsp[-2].value) || *(yyvsp[0].value));}
+#line 1715 "y.tab.c"
+    break;
+
+  case 47:
+#line 399 "project2.y"
+                        { (yyval.value) = new VALUE(*(yyvsp[-2].value) && *(yyvsp[0].value));}
+#line 1721 "y.tab.c"
+    break;
+
+  case 48:
+#line 400 "project2.y"
+                        { (yyval.value) = new VALUE(*(yyvsp[-2].value) < *(yyvsp[0].value));}
+#line 1727 "y.tab.c"
+    break;
+
+  case 49:
+#line 401 "project2.y"
+                        { (yyval.value) = new VALUE(*(yyvsp[-2].value) <= *(yyvsp[0].value));}
+#line 1733 "y.tab.c"
+    break;
+
+  case 50:
+#line 402 "project2.y"
+                        { (yyval.value) = new VALUE(*(yyvsp[-2].value) == *(yyvsp[0].value));}
+#line 1739 "y.tab.c"
+    break;
+
+  case 51:
+#line 403 "project2.y"
+                        { (yyval.value) = new VALUE(*(yyvsp[-2].value) != *(yyvsp[0].value));}
+#line 1745 "y.tab.c"
+    break;
+
+  case 52:
+#line 404 "project2.y"
+                        { (yyval.value) = new VALUE(*(yyvsp[-2].value) >= *(yyvsp[0].value));}
+#line 1751 "y.tab.c"
+    break;
+
+  case 53:
+#line 405 "project2.y"
+                        { (yyval.value) = new VALUE(*(yyvsp[-2].value) > *(yyvsp[0].value));}
+#line 1757 "y.tab.c"
+    break;
+
+  case 54:
+#line 410 "project2.y"
                         {
                             // start to find the id name in the current scope
                             ID& functionID = symbolTable.LookUp(*(yyvsp[0].idName));
@@ -1698,11 +1772,11 @@ yyreduce:
                             // initialize function parameter index
                             parameterIndex = 0;
                         }
-#line 1702 "y.tab.c"
+#line 1776 "y.tab.c"
     break;
 
-  case 46:
-#line 408 "project2.y"
+  case 55:
+#line 425 "project2.y"
                         {   
                             // set the function return value to $$, to get change to exp
                             (yyval.value) = new VALUE(functionCalledPtr->retVal);
@@ -1711,11 +1785,11 @@ yyreduce:
                             parameterIndex = 0;
                             functionCalledPtr = NULL;
                         }
-#line 1715 "y.tab.c"
+#line 1789 "y.tab.c"
     break;
 
-  case 49:
-#line 425 "project2.y"
+  case 58:
+#line 442 "project2.y"
                         {
                             // check the value token value type against the function paramter index value type
                             if((yyvsp[0].value)->valueType != functionCalledPtr->parameters[parameterIndex]->value.valueType){
@@ -1727,11 +1801,11 @@ yyreduce:
                             // finish checking, add paramterIndex
                             parameterIndex++;
                         }
-#line 1731 "y.tab.c"
+#line 1805 "y.tab.c"
     break;
 
 
-#line 1735 "y.tab.c"
+#line 1809 "y.tab.c"
 
       default: break;
     }
@@ -1925,7 +1999,7 @@ yyreturn:
   return yyresult;
 }
 
-#line 440 "project2.y"
+#line 457 "project2.y"
 
 #include "lex.yy.cpp"
 

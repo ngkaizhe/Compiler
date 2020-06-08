@@ -135,6 +135,8 @@ char            '([^'\\\n]|\\.)'
 
 "object"              { AddList(yytext); return OBJECT;}
 
+"read"                { AddList(yytext); return READ;}
+
 
 "boolean"             { AddList(yytext); yylval.valueType = new VALUETYPE(VALUETYPE::BOOLEAN); return VALUE_TYPE;}
 
