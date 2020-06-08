@@ -488,11 +488,11 @@ IF_STMT                 : IF '(' EXP ')'
                             if($3->valueType != VALUETYPE::BOOLEAN) yyerror("If Statement only accept boolean expression!");
                             else    DebugLog("IF statement detected.......OK");
                         } 
-                        STMT ELSE_STMT
+                        { symbolTable.CreateSymbol();} STMT { symbolTable.DropSymbol();} ELSE_STMT
                         ;
 
 // else statement
-ELSE_STMT               :   ELSE STMT
+ELSE_STMT               :   ELSE { symbolTable.CreateSymbol();} STMT { symbolTable.DropSymbol();}
                         |
                         ;
 
@@ -503,12 +503,16 @@ WHILE_STMT              : WHILE '(' EXP ')'
                             // the exp must be boolean only
                             if($3->valueType != VALUETYPE::BOOLEAN) yyerror("While Statement only accept boolean expression!");
                             else    DebugLog("While statement detected.......OK");
-                        }
-                        STMT
+
+                        }{ symbolTable.CreateSymbol();} STMT { symbolTable.DropSymbol();}
                         ;
 
 // for loops
-FOR_STMT                : FOR '(' ID_NAME FOR_SET EXP TO EXP ')' STMT;
+FOR_STMT                : FOR '(' ID_NAME FOR_SET EXP TO EXP ')' 
+                        {
+                            
+                        }{ symbolTable.CreateSymbol();} STMT { symbolTable.DropSymbol();}
+                        ;
 
 %%
 #include "lex.yy.cpp"
