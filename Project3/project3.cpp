@@ -935,7 +935,9 @@ void SymbolTable::CreateSymbol()
     DebugLog("New Symbol Created! Means that we have enter a new scope......OK");
     Symbol newSymbol = Symbol();
     // set the parent id pointer
-    ID *parentPtr = this->validSymbols.back().ids.back();
+    ID *parentPtr = NULL;
+    if (validSymbols.size() && validSymbols.back().ids.size())
+        parentPtr = validSymbols.back().ids.back();
 
     // check whether the parent pointer is a valid pointer
     if (parentPtr)
@@ -977,7 +979,7 @@ ID *SymbolTable::LookUp(string IDName)
     throw string("IDName pass in(" + IDName + ") didn't found in symbol table!\n");
 }
 
-ID *SymbolTable::Insert(ID id)
+ID *SymbolTable::Insert(ID *idPtr)
 {
     // get the symbol from the current scope
     int i = validSymbols.size() - 1;
@@ -985,14 +987,14 @@ ID *SymbolTable::Insert(ID id)
     for (int j = 0; j < validSymbols[i].ids.size(); j++)
     {
         // the id with same name already declare in this scope
-        if (validSymbols[i].ids[j]->IDName == id.IDName)
+        if (validSymbols[i].ids[j]->IDName == idPtr->IDName)
         {
             throw("A same ID name " + validSymbols[i].ids[j]->IDName + " found has already declared in this scope with id type " + IdTypeToString(validSymbols[i].ids[j]->idType));
         }
     }
 
-    validSymbols[i].ids.push_back(new ID(id));
-    return validSymbols[i].ids[validSymbols[i].ids.size() - 1];
+    validSymbols[i].ids.push_back(idPtr);
+    return idPtr;
 }
 
 void SymbolTable::DumpValidSymbols()

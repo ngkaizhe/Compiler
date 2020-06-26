@@ -20,6 +20,7 @@ ID* functionCalledPtr;
 int parameterIndex;
 %}
 
+// all union var should be as pointer(i think is memory allocation problems)
 %union{
 
     /* id name */
@@ -90,10 +91,10 @@ int parameterIndex;
 PROGRAM     :   OBJECT ID_NAME 
             {
                 DebugLog("Object definition start!");
-                ID objectId = ID();
-                objectId.IDName = *$2;
-                objectId.idType = IDTYPE::OBJECTID;
-                symbolTable.Insert(objectId);
+                ID* objectIdPtr = new ID();
+                objectIdPtr->IDName = *$2;
+                objectIdPtr->idType = IDTYPE::OBJECTID;
+                symbolTable.Insert(objectIdPtr);
             }   
                 '{'
             {
@@ -128,12 +129,11 @@ FUNCTION_DEFINITIONS    : FUNCTION_DEFINITION FUNCTION_DEFINITIONS
 FUNCTION_DEFINITION :   DEF ID_NAME 
                         {
                             // insert function name
-                            ID functionID = ID();
-                            functionID.SetToFunction(*$2);
+                            ID* functionIDPtr = new ID();
+                            functionIDPtr->SetToFunction(*$2);
 
-                            ID& functionRef = symbolTable.Insert(functionID);
                             // set the functionScopedPtr to current function
-                            functionScopedPtr = &functionRef;
+                            functionScopedPtr = symbolTable.Insert(functionIDPtr);
                         }
                         FUNCTION_DEFINITION2
                         '{'
@@ -143,7 +143,7 @@ FUNCTION_DEFINITION :   DEF ID_NAME
 
                             // put all parameter into the current scope
                             for(int i=0; i< functionScopedPtr->parameters.size(); i++){
-                                symbolTable.Insert(*(functionScopedPtr->parameters[i]));
+                                symbolTable.Insert(functionScopedPtr->parameters[i]);
                             }
                         }
                         STMTS
@@ -223,7 +223,7 @@ STMTS   : STMT
 STMT            : ID_NAME '=' EXP 
                 {
                     // check whether the exp has the same value type with the id name
-                    VALUE rvalue = symbolTable.LookUp(*$1).value;
+                    VALUE rvalue = symbolTable.LookUp(*$1)->value;
                     if(rvalue.valueType == $3->valueType){
                         DebugLog("Assignment operation done!");
                     }
@@ -267,15 +267,15 @@ VALDECLARATION  :       VAL ID_NAME ':' VALUE_TYPE '=' VALUE_TOKEN
                         {
                             // error checking first
                             try{
-                                ID newId = ID();
-                                newId.SetToConstVar(*$2);
+                                ID* newIdPtr = new ID();
+                                newIdPtr->SetToConstVar(*$2);
                                 // check ID is already used in this scope or not
                                 // insert id with name to the symbol table
-                                ID& idRef = symbolTable.Insert(newId);
+                                symbolTable.Insert(newIdPtr);
 
                                 // check VALUE_TOKEN's value type same as VALUE_TYPE
-                                idRef.SetValueType(*$4);
-                                idRef.InitValue(*$6);
+                                newIdPtr->SetValueType(*$4);
+                                newIdPtr->InitValue(*$6);
                             }
                             catch(string s){
                                 yyerror(s.c_str());
@@ -285,12 +285,12 @@ VALDECLARATION  :       VAL ID_NAME ':' VALUE_TYPE '=' VALUE_TOKEN
                         {
                             // error checking first
                             try{
-                                ID newId = ID();
-                                newId.SetToConstVar(*$2);
+                                ID* newIdPtr = new ID();
+                                newIdPtr->SetToConstVar(*$2);
                                 // check ID is already used in this scope or not
                                 // insert id with name to the symbol table
-                                ID& idRef = symbolTable.Insert(newId);
-                                idRef.InitValue(*$4);
+                                symbolTable.Insert(newIdPtr);
+                                newIdPtr->InitValue(*$4);
                             }
                             catch(string s){
                                 yyerror(s.c_str());
@@ -303,14 +303,14 @@ VARDECLARATION  :       VAR ID_NAME ':' VALUE_TYPE
                         {
                             // error checking first
                             try{
-                                ID newId = ID();
-                                newId.SetToVar(*$2);
+                                ID* newIdPtr = new ID();
+                                newIdPtr->SetToVar(*$2);
                                 // check ID is already used in this scope or not
                                 // insert id with name to the symbol table
-                                ID& idRef = symbolTable.Insert(newId);
+                                symbolTable.Insert(newIdPtr);
 
                                 // set value type
-                                idRef.SetValueType(*$4);
+                                newIdPtr->SetValueType(*$4);
                             }
                             catch(string s){
                                 yyerror(s.c_str());
@@ -321,14 +321,14 @@ VARDECLARATION  :       VAR ID_NAME ':' VALUE_TYPE
                         {
                             // error checking first
                             try{
-                                ID newId = ID();
-                                newId.SetToVar(*$2);
+                                ID* newIdPtr = new ID();
+                                newIdPtr->SetToVar(*$2);
                                 // check ID is already used in this scope or not
                                 // insert id with name to the symbol table
-                                ID& idRef = symbolTable.Insert(newId);
+                                symbolTable.Insert(newIdPtr);
 
                                 // set type
-                                idRef.InitValue(*$4);
+                                newIdPtr->InitValue(*$4);
                             }
                             catch(string s){
                                 yyerror(s.c_str());
@@ -339,15 +339,15 @@ VARDECLARATION  :       VAR ID_NAME ':' VALUE_TYPE
                         {
                             // error checking first
                             try{
-                                ID newId = ID();
-                                newId.SetToVar(*$2);
+                                ID* newIdPtr = new ID();
+                                newIdPtr->SetToVar(*$2);
                                 // check ID is already used in this scope or not
                                 // insert id with name to the symbol table
-                                ID& idRef = symbolTable.Insert(newId);
+                                symbolTable.Insert(newIdPtr);
 
                                 // check VALUE_TOKEN's value type same as VALUE_TYPE
-                                idRef.SetValueType(*$4);
-                                idRef.InitValue(*$6);
+                                newIdPtr->SetValueType(*$4);
+                                newIdPtr->InitValue(*$6);
                             }
                             catch(string s){
                                 yyerror(s.c_str());
@@ -357,12 +357,12 @@ VARDECLARATION  :       VAR ID_NAME ':' VALUE_TYPE
                         {
                             // error checking first
                             try{
-                                ID newId = ID();
-                                newId.SetToVar(*$2);
+                                ID* newIdPtr = new ID();
+                                newIdPtr->SetToVar(*$2);
 
                                 // check ID is already used in this scope or not
                                 // insert id with name to the symbol table
-                                ID& idRef = symbolTable.Insert(newId);
+                                symbolTable.Insert(newIdPtr);
                             }
                             catch(string s){
                                 yyerror(s.c_str());
@@ -373,18 +373,19 @@ VARDECLARATION  :       VAR ID_NAME ':' VALUE_TYPE
                             
                             // error checking first
                             try{
-                                ID newId = ID();
-                                newId.SetToVar(*$2);
+                                ID* newIdPtr = new ID();
+                                newIdPtr->SetToVar(*$2);
                                 
                                 // check ID is already used in this scope or not
                                 // insert id with name to the symbol table
-                                ID* idRef = &symbolTable.Insert(newId);
+                                symbolTable.Insert(newIdPtr);
 
                                 // the value_token must be type int
                                 if($6->valueType != VALUETYPE::INT) yyerror("array declaration's number value must be integer!");
+
                                 // set the array range for id name
-                                // and resize
-                                idRef->value = VALUE(*$4, $6->ival);
+                                // and resize and the array length
+                                newIdPtr->value = VALUE(*$4, $6->ival);
                             }
                             catch(string s){
                                 yyerror(s.c_str());
@@ -395,14 +396,14 @@ VARDECLARATION  :       VAR ID_NAME ':' VALUE_TYPE
 // expression
 EXP     :   ID_NAME        {
             // find the id in the symbol table
-                VALUE& idVal = symbolTable.LookUp(*$1).value;
+                VALUE& idVal = symbolTable.LookUp(*$1)->value;
                 $$ = new VALUE(idVal);
             }
 
         |   ID_NAME '[' EXP ']' '=' EXP
         {
             // id name must be valid
-            VALUE& arrID = symbolTable.LookUp(*$1).value;
+            VALUE& arrID = symbolTable.LookUp(*$1)->value;
 
             // 1st exp should only be int type
             if($3->valueType != VALUETYPE::INT) yyerror("Array index must be integer type!");
@@ -437,14 +438,14 @@ EXP     :   ID_NAME        {
 FUNCTION_CALLED         : ID_NAME 
                         {
                             // start to find the id name in the current scope
-                            ID& functionID = symbolTable.LookUp(*$1);
+                            ID* functionIDPtr = symbolTable.LookUp(*$1);
                             // check the id type to be function
-                            if(functionID.idType == IDTYPE::FUNCTION)
-                                DebugLog("Function Called Detected. Function name is " + functionID.IDName + "......OK");
+                            if(functionIDPtr->idType == IDTYPE::FUNCTION)
+                                DebugLog("Function Called Detected. Function name is " + functionIDPtr->IDName + "......OK");
                             else    yyerror("ID Called wasn't function!");
 
                             // initialize function ptr
-                            functionCalledPtr = &functionID;
+                            functionCalledPtr = functionIDPtr;
 
                             // initialize function parameter index
                             parameterIndex = 0;
@@ -468,7 +469,7 @@ FUNCTION_CALLED_ARGS    : FUNCTION_CALLED_ARG ',' FUNCTION_CALLED_ARGS
 // function called argument
 FUNCTION_CALLED_ARG     : EXP
                         {
-                            // check the value token value type against the function paramter index value type
+                            // check the value token value type against the function parameter index value type
                             if($1->valueType != functionCalledPtr->parameters[parameterIndex]->value.valueType){
                                 yyerror(("Function called parameter " + to_string(parameterIndex) + ", doesn't have the correct value type!").c_str());
                             }
@@ -488,11 +489,11 @@ IF_STMT                 : IF '(' EXP ')'
                             if($3->valueType != VALUETYPE::BOOLEAN) yyerror("If Statement only accept boolean expression!");
                             else    DebugLog("IF statement detected.......OK");
                         } 
-                        { symbolTable.CreateSymbol(false);} STMT { symbolTable.DropSymbol(false);} ELSE_STMT
+                        STMT ELSE_STMT
                         ;
 
 // else statement
-ELSE_STMT               :   ELSE { symbolTable.CreateSymbol(false);} STMT { symbolTable.DropSymbol(false);}
+ELSE_STMT               :   ELSE STMT
                         |
                         ;
 
@@ -504,7 +505,8 @@ WHILE_STMT              : WHILE '(' EXP ')'
                             if($3->valueType != VALUETYPE::BOOLEAN) yyerror("While Statement only accept boolean expression!");
                             else    DebugLog("While statement detected.......OK");
 
-                        }{ symbolTable.CreateSymbol(false);} STMT { symbolTable.DropSymbol(false);}
+                        }
+                        STMT
                         ;
 
 // for loops
@@ -517,123 +519,15 @@ FOR_STMT                : FOR '(' ID_NAME FOR_SET EXP TO EXP ')'
                             if($7->valueType != VALUETYPE::INT){
                                 yyerror("Terminate value of for loop only can be int!");
                             }
-                            // create a new symbol first
-                            symbolTable.CreateSymbol(false);
 
-                            ID forID;
-                            forID.SetToVar(*$3);
-                            forID.value = *$5;
-                            symbolTable.Insert(forID);
-
-                        } STMT { symbolTable.DropSymbol(false);}
+                            ID* forIDPtr = symbolTable.LookUp(*$3);
+                            forIDPtr->value = *$5;
+                        }
+                        STMT
                         ;
 
 %%
 #include "lex.yy.cpp"
-
-VALUE oper(char operC, VALUE v1, VALUE v2){
-    // type should be the same
-    if(v1.valueType != v2.valueType){
-        yyerror("Different type the value cant do mathematics operation!");
-    }
-
-    // only float and int can do the operation
-    if(v1.valueType != VALUETYPE::FLOAT && v1.valueType != VALUETYPE::INT){
-        yyerror("Only float and int can do the mathematics operation!");
-    }
-
-    // add operation
-    // add operation for float
-    if(operC == '+' && v1.valueType == VALUETYPE::FLOAT){
-        DebugLog("+ operator found! Checking Result......OK");
-        VALUE answer;
-        // set answer value type
-        answer.valueType = VALUETYPE::FLOAT;
-        // set answer value
-        answer.fval = v1.fval + v2.fval;
-        return answer;
-    }
-    // add operation for int
-    if(operC == '+' && v1.valueType == VALUETYPE::INT){
-        DebugLog("+ operator found! Checking Result......OK");
-        VALUE answer;
-        // set answer value type
-        answer.valueType = VALUETYPE::INT;
-        // set answer value
-        answer.ival = v1.ival + v2.ival;
-        return answer;
-    }
-
-    // minus operation
-    // minus operation for float
-    if(operC == '-' && v1.valueType == VALUETYPE::FLOAT){
-        DebugLog("- operator found! Checking Result......OK");
-        VALUE answer;
-        // set answer value type
-        answer.valueType = VALUETYPE::FLOAT;
-        // set answer value
-        answer.fval = v1.fval - v2.fval;
-        return answer;
-    }
-    // minus operation for int
-    if(operC == '-' && v1.valueType == VALUETYPE::INT){
-        DebugLog("- operator found! Checking Result......OK");
-        VALUE answer;
-        // set answer value type
-        answer.valueType = VALUETYPE::INT;
-        // set answer value
-        answer.ival = v1.ival - v2.ival;
-        return answer;
-    }
-
-    // multiple operation
-    // multiple operation for float
-    if(operC == '*' && v1.valueType == VALUETYPE::FLOAT){
-        DebugLog("* operator found! Checking Result......OK");
-        VALUE answer;
-        // set answer value type
-        answer.valueType = VALUETYPE::FLOAT;
-        // set answer value
-        answer.fval = v1.fval * v2.fval;
-        return answer;
-    }
-    // multiple operation for int
-    if(operC == '*' && v1.valueType == VALUETYPE::INT){
-        DebugLog("* operator found! Checking Result......OK");
-        VALUE answer;
-        // set answer value type
-        answer.valueType = VALUETYPE::INT;
-        // set answer value
-        answer.ival = v1.ival / v2.ival;
-        return answer;
-    }
-
-    // divide operation
-    // divide operation for float
-    if(operC == '/' && v1.valueType == VALUETYPE::FLOAT){
-        DebugLog("/ operator found! Checking Result......OK");
-        VALUE answer;
-        // set answer value type
-        answer.valueType = VALUETYPE::FLOAT;
-        // set answer value
-        answer.fval = v1.fval / v2.fval;
-        return answer;
-    }
-    // divide operation for int
-    if(operC == '/' && v1.valueType == VALUETYPE::INT){
-        DebugLog("/ operator found! Checking Result......OK");
-        VALUE answer;
-        // set answer value type
-        answer.valueType = VALUETYPE::INT;
-        // set answer value
-        answer.ival = v1.ival / v2.ival;
-        return answer;
-    }
-
-    // shoudn't run till here
-    yyerror("Invalid operation character passed!");
-    return VALUE();
-}
 
 int yyerror(const char* s){
     // fprintf(stderr, "Error, Line%d: %s\n", yylineno, s);

@@ -1,19 +1,20 @@
 #ifndef PROJECT3_H
-#define PROJECT3_H 
+#define PROJECT3_H
 
-#include<vector>
-#include<string>
-#include<iostream>
+#include <vector>
+#include <string>
+#include <iostream>
 using namespace std;
 
 // newline
 // list out the current line to check
-void AddList(char* token);
+void AddList(char *token);
 void ListLine();
 
 // symbol table
 
-enum class IDTYPE {
+enum class IDTYPE
+{
     INVALID,
 
     FUNCTION,
@@ -22,9 +23,10 @@ enum class IDTYPE {
     OBJECTID,
 };
 
-enum class VALUETYPE {
+enum class VALUETYPE
+{
     INVALID, // invalid is when idtype and id is setted, but they wont use the value(eg-> value type = double, then value type of ival should be invalid)
-    UNSET, // when idtype and id is setted, but they no yet set the value
+    UNSET,   // when idtype and id is setted, but they no yet set the value
 
     VOID,
     STRING,
@@ -40,7 +42,8 @@ enum class VALUETYPE {
     ARRBOOLEAN,
 };
 
-class VALUE {
+class VALUE
+{
 public:
     VALUE();
     // constructor for different types (type could defined explicitly/implicitly)
@@ -56,21 +59,21 @@ public:
 
     // operator overloading
     // mathematics
-    friend VALUE operator+(const VALUE& lhs, const VALUE& rhs);
-    friend VALUE operator-(const VALUE& lhs, const VALUE& rhs);
-    friend VALUE operator*(const VALUE& lhs, const VALUE& rhs);
-    friend VALUE operator/(const VALUE& lhs, const VALUE& rhs);
-    friend VALUE operator%(const VALUE& lhs, const VALUE& rhs);
-    VALUE& operator[](int idx);
+    friend VALUE operator+(const VALUE &lhs, const VALUE &rhs);
+    friend VALUE operator-(const VALUE &lhs, const VALUE &rhs);
+    friend VALUE operator*(const VALUE &lhs, const VALUE &rhs);
+    friend VALUE operator/(const VALUE &lhs, const VALUE &rhs);
+    friend VALUE operator%(const VALUE &lhs, const VALUE &rhs);
+    VALUE &operator[](int idx);
     // logical operators
-    friend VALUE operator||(const VALUE& lhs, const VALUE& rhs);
-    friend VALUE operator&&(const VALUE& lhs, const VALUE& rhs);
-    friend VALUE operator<(const VALUE& lhs, const VALUE& rhs);
-    friend VALUE operator<=(const VALUE& lhs, const VALUE& rhs);
-    friend VALUE operator>(const VALUE& lhs, const VALUE& rhs);
-    friend VALUE operator>=(const VALUE& lhs, const VALUE& rhs);
-    friend VALUE operator==(const VALUE& lhs, const VALUE& rhs);
-    friend VALUE operator!=(const VALUE& lhs, const VALUE& rhs);
+    friend VALUE operator||(const VALUE &lhs, const VALUE &rhs);
+    friend VALUE operator&&(const VALUE &lhs, const VALUE &rhs);
+    friend VALUE operator<(const VALUE &lhs, const VALUE &rhs);
+    friend VALUE operator<=(const VALUE &lhs, const VALUE &rhs);
+    friend VALUE operator>(const VALUE &lhs, const VALUE &rhs);
+    friend VALUE operator>=(const VALUE &lhs, const VALUE &rhs);
+    friend VALUE operator==(const VALUE &lhs, const VALUE &rhs);
+    friend VALUE operator!=(const VALUE &lhs, const VALUE &rhs);
     // unary operators
     VALUE operator-();
     VALUE operator!();
@@ -83,7 +86,7 @@ public:
 
     // the value below should be setted as private
     // but since we can't determine the return type
-    // so the only way to get the value should dynamic check 
+    // so the only way to get the value should dynamic check
     // the value type
     // but since this is the syntax analyze we wont assign any value
     // inside yet
@@ -108,7 +111,8 @@ public:
     vector<char> cvals;
 };
 
-class ID {
+class ID
+{
 public:
     ID();
 
@@ -146,7 +150,7 @@ public:
     string IDName;
 
     // will only used by function
-    vector<ID*> parameters;
+    vector<ID *> parameters;
     // return type for function
     VALUE retVal;
 
@@ -159,11 +163,11 @@ class Symbol
 public:
     void Dump();
 
-    vector<ID*> ids;
+    vector<ID *> ids;
 
     // the id that owns this Symbol
     // only used by object scope and function scope
-    ID* parentIDPtr;
+    ID *parentIDPtr;
 };
 
 class SymbolTable
@@ -175,7 +179,7 @@ private:
     vector<Symbol> invalidSymbols;
 
 public:
-    SymbolTable() {};
+    SymbolTable(){};
 
     // create symbol if we reached a new scope
     void CreateSymbol();
@@ -184,10 +188,10 @@ public:
     void DropSymbol();
 
     // look up the id name in the current scope or the larger scope
-    ID* LookUp(string IDName);
+    ID *LookUp(string IDName);
 
     // insert the ID into the current scope
-    ID* Insert(ID id);
+    ID *Insert(ID *id);
 
     // print all value in the current symbol table
     void DumpValidSymbols();
@@ -201,6 +205,5 @@ void DebugLog(string log, bool hasLine = true);
 string IdTypeToString(IDTYPE idtype);
 
 string valueTypeToString(VALUETYPE valueType);
-
 
 #endif

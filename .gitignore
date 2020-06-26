@@ -1,3 +1,4 @@
+# ignore lex and yacc created files
 y.yab.cpp
 y.tab.hpp
 lex.yy.cpp
