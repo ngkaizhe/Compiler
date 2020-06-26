@@ -1,5 +1,5 @@
 %{
-#include "project2.h"
+#include "project3.h"
 
 string lineBuffer = "";
 // string buffer

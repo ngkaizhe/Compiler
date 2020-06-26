@@ -1,7 +1,7 @@
 %{
 extern int yylex();
 
-#include "project2.h"
+#include "project3.h"
 #include "stdio.h"
 
 // function declaration
