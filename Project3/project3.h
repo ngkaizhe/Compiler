@@ -20,6 +20,7 @@ enum class IDTYPE
     FUNCTION,
     CONSTVAR,
     VARIABLE,
+    GLOBALVAR,
     OBJECTID,
 };
 
@@ -95,6 +96,7 @@ public:
     // the value type
     VALUETYPE valueType;
 
+    // only constant will used these
     // only one of the value below will be used
     // the value
     int ival;
@@ -102,8 +104,6 @@ public:
     string sval;
     bool bval;
     char cval;
-
-    // if the value is array type
     vector<int> ivals;
     vector<float> fvals;
     vector<string> svals;
@@ -154,8 +154,11 @@ public:
     // return type for function
     VALUE retVal;
 
-    // value type
+    // value type for var and constant var
     VALUE value;
+
+    // only variable will used these
+    int scopeIndex;
 };
 
 class Symbol
@@ -192,6 +195,11 @@ public:
 
     // insert the ID into the current scope
     ID *Insert(ID *id);
+
+    // check whether current scope is global scope
+    bool isGlobalScope(string IDName);
+    // same as the function above, but only used in initialized
+    bool isGlobalScope();
 
     // print all value in the current symbol table
     void DumpValidSymbols();

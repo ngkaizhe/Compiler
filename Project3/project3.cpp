@@ -6,7 +6,9 @@ extern char *yytext;
 
 // extern variables for line
 extern string lineBuffer;
-extern int yylineno; // defined and maintained in lex
+
+// extern variables for symbol table
+extern SymbolTable symbolTable;
 
 // output the current line buffer
 void AddList(char *token)
@@ -55,7 +57,17 @@ void ID::SetToConstVar(string idName)
 void ID::SetToVar(string idName)
 {
     this->IDName = idName;
-    idType = IDTYPE::VARIABLE;
+
+    // we must check whether the idName is global variable or local variable
+    if (symbolTable.isGlobalScope())
+    {
+        idType = IDTYPE::GLOBALVAR;
+    }
+    else
+    {
+        idType = IDTYPE::VARIABLE;
+    }
+
     value.valueType = VALUETYPE::UNSET;
 
     // successful message
@@ -103,7 +115,7 @@ void ID::SetValueType(VALUETYPE valType)
 {
     // id type checking
     // this function can only be used by const var and var
-    if (idType == IDTYPE::CONSTVAR || idType == IDTYPE::VARIABLE)
+    if (idType == IDTYPE::CONSTVAR || idType == IDTYPE::VARIABLE || idType == IDTYPE::GLOBALVAR)
     {
         // value type checking
         if (value.valueType == VALUETYPE::UNSET)
@@ -171,7 +183,7 @@ void ID::AddParameter(ID id)
 // init value could be used by var and const var
 void ID::InitValue(VALUE value)
 {
-    if (idType == IDTYPE::CONSTVAR || idType == IDTYPE::VARIABLE)
+    if (idType == IDTYPE::CONSTVAR || idType == IDTYPE::VARIABLE || idType == IDTYPE::GLOBALVAR)
     {
         if (this->value.valueType == value.valueType || this->value.valueType == VALUETYPE::UNSET)
         {
@@ -190,7 +202,7 @@ void ID::InitValue(VALUE value)
 // set value can only used by var
 void ID::SetValue(VALUE value)
 {
-    if (idType == IDTYPE::VARIABLE)
+    if (idType == IDTYPE::VARIABLE || idType == IDTYPE::GLOBALVAR)
     {
         if (this->value.valueType == value.valueType)
         {
@@ -997,6 +1009,49 @@ ID *SymbolTable::Insert(ID *idPtr)
     return idPtr;
 }
 
+// check whether current scope is global scope
+bool SymbolTable::isGlobalScope(string IDName)
+{
+    // look up for the current scope first
+    for (int i = validSymbols.size() - 1; i >= 0; i--)
+    {
+        for (int j = 0; j < validSymbols[i].ids.size(); j++)
+        {
+            // found same id with the name
+            if (IDName == validSymbols[i].ids[j]->IDName)
+            {
+                // zero scope should only contain the class name
+                // so the first scope is the global scope then
+                if (i == 1)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
+    }
+
+    // else look up not found
+    throw string("IDName pass in(" + IDName + ") didn't found in symbol table!\n");
+}
+
+bool SymbolTable::isGlobalScope()
+{
+    // zero scope should only contain the class name
+    // so the first scope is the global scope then (hence the size of valid symbol must be 2)
+    if (validSymbols.size() == 2)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
 void SymbolTable::DumpValidSymbols()
 {
     for (int i = 0; i < validSymbols.size(); i++)
@@ -1040,6 +1095,9 @@ string IdTypeToString(IDTYPE idtype)
         break;
     case IDTYPE::FUNCTION:
         return "Function";
+        break;
+    case IDTYPE::GLOBALVAR:
+        return "Global Variable";
         break;
     case IDTYPE::OBJECTID:
         return "Object";

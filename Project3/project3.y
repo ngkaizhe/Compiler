@@ -1,16 +1,15 @@
 %{
-extern int yylex();
 
 #include "project3.h"
 #include "stdio.h"
 
-// function declaration
-VALUE oper(char operC, VALUE v1, VALUE v2);
 SymbolTable symbolTable = SymbolTable();
 
 int yyerror(const char* s);
+int yyparse();
+int yylex();
+
 extern int yylineno;  // defined and maintained in lex
-extern int yyparse();
 extern FILE* yyin, *yyout;
 
 // function name to dynamic tracking current function scope
