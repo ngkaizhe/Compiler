@@ -57,6 +57,13 @@ int parameterIndex;
 %token OBJECT
 %token FOR_SET
 
+%token OpenParenthese
+%token CloseParenthese
+%token OpenSquareBracket
+%token CloseSquareBracket
+%token OpenBracket
+%token CloseBracket
+
 %token AND
 %token OR
 %token NOT
@@ -88,7 +95,8 @@ int parameterIndex;
 /* descriptions of expected inputs corresponding actions (in C)*/
 
 // starting program token
-PROGRAM     :   OBJECT ID_NAME 
+PROGRAM     :   
+            OBJECT ID_NAME 
             {
                 DebugLog("Object definition start!");
                 ID* objectIdPtr = new ID();
@@ -96,12 +104,14 @@ PROGRAM     :   OBJECT ID_NAME
                 objectIdPtr->idType = IDTYPE::OBJECTID;
                 symbolTable.Insert(objectIdPtr);
             }   
-                '{'
+
+            '{'
             {
                 // create new scope
                 symbolTable.CreateSymbol();
             }
-                OBJCONTENT '}'
+
+            OBJCONTENT '}'
             {
                 // check whether their are main function inside
                 try{
@@ -135,19 +145,19 @@ FUNCTION_DEFINITION :   DEF ID_NAME
                             // set the functionScopedPtr to current function
                             functionScopedPtr = symbolTable.Insert(functionIDPtr);
                         }
-                        FUNCTION_DEFINITION2
-                        '{'
+
+                        FUNCTION_DEFINITION2 '{'
                         {
                             // create the scope
                             symbolTable.CreateSymbol();
 
-                            // put all parameter into the current scope
+                            // put all parameter into the current function parameters scope
                             for(int i=0; i< functionScopedPtr->parameters.size(); i++){
                                 symbolTable.Insert(functionScopedPtr->parameters[i]);
                             }
                         }
-                        STMTS
-                        '}'
+
+                        STMTS '}'
                         {
                             // dump to check that we set the correct function
                             // functionScopedPtr->Dump();
@@ -166,7 +176,7 @@ FUNCTION_DEFINITION2    : '(' FORMAL_ARGS ')' ':' VALUE_TYPE
                         }
                         | '(' FORMAL_ARGS ')'
                         {
-                            // set the return type for the function
+                            // set the return type for the function to void
                             functionScopedPtr->SetReturnType(VALUETYPE::VOID);
                         }
                         ;
@@ -199,7 +209,7 @@ RETURN_STMT : RETURN EXP
 
                 // check whether the return exp's type is same as the current function type
                 if($2->valueType != functionScopedPtr->retVal.valueType) 
-                    yyerror("The function return type definition is different as the function return type declaration!"); 
+                    yyerror("The function return type definition is different as the function return type declaration!");
             }
             | RETURN
             {
@@ -209,7 +219,7 @@ RETURN_STMT : RETURN EXP
 
                 // check whether the return exp's type is same as the current function type
                 if(VALUETYPE::VOID != functionScopedPtr->retVal.valueType) 
-                    yyerror("The function return type is void!"); 
+                    yyerror("The function return type must be void!"); 
             }
             ;
 
@@ -235,21 +245,23 @@ STMT            : ID_NAME '=' EXP
                 | VALDECLARATION
                 | VARDECLARATION
                 | RETURN_STMT
+
                 | PRINT '(' EXP ')'
                 {
                     DebugLog("Print function Called!");
                 }
+
                 | PRINTLN '(' EXP ')'
                 {
                     DebugLog("Println function Called!");
                 }
+
                 | READ ID_NAME
                 {
                     DebugLog("Read function Called!");
                 }
-                |
 
-                '{' 
+                | '{' 
                 {
                     symbolTable.CreateSymbol();
                 }
@@ -257,9 +269,12 @@ STMT            : ID_NAME '=' EXP
                 {
                     symbolTable.DropSymbol();
                 }
-                |   IF_STMT
-                |   WHILE_STMT
-                |   FOR_STMT
+
+                | IF_STMT
+
+                | WHILE_STMT
+
+                | FOR_STMT
                 ;
 
 // constant declaration
@@ -444,9 +459,9 @@ FUNCTION_CALLED         : ID_NAME
                                 DebugLog("Function Called Detected. Function name is " + functionIDPtr->IDName + "......OK");
                             else    yyerror("ID Called wasn't function!");
 
+
                             // initialize function ptr
                             functionCalledPtr = functionIDPtr;
-
                             // initialize function parameter index
                             parameterIndex = 0;
                         }
