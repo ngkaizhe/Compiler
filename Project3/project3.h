@@ -159,7 +159,11 @@ class Symbol
 public:
     void Dump();
 
-    vector<ID> ids;
+    vector<ID*> ids;
+
+    // the id that owns this Symbol
+    // only used by object scope and function scope
+    ID* parentIDPtr;
 };
 
 class SymbolTable
@@ -174,16 +178,16 @@ public:
     SymbolTable() {};
 
     // create symbol if we reached a new scope
-    void CreateSymbol(bool printMess=true);
+    void CreateSymbol();
 
     // drop symbol for different scope
-    void DropSymbol(bool printMess=true);
+    void DropSymbol();
 
     // look up the id name in the current scope or the larger scope
-    ID& LookUp(string IDName);
+    ID* LookUp(string IDName);
 
     // insert the ID into the current scope
-    ID& Insert(ID id);
+    ID* Insert(ID id);
 
     // print all value in the current symbol table
     void DumpValidSymbols();

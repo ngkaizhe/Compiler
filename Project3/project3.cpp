@@ -1,19 +1,21 @@
-#include"project3.h"
+#include "project3.h"
 
 // extern variables for lex
 extern int yylineno;
-extern char* yytext;
+extern char *yytext;
 
 // extern variables for line
 extern string lineBuffer;
-extern int yylineno;  // defined and maintained in lex
+extern int yylineno; // defined and maintained in lex
 
 // output the current line buffer
-void AddList(char* token) {
+void AddList(char *token)
+{
     lineBuffer += string(token);
 }
 
-void ListLine() {
+void ListLine()
+{
     // dont print anything from now
     // fprintf(yyout, "%d: %s\n", lineNumber, lineBuffer);
     // reset line buffer
@@ -21,7 +23,8 @@ void ListLine() {
 }
 
 // project2.h definition
-ID::ID() {
+ID::ID()
+{
     // set the id type
     idType = IDTYPE::INVALID;
 
@@ -66,13 +69,17 @@ void ID::Dump()
     cout << "IDName -> " << this->IDName << ",\tIDType -> " << IdTypeToString(this->idType) << "|";
 
     // function
-    if (this->idType == IDTYPE::FUNCTION) {
+    if (this->idType == IDTYPE::FUNCTION)
+    {
         // print parameters
         cout << "\nParameters -> (";
-        for (int i = 0; i < parameters.size(); i++) {
+        for (int i = 0; i < parameters.size(); i++)
+        {
             parameters[i]->Dump();
-            if (i != parameters.size() - 1)  cout << ", ";
-            else cout << ")\t";
+            if (i != parameters.size() - 1)
+                cout << ", ";
+            else
+                cout << ")\t";
         }
         // print return value
         cout << "Return value -> ";
@@ -80,7 +87,8 @@ void ID::Dump()
         cout << "\n";
     }
     // others idtype that shouldn't be invalid
-    else if (this->idType != IDTYPE::INVALID) {
+    else if (this->idType != IDTYPE::INVALID)
+    {
         // print value
         cout << "Value -> ";
         value.Dump();
@@ -95,23 +103,29 @@ void ID::SetValueType(VALUETYPE valType)
 {
     // id type checking
     // this function can only be used by const var and var
-    if (idType == IDTYPE::CONSTVAR || idType == IDTYPE::VARIABLE) {
+    if (idType == IDTYPE::CONSTVAR || idType == IDTYPE::VARIABLE)
+    {
         // value type checking
-        if (value.valueType == VALUETYPE::UNSET) {
+        if (value.valueType == VALUETYPE::UNSET)
+        {
             value.valueType = valType;
 
             // successful message
             DebugLog("Variable type declaration detected. Variable type is " + value.ValueTypeString() + "......OK");
         }
-        // error handling as the value value type must be unset 
-        else {
-            throw (string("Value type has already setted to ") + 
-                value.ValueTypeString() + string(". Value type can't be reset!")).c_str();
+        // error handling as the value value type must be unset
+        else
+        {
+            throw(string("Value type has already setted to ") +
+                  value.ValueTypeString() + string(". Value type can't be reset!"))
+                .c_str();
         }
     }
-    else {
-        throw (string("ID Type must be constant variable or variable to be setted its value type! Current ID Type is ") + 
-            string(IdTypeToString(this->idType))).c_str();
+    else
+    {
+        throw(string("ID Type must be constant variable or variable to be setted its value type! Current ID Type is ") +
+              string(IdTypeToString(this->idType)))
+            .c_str();
     }
 }
 
@@ -119,23 +133,27 @@ void ID::SetReturnType(VALUETYPE valType)
 {
     // id type checking
     // this function can only be used by function type
-    if (idType == IDTYPE::FUNCTION) {
+    if (idType == IDTYPE::FUNCTION)
+    {
         // value type checking
-        if (retVal.valueType == VALUETYPE::UNSET) {
+        if (retVal.valueType == VALUETYPE::UNSET)
+        {
             retVal.valueType = valType;
 
             // successful message
             DebugLog("Function return declaration detected. Return Type is " + retVal.ValueTypeString() + "......OK");
         }
-        // error handling as the value value type must be unset 
-        else {
-            throw (string("Function return type has already setted to ") +
-                retVal.ValueTypeString() + string(". Function return value type can't be reset!"));
+        // error handling as the value value type must be unset
+        else
+        {
+            throw(string("Function return type has already setted to ") +
+                  retVal.ValueTypeString() + string(". Function return value type can't be reset!"));
         }
     }
-    else {
-        throw (string("ID Type must be function to be setted its return value type! Current ID Type is ") +
-            string(IdTypeToString(this->idType)));
+    else
+    {
+        throw(string("ID Type must be function to be setted its return value type! Current ID Type is ") +
+              string(IdTypeToString(this->idType)));
     }
 }
 
@@ -147,21 +165,24 @@ void ID::AddParameter(ID id)
 
     // print successful message
     DebugLog("Function argument declaration detected, argument name is " +
-        id.IDName + ", Argument value type is " + id.value.ValueTypeString() + "......OK");
+             id.IDName + ", Argument value type is " + id.value.ValueTypeString() + "......OK");
 }
 
 // init value could be used by var and const var
 void ID::InitValue(VALUE value)
 {
-    if (idType == IDTYPE::CONSTVAR || idType == IDTYPE::VARIABLE) {
-        if (this->value.valueType == value.valueType || this->value.valueType == VALUETYPE::UNSET) {
+    if (idType == IDTYPE::CONSTVAR || idType == IDTYPE::VARIABLE)
+    {
+        if (this->value.valueType == value.valueType || this->value.valueType == VALUETYPE::UNSET)
+        {
             this->value.valueType = value.valueType;
             this->value = value;
         }
-        else throw string("Variable value type is " + this->value.ValueTypeString() + ", but the value type assigned is "
-            + value.ValueTypeString());
+        else
+            throw string("Variable value type is " + this->value.ValueTypeString() + ", but the value type assigned is " + value.ValueTypeString());
     }
-    else {
+    else
+    {
         throw string("Only ID type that is constant variable and variable can init its values");
     }
 }
@@ -169,19 +190,23 @@ void ID::InitValue(VALUE value)
 // set value can only used by var
 void ID::SetValue(VALUE value)
 {
-    if (idType == IDTYPE::VARIABLE) {
-        if (this->value.valueType == value.valueType) {
+    if (idType == IDTYPE::VARIABLE)
+    {
+        if (this->value.valueType == value.valueType)
+        {
             this->value = value;
         }
-        else throw string("Variable value type is " + this->value.ValueTypeString() + ", but the value type assigned is "
-            + value.ValueTypeString());
+        else
+            throw string("Variable value type is " + this->value.ValueTypeString() + ", but the value type assigned is " + value.ValueTypeString());
     }
-    else {
+    else
+    {
         throw string("Only ID type that is variable can change its values");
     }
 }
 
-VALUE::VALUE() {
+VALUE::VALUE()
+{
     valueType = VALUETYPE::INVALID;
 
     ival = 0;
@@ -193,11 +218,13 @@ VALUE::VALUE() {
 
 // constructor for different types (type could defined explicitly/implicitly)
 // below constructor is non array values
-VALUE::VALUE(int ival, VALUETYPE valueType) {
+VALUE::VALUE(int ival, VALUETYPE valueType)
+{
     // if user set the valuetype explicitly, check value type passed in
-    if (valueType != VALUETYPE::INT) {
-        throw (string("Provided value type is int, but the value type at declaration is ") + 
-            valueTypeToString(valueType));
+    if (valueType != VALUETYPE::INT)
+    {
+        throw(string("Provided value type is int, but the value type at declaration is ") +
+              valueTypeToString(valueType));
     }
 
     this->valueType = valueType;
@@ -209,11 +236,13 @@ VALUE::VALUE(int ival, VALUETYPE valueType) {
     cval = 0;
 }
 
-VALUE::VALUE(float fval, VALUETYPE valueType) {
+VALUE::VALUE(float fval, VALUETYPE valueType)
+{
     // if user set the valuetype explicitly, check value type passed in
-    if (valueType != VALUETYPE::FLOAT) {
-        throw (string("Provided value type is float, but the value type at declaration is ") +
-            valueTypeToString(valueType));
+    if (valueType != VALUETYPE::FLOAT)
+    {
+        throw(string("Provided value type is float, but the value type at declaration is ") +
+              valueTypeToString(valueType));
     }
 
     this->valueType = valueType;
@@ -225,11 +254,13 @@ VALUE::VALUE(float fval, VALUETYPE valueType) {
     cval = 0;
 }
 
-VALUE::VALUE(string sval, VALUETYPE valueType) {
+VALUE::VALUE(string sval, VALUETYPE valueType)
+{
     // if user set the valuetype explicitly, check value type passed in
-    if (valueType != VALUETYPE::STRING) {
-        throw (string("Provided value type is string, but the value type at declaration is ") +
-            valueTypeToString(valueType));
+    if (valueType != VALUETYPE::STRING)
+    {
+        throw(string("Provided value type is string, but the value type at declaration is ") +
+              valueTypeToString(valueType));
     }
 
     this->valueType = valueType;
@@ -241,11 +272,13 @@ VALUE::VALUE(string sval, VALUETYPE valueType) {
     cval = 0;
 }
 
-VALUE::VALUE(bool bval, VALUETYPE valueType) {
+VALUE::VALUE(bool bval, VALUETYPE valueType)
+{
     // if user set the valuetype explicitly, check value type passed in
-    if (valueType != VALUETYPE::BOOLEAN) {
-        throw (string("Provided value type is bool, but the value type at declaration is ") +
-            valueTypeToString(valueType));
+    if (valueType != VALUETYPE::BOOLEAN)
+    {
+        throw(string("Provided value type is bool, but the value type at declaration is ") +
+              valueTypeToString(valueType));
     }
 
     this->valueType = valueType;
@@ -257,11 +290,13 @@ VALUE::VALUE(bool bval, VALUETYPE valueType) {
     cval = 0;
 }
 
-VALUE::VALUE(char cval, VALUETYPE valueType) {
+VALUE::VALUE(char cval, VALUETYPE valueType)
+{
     // if user set the valuetype explicitly, check value type passed in
-    if (valueType != VALUETYPE::CHAR) {
-        throw (string("Provided value type is char, but the value type at declaration is ") +
-            valueTypeToString(valueType));
+    if (valueType != VALUETYPE::CHAR)
+    {
+        throw(string("Provided value type is char, but the value type at declaration is ") +
+              valueTypeToString(valueType));
     }
 
     this->valueType = valueType;
@@ -274,7 +309,8 @@ VALUE::VALUE(char cval, VALUETYPE valueType) {
 }
 
 // constructor for array values
-VALUE::VALUE(VALUETYPE valueType, int range) {
+VALUE::VALUE(VALUETYPE valueType, int range)
+{
     this->valueType = valueType;
 
     ival = 0;
@@ -284,515 +320,654 @@ VALUE::VALUE(VALUETYPE valueType, int range) {
     cval = 0;
 
     // check the range value to be larger than zero
-    if (range <= 0) {
+    if (range <= 0)
+    {
         throw string("Array Range should be larger than zero!");
     }
 
     // set vector size
     // char vector
-    if (this->valueType == VALUETYPE::CHAR) {
+    if (this->valueType == VALUETYPE::CHAR)
+    {
         this->valueType = VALUETYPE::ARRCHAR;
         cvals.resize((size_t)range);
     }
     // boolean vector
-    else if (this->valueType == VALUETYPE::BOOLEAN) {
+    else if (this->valueType == VALUETYPE::BOOLEAN)
+    {
         this->valueType = VALUETYPE::ARRBOOLEAN;
         bvals.resize((size_t)range);
     }
     // string vector
-    else if (this->valueType == VALUETYPE::STRING) {
+    else if (this->valueType == VALUETYPE::STRING)
+    {
         this->valueType = VALUETYPE::ARRSTRING;
         svals.resize((size_t)range);
     }
     // int vector
-    else if (this->valueType == VALUETYPE::INT) {
+    else if (this->valueType == VALUETYPE::INT)
+    {
         this->valueType = VALUETYPE::ARRINT;
         ivals.resize((size_t)range);
     }
     // float vector
-    else if (this->valueType == VALUETYPE::FLOAT) {
+    else if (this->valueType == VALUETYPE::FLOAT)
+    {
         this->valueType = VALUETYPE::ARRFLOAT;
         fvals.resize((size_t)range);
     }
     // this shouldn't be called
-    else {
-        throw string("I dont know how possible do you reach here!\n" 
-            "Bug Found at VALUE::VALUE(VALUETYPE valueType, int range)\n");
+    else
+    {
+        throw string("I dont know how possible do you reach here!\n"
+                     "Bug Found at VALUE::VALUE(VALUETYPE valueType, int range)\n");
     }
     DebugLog("Array declaration detected! Array value setted......OK");
 }
 
 // operator overloading
-VALUE operator+(const VALUE& lhs, const VALUE& rhs) {
+VALUE operator+(const VALUE &lhs, const VALUE &rhs)
+{
     // type should be same
-    if (lhs.valueType != rhs.valueType) throw string("Different value type cant do the add operation");
+    if (lhs.valueType != rhs.valueType)
+        throw string("Different value type cant do the add operation");
     // type should be int or float
-    if (lhs.valueType != VALUETYPE::INT && lhs.valueType != VALUETYPE::FLOAT) throw string("Only value type int and float do the add operation");
-    
+    if (lhs.valueType != VALUETYPE::INT && lhs.valueType != VALUETYPE::FLOAT)
+        throw string("Only value type int and float do the add operation");
+
     // successful message
     VALUE answerValue;
     answerValue.valueType = lhs.valueType;
-    if (lhs.valueType == VALUETYPE::INT) answerValue.ival = lhs.ival + rhs.ival;
-    else if (lhs.valueType == VALUETYPE::FLOAT) answerValue.fval = lhs.fval + rhs.fval;
+    if (lhs.valueType == VALUETYPE::INT)
+        answerValue.ival = lhs.ival + rhs.ival;
+    else if (lhs.valueType == VALUETYPE::FLOAT)
+        answerValue.fval = lhs.fval + rhs.fval;
 
     DebugLog("<" + valueTypeToString(lhs.valueType) + "> + <" + valueTypeToString(rhs.valueType) + "> detected......OK");
     return answerValue;
 }
 
-VALUE operator-(const VALUE& lhs, const VALUE& rhs) {
+VALUE operator-(const VALUE &lhs, const VALUE &rhs)
+{
     // type should be same
-    if (lhs.valueType != rhs.valueType) throw string("Different value type cant do the minus operation");
+    if (lhs.valueType != rhs.valueType)
+        throw string("Different value type cant do the minus operation");
     // type should be int or float
-    if (lhs.valueType != VALUETYPE::INT && lhs.valueType != VALUETYPE::FLOAT) throw string("Only value type int and float do the minus operation");
+    if (lhs.valueType != VALUETYPE::INT && lhs.valueType != VALUETYPE::FLOAT)
+        throw string("Only value type int and float do the minus operation");
 
     // successful message
     VALUE answerValue;
     answerValue.valueType = lhs.valueType;
-    if (lhs.valueType == VALUETYPE::INT) answerValue.ival = lhs.ival - rhs.ival;
-    else if (lhs.valueType == VALUETYPE::FLOAT) answerValue.fval = lhs.fval - rhs.fval;
+    if (lhs.valueType == VALUETYPE::INT)
+        answerValue.ival = lhs.ival - rhs.ival;
+    else if (lhs.valueType == VALUETYPE::FLOAT)
+        answerValue.fval = lhs.fval - rhs.fval;
 
     DebugLog("<" + valueTypeToString(lhs.valueType) + "> - <" + valueTypeToString(rhs.valueType) + "> detected......OK");
     return answerValue;
 }
 
-VALUE operator*(const VALUE& lhs, const VALUE& rhs) {
+VALUE operator*(const VALUE &lhs, const VALUE &rhs)
+{
     // type should be same
-    if (lhs.valueType != rhs.valueType) throw string("Different value type cant do the mutiple operation");
+    if (lhs.valueType != rhs.valueType)
+        throw string("Different value type cant do the mutiple operation");
     // type should be int or float
-    if (lhs.valueType != VALUETYPE::INT && lhs.valueType != VALUETYPE::FLOAT) throw string("Only value type int and float do the mutiple operation");
+    if (lhs.valueType != VALUETYPE::INT && lhs.valueType != VALUETYPE::FLOAT)
+        throw string("Only value type int and float do the mutiple operation");
 
     // successful message
     VALUE answerValue;
     answerValue.valueType = lhs.valueType;
-    if (lhs.valueType == VALUETYPE::INT) answerValue.ival = lhs.ival * rhs.ival;
-    else if (lhs.valueType == VALUETYPE::FLOAT) answerValue.fval = lhs.fval * rhs.fval;
+    if (lhs.valueType == VALUETYPE::INT)
+        answerValue.ival = lhs.ival * rhs.ival;
+    else if (lhs.valueType == VALUETYPE::FLOAT)
+        answerValue.fval = lhs.fval * rhs.fval;
 
     DebugLog("<" + valueTypeToString(lhs.valueType) + "> * <" + valueTypeToString(rhs.valueType) + "> detected......OK");
     return answerValue;
 }
 
-VALUE operator/(const VALUE& lhs, const VALUE& rhs) {
+VALUE operator/(const VALUE &lhs, const VALUE &rhs)
+{
     // type should be same
-    if (lhs.valueType != rhs.valueType) throw string("Different value type cant do the mutiple operation");
+    if (lhs.valueType != rhs.valueType)
+        throw string("Different value type cant do the mutiple operation");
     // type should be int or float
-    if (lhs.valueType != VALUETYPE::INT && lhs.valueType != VALUETYPE::FLOAT) throw string("Only value type int and float do the mutiple operation");
+    if (lhs.valueType != VALUETYPE::INT && lhs.valueType != VALUETYPE::FLOAT)
+        throw string("Only value type int and float do the mutiple operation");
 
     // successful message
     VALUE answerValue;
     answerValue.valueType = lhs.valueType;
-    if (lhs.valueType == VALUETYPE::INT) answerValue.ival = lhs.ival / rhs.ival;
-    else if (lhs.valueType == VALUETYPE::FLOAT) answerValue.fval = lhs.fval / rhs.fval;
+    if (lhs.valueType == VALUETYPE::INT)
+        answerValue.ival = lhs.ival / rhs.ival;
+    else if (lhs.valueType == VALUETYPE::FLOAT)
+        answerValue.fval = lhs.fval / rhs.fval;
 
     DebugLog("<" + valueTypeToString(lhs.valueType) + "> / <" + valueTypeToString(rhs.valueType) + "> detected......OK");
     return answerValue;
 }
 
-VALUE operator%(const VALUE& lhs, const VALUE& rhs) {
+VALUE operator%(const VALUE &lhs, const VALUE &rhs)
+{
     throw string("The owner didn't implemented the remainder operation");
 }
 
-VALUE& VALUE::operator[](int idx) {
+VALUE &VALUE::operator[](int idx)
+{
     // check provided idx is larger or equal than zero
-    if (idx < 0) {
+    if (idx < 0)
+    {
         throw string("The index used in [] operator must be larger or equal than zero!");
     }
-    VALUE& answerValue = *this;
+    VALUE &answerValue = *this;
 
     // check whether is array or not
     // bool
-    if (valueType == VALUETYPE::ARRBOOLEAN) {
+    if (valueType == VALUETYPE::ARRBOOLEAN)
+    {
         // check provided idx doesn't exceed the range
-        if (bvals.size() <= idx) {
+        if (bvals.size() <= idx)
+        {
             throw string("The index used in [] operator exceed the size of boolean array!");
         }
-        else {
+        else
+        {
             answerValue.valueType = VALUETYPE::BOOLEAN;
             answerValue.bval = bvals[idx];
         }
     }
 
     // char
-    else if (valueType == VALUETYPE::ARRCHAR) {
+    else if (valueType == VALUETYPE::ARRCHAR)
+    {
         // check provided idx doesn't exceed the range
-        if (cvals.size() <= idx) {
+        if (cvals.size() <= idx)
+        {
             throw string("The index used in [] operator exceed the size of char array!");
         }
-        else {
+        else
+        {
             answerValue.valueType = VALUETYPE::CHAR;
             answerValue.cval = cvals[idx];
         }
     }
 
     // string
-    else if (valueType == VALUETYPE::ARRSTRING) {
+    else if (valueType == VALUETYPE::ARRSTRING)
+    {
         // check provided idx doesn't exceed the range
-        if (svals.size() <= idx) {
+        if (svals.size() <= idx)
+        {
             throw string("The index used in [] operator exceed the size of string array!");
         }
-        else {
+        else
+        {
             answerValue.valueType = VALUETYPE::STRING;
             answerValue.sval = svals[idx];
         }
     }
 
     // float
-    else if (valueType == VALUETYPE::ARRFLOAT) {
+    else if (valueType == VALUETYPE::ARRFLOAT)
+    {
         // check provided idx doesn't exceed the range
-        if (fvals.size() <= idx) {
+        if (fvals.size() <= idx)
+        {
             throw string("The index used in [] operator exceed the size of float array!");
         }
-        else {
+        else
+        {
             answerValue.valueType = VALUETYPE::FLOAT;
             answerValue.fval = fvals[idx];
         }
     }
 
     // int
-    else if (valueType == VALUETYPE::ARRINT) {
+    else if (valueType == VALUETYPE::ARRINT)
+    {
         // check provided idx doesn't exceed the range
-        if (ivals.size() <= idx) {
+        if (ivals.size() <= idx)
+        {
             throw string("The index used in [] operator exceed the size of int array!");
         }
-        else {
+        else
+        {
             answerValue.valueType = VALUETYPE::INT;
             answerValue.ival = ivals[idx];
         }
     }
-    else{
+    else
+    {
         // error detected
         throw string("[] operator can only used on array value type!");
     }
-    
+
     // return successful message
     DebugLog("[] operator detected......OK");
     return answerValue;
 }
 
-VALUE operator||(const VALUE& lhs, const VALUE& rhs){
+VALUE operator||(const VALUE &lhs, const VALUE &rhs)
+{
     // only boolean value can do or operation
-    if(lhs.valueType == VALUETYPE::BOOLEAN && rhs.valueType == VALUETYPE::BOOLEAN){
+    if (lhs.valueType == VALUETYPE::BOOLEAN && rhs.valueType == VALUETYPE::BOOLEAN)
+    {
         DebugLog("<BOOLEAN> || <BOOLEAN> detected!......OK");
         VALUE answer;
         answer.valueType = VALUETYPE::BOOLEAN;
         answer.bval = (lhs.bval || rhs.bval);
         return answer;
     }
-    else{
+    else
+    {
         throw string("Only boolean value type can do OR operation!");
     }
 }
 
-VALUE operator&&(const VALUE& lhs, const VALUE& rhs){
+VALUE operator&&(const VALUE &lhs, const VALUE &rhs)
+{
     // only boolean value can do and operation
-    if(lhs.valueType == VALUETYPE::BOOLEAN && rhs.valueType == VALUETYPE::BOOLEAN){
+    if (lhs.valueType == VALUETYPE::BOOLEAN && rhs.valueType == VALUETYPE::BOOLEAN)
+    {
         DebugLog("<BOOLEAN> && <BOOLEAN> detected!......OK");
         VALUE answer;
         answer.valueType = VALUETYPE::BOOLEAN;
         answer.bval = (lhs.bval && rhs.bval);
         return answer;
     }
-    else{
+    else
+    {
         throw string("Only boolean value type can do AND operation!");
     }
 }
 
-VALUE operator<(const VALUE& lhs, const VALUE& rhs){
+VALUE operator<(const VALUE &lhs, const VALUE &rhs)
+{
     // comparation operator must be same value type
-    if(lhs.valueType != rhs.valueType) throw string("Less than operation can only work on same value type");
+    if (lhs.valueType != rhs.valueType)
+        throw string("Less than operation can only work on same value type");
 
-    if(lhs.valueType == VALUETYPE::FLOAT){
+    if (lhs.valueType == VALUETYPE::FLOAT)
+    {
         DebugLog("<FLAOT> < <FLOAT> detected!......OK");
         return VALUE(lhs.fval < rhs.fval);
     }
 
-    else if(lhs.valueType == VALUETYPE::INT){
+    else if (lhs.valueType == VALUETYPE::INT)
+    {
         DebugLog("<INT> < <INT> detected!......OK");
         return VALUE(lhs.ival < rhs.ival);
     }
 
-    else{
+    else
+    {
         throw string("Only int and float can do LESS THAN operation!");
     }
 }
 
-VALUE operator<=(const VALUE& lhs, const VALUE& rhs){
+VALUE operator<=(const VALUE &lhs, const VALUE &rhs)
+{
     // comparation operator must be same value type
-    if(lhs.valueType != rhs.valueType) throw string("Less or equal than operation can only work on same value type");
+    if (lhs.valueType != rhs.valueType)
+        throw string("Less or equal than operation can only work on same value type");
 
-    if(lhs.valueType == VALUETYPE::FLOAT){
+    if (lhs.valueType == VALUETYPE::FLOAT)
+    {
         DebugLog("<FLAOT> <= <FLOAT> detected!......OK");
         return VALUE(lhs.fval <= rhs.fval);
     }
 
-    else if(lhs.valueType == VALUETYPE::INT){
+    else if (lhs.valueType == VALUETYPE::INT)
+    {
         DebugLog("<INT> <= <INT> detected!......OK");
         return VALUE(lhs.ival <= rhs.ival);
     }
 
-    else{
+    else
+    {
         throw string("Only int and float can do Less or equal than operation!");
     }
 }
 
-VALUE operator>(const VALUE& lhs, const VALUE& rhs){
+VALUE operator>(const VALUE &lhs, const VALUE &rhs)
+{
     // comparation operator must be same value type
-    if(lhs.valueType != rhs.valueType) throw string("Greater than operation can only work on same value type");
+    if (lhs.valueType != rhs.valueType)
+        throw string("Greater than operation can only work on same value type");
 
-    if(lhs.valueType == VALUETYPE::FLOAT){
+    if (lhs.valueType == VALUETYPE::FLOAT)
+    {
         DebugLog("<FLAOT> > <FLOAT> detected!......OK");
         return VALUE(lhs.fval > rhs.fval);
     }
 
-    else if(lhs.valueType == VALUETYPE::INT){
+    else if (lhs.valueType == VALUETYPE::INT)
+    {
         DebugLog("<INT> > <INT> detected!......OK");
         return VALUE(lhs.ival > rhs.ival);
     }
 
-    else{
+    else
+    {
         throw string("Only int and float can do Greater than operation!");
     }
 }
 
-VALUE operator>=(const VALUE& lhs, const VALUE& rhs){
+VALUE operator>=(const VALUE &lhs, const VALUE &rhs)
+{
     // comparation operator must be same value type
-    if(lhs.valueType != rhs.valueType) throw string("Greater or equal than operation can only work on same value type");
+    if (lhs.valueType != rhs.valueType)
+        throw string("Greater or equal than operation can only work on same value type");
 
-    if(lhs.valueType == VALUETYPE::FLOAT){
+    if (lhs.valueType == VALUETYPE::FLOAT)
+    {
         DebugLog("<FLAOT> >= <FLOAT> detected!......OK");
         return VALUE(lhs.fval >= rhs.fval);
     }
 
-    else if(lhs.valueType == VALUETYPE::INT){
+    else if (lhs.valueType == VALUETYPE::INT)
+    {
         DebugLog("<INT> >= <INT> detected!......OK");
         return VALUE(lhs.ival >= rhs.ival);
     }
 
-    else{
+    else
+    {
         throw string("Only int and float can do Greater or equal than operation!");
     }
 }
 
-VALUE operator==(const VALUE& lhs, const VALUE& rhs){
+VALUE operator==(const VALUE &lhs, const VALUE &rhs)
+{
     // comparation operator must be same value type
-    if(lhs.valueType != rhs.valueType) throw string("Equal operation can only work on same value type");
+    if (lhs.valueType != rhs.valueType)
+        throw string("Equal operation can only work on same value type");
 
-    if(lhs.valueType == VALUETYPE::FLOAT){
+    if (lhs.valueType == VALUETYPE::FLOAT)
+    {
         DebugLog("<FLAOT> == <FLOAT> detected!......OK");
         return VALUE(lhs.fval == rhs.fval);
     }
 
-    else if(lhs.valueType == VALUETYPE::INT){
+    else if (lhs.valueType == VALUETYPE::INT)
+    {
         DebugLog("<INT> == <INT> detected!......OK");
         return VALUE(lhs.ival == rhs.ival);
     }
 
-    else if(lhs.valueType == VALUETYPE::BOOLEAN){
+    else if (lhs.valueType == VALUETYPE::BOOLEAN)
+    {
         DebugLog("<BOOLEAN> == <BOOLEAN> detected!......OK");
         return VALUE(lhs.bval == rhs.bval);
     }
 
-    else if(lhs.valueType == VALUETYPE::STRING){
+    else if (lhs.valueType == VALUETYPE::STRING)
+    {
         DebugLog("<STRING> == <STRING> detected!......OK");
         return VALUE(lhs.sval == rhs.sval);
     }
 
-    else if(lhs.valueType == VALUETYPE::CHAR){
+    else if (lhs.valueType == VALUETYPE::CHAR)
+    {
         DebugLog("<CHAR> == <CHAR> detected!......OK");
         return VALUE(lhs.cval == rhs.cval);
     }
 
-    else{
+    else
+    {
         throw string("Only int, float, string, char, and boolean can do equal operation!");
     }
 }
 
-VALUE operator!=(const VALUE& lhs, const VALUE& rhs){
+VALUE operator!=(const VALUE &lhs, const VALUE &rhs)
+{
     // comparation operator must be same value type
-    if(lhs.valueType != rhs.valueType) throw string("Non Equal operation can only work on same value type");
+    if (lhs.valueType != rhs.valueType)
+        throw string("Non Equal operation can only work on same value type");
 
-    if(lhs.valueType == VALUETYPE::FLOAT){
+    if (lhs.valueType == VALUETYPE::FLOAT)
+    {
         DebugLog("<FLAOT> != <FLOAT> detected!......OK");
         return VALUE(lhs.fval != rhs.fval);
     }
 
-    else if(lhs.valueType == VALUETYPE::INT){
+    else if (lhs.valueType == VALUETYPE::INT)
+    {
         DebugLog("<INT> != <INT> detected!......OK");
         return VALUE(lhs.ival != rhs.ival);
     }
 
-    else if(lhs.valueType == VALUETYPE::BOOLEAN){
+    else if (lhs.valueType == VALUETYPE::BOOLEAN)
+    {
         DebugLog("<BOOLEAN> != <BOOLEAN> detected!......OK");
         return VALUE(lhs.bval != rhs.bval);
     }
 
-    else if(lhs.valueType == VALUETYPE::STRING){
+    else if (lhs.valueType == VALUETYPE::STRING)
+    {
         DebugLog("<STRING> != <STRING> detected!......OK");
         return VALUE(lhs.sval != rhs.sval);
     }
 
-    else if(lhs.valueType == VALUETYPE::CHAR){
+    else if (lhs.valueType == VALUETYPE::CHAR)
+    {
         DebugLog("<CHAR> != <CHAR> detected!......OK");
         return VALUE(lhs.cval != rhs.cval);
     }
 
-    else{
+    else
+    {
         throw string("Only int, float, string, char, and boolean can do Non Equal operation!");
     }
 }
 
 // unary operators
-VALUE VALUE::operator-(){
+VALUE VALUE::operator-()
+{
     // only float and int value can do minus unary operation
-    if(this->valueType == VALUETYPE::INT){
+    if (this->valueType == VALUETYPE::INT)
+    {
         DebugLog("Value type int is doing MINUS unary operation......OK");
         VALUE answer;
         answer.valueType = VALUETYPE::INT;
         answer.ival = -this->ival;
         return answer;
     }
-    if(this->valueType == VALUETYPE::FLOAT){
+    if (this->valueType == VALUETYPE::FLOAT)
+    {
         DebugLog("Value type float is doing MINUS unary operation......OK");
         VALUE answer;
         answer.valueType = VALUETYPE::FLOAT;
         answer.fval = -this->fval;
         return answer;
     }
-    else{
+    else
+    {
         throw string("Only int and float value type can do MINUS unary operation!");
     }
 }
 
-VALUE VALUE::operator!(){
+VALUE VALUE::operator!()
+{
     // only boolean value can do or operation
-    if(this->valueType == VALUETYPE::BOOLEAN){
+    if (this->valueType == VALUETYPE::BOOLEAN)
+    {
         DebugLog("Value type boolean is doing NOT unary operation......OK");
         VALUE answer;
         answer.valueType = VALUETYPE::BOOLEAN;
         answer.bval = !this->bval;
         return answer;
     }
-    else{
+    else
+    {
         throw string("Only boolean value type can do NOT unary operation!");
     }
 }
 
 // return value type string
-string VALUE::ValueTypeString() {
+string VALUE::ValueTypeString()
+{
     return valueTypeToString(valueType);
 }
 
 void VALUE::Dump()
 {
-    if (valueType == VALUETYPE::INVALID){
+    if (valueType == VALUETYPE::INVALID)
+    {
         cout << "ValueType -> Invalid\n";
     }
-    else if (valueType == VALUETYPE::ARRBOOLEAN) {
+    else if (valueType == VALUETYPE::ARRBOOLEAN)
+    {
         cout << "ValueType -> Arr Boolean";
         cout << " | ValueValue -> (";
-        for (int i = 0; i < bvals.size(); i++) {
+        for (int i = 0; i < bvals.size(); i++)
+        {
             cout << bvals[i];
 
-            if (i != bvals.size() - 1)  cout << ", ";
-            else cout << ")";
+            if (i != bvals.size() - 1)
+                cout << ", ";
+            else
+                cout << ")";
         }
     }
-    else if (valueType == VALUETYPE::ARRCHAR) {
+    else if (valueType == VALUETYPE::ARRCHAR)
+    {
         cout << "ValueType -> Arr Char";
         cout << " | ValueValue -> (";
-        for (int i = 0; i < cvals.size(); i++) {
+        for (int i = 0; i < cvals.size(); i++)
+        {
             cout << cvals[i];
 
-            if (i != cvals.size() - 1)  cout << ", ";
-            else cout << ")";
+            if (i != cvals.size() - 1)
+                cout << ", ";
+            else
+                cout << ")";
         }
     }
-    else if (valueType == VALUETYPE::ARRFLOAT) {
+    else if (valueType == VALUETYPE::ARRFLOAT)
+    {
         cout << "ValueType -> Arr Double";
         cout << " | ValueValue -> (";
-        for (int i = 0; i < fvals.size(); i++) {
+        for (int i = 0; i < fvals.size(); i++)
+        {
             cout << fvals[i];
 
-            if (i != fvals.size() - 1)  cout << ", ";
-            else cout << ")";
+            if (i != fvals.size() - 1)
+                cout << ", ";
+            else
+                cout << ")";
         }
     }
-    else if (valueType == VALUETYPE::ARRINT) {
+    else if (valueType == VALUETYPE::ARRINT)
+    {
         cout << "ValueType -> Arr Integer";
         cout << " | ValueValue -> (";
-        for (int i = 0; i < ivals.size(); i++) {
+        for (int i = 0; i < ivals.size(); i++)
+        {
             cout << ivals[i];
 
-            if (i != ivals.size() - 1)  cout << ", ";
-            else cout << ")";
+            if (i != ivals.size() - 1)
+                cout << ", ";
+            else
+                cout << ")";
         }
     }
-    else if (valueType == VALUETYPE::ARRSTRING) {
+    else if (valueType == VALUETYPE::ARRSTRING)
+    {
         cout << "ValueType -> Arr String";
         cout << " | ValueValue -> (";
-        for (int i = 0; i < svals.size(); i++) {
+        for (int i = 0; i < svals.size(); i++)
+        {
             cout << svals[i];
 
-            if (i != svals.size() - 1)  cout << ", ";
-            else cout << ")";
+            if (i != svals.size() - 1)
+                cout << ", ";
+            else
+                cout << ")";
         }
     }
-    else if (valueType == VALUETYPE::VOID) {
+    else if (valueType == VALUETYPE::VOID)
+    {
         cout << "ValueType -> Void";
     }
-    else if (valueType == VALUETYPE::BOOLEAN) {
+    else if (valueType == VALUETYPE::BOOLEAN)
+    {
         cout << "ValueType -> Boolean";
         cout << " | ValueValue -> (" << bval << ")";
     }
-    else if (valueType == VALUETYPE::CHAR) {
+    else if (valueType == VALUETYPE::CHAR)
+    {
         cout << "ValueType -> Char";
         cout << " | ValueValue -> (" << cval << ")";
     }
-    else if (valueType == VALUETYPE::FLOAT) {
+    else if (valueType == VALUETYPE::FLOAT)
+    {
         cout << "ValueType -> Double";
         cout << " | ValueValue -> (" << fval << ")";
     }
-    else if (valueType == VALUETYPE::INT) {
+    else if (valueType == VALUETYPE::INT)
+    {
         cout << "ValueType -> Integer";
         cout << " | ValueValue -> (" << ival << ")";
     }
-    else if (valueType == VALUETYPE::STRING) {
+    else if (valueType == VALUETYPE::STRING)
+    {
         cout << "ValueType -> String";
         cout << " | ValueValue -> (" << sval << ")";
     }
-
 }
 
 void Symbol::Dump()
 {
-    for (int i = 0; i < ids.size(); i++) {
+    for (int i = 0; i < ids.size(); i++)
+    {
         cout << "\n";
-        ids[i].Dump();
+        ids[i]->Dump();
         cout << "\n";
     }
 }
 
-void SymbolTable::CreateSymbol(bool printMess)
+void SymbolTable::CreateSymbol()
 {
-    if(printMess)   DebugLog("New Symbol Created! Means that we have enter a new scope......OK");
+    DebugLog("New Symbol Created! Means that we have enter a new scope......OK");
+    Symbol newSymbol = Symbol();
+    // set the parent id pointer
+    ID *parentPtr = this->validSymbols.back().ids.back();
+
+    // check whether the parent pointer is a valid pointer
+    if (parentPtr)
+    {
+        // only function and object id will be used as parent id ptr
+        if (parentPtr->idType == IDTYPE::FUNCTION || parentPtr->idType == IDTYPE::OBJECTID)
+        {
+            newSymbol.parentIDPtr = parentPtr;
+        }
+    }
     this->validSymbols.push_back(Symbol());
 }
 
-void SymbolTable::DropSymbol(bool printMess)
+void SymbolTable::DropSymbol()
 {
-    if(printMess)   DebugLog("Symbol Dropped! Means that we have leave the current scope......OK");
-    
+    DebugLog("Symbol Dropped! Means that we have leave the current scope......OK");
+
     Symbol symbol = this->validSymbols.back();
     this->validSymbols.pop_back();
     this->invalidSymbols.push_back(symbol);
 }
 
-ID& SymbolTable::LookUp(string IDName)
+ID *SymbolTable::LookUp(string IDName)
 {
     // look up for the current scope first
-    for (int i = validSymbols.size() - 1; i >= 0; i--) {
-        for (int j = 0; j < validSymbols[i].ids.size(); j++) {
+    for (int i = validSymbols.size() - 1; i >= 0; i--)
+    {
+        for (int j = 0; j < validSymbols[i].ids.size(); j++)
+        {
             // found same id with the name
-            if (IDName == validSymbols[i].ids[j].IDName) {
+            if (IDName == validSymbols[i].ids[j]->IDName)
+            {
                 return validSymbols[i].ids[j];
             }
         }
@@ -802,26 +977,28 @@ ID& SymbolTable::LookUp(string IDName)
     throw string("IDName pass in(" + IDName + ") didn't found in symbol table!\n");
 }
 
-ID& SymbolTable::Insert(ID id)
+ID *SymbolTable::Insert(ID id)
 {
     // get the symbol from the current scope
     int i = validSymbols.size() - 1;
     // check whether has same id name inside the current scope
-    for (int j = 0; j < validSymbols[i].ids.size(); j++) {
+    for (int j = 0; j < validSymbols[i].ids.size(); j++)
+    {
         // the id with same name already declare in this scope
-        if (validSymbols[i].ids[j].IDName == id.IDName) {
-            throw ("A same ID name " + validSymbols[i].ids[j].IDName + " found has already declared in this scope with id type "
-                + IdTypeToString(validSymbols[i].ids[j].idType));
+        if (validSymbols[i].ids[j]->IDName == id.IDName)
+        {
+            throw("A same ID name " + validSymbols[i].ids[j]->IDName + " found has already declared in this scope with id type " + IdTypeToString(validSymbols[i].ids[j]->idType));
         }
     }
 
-    validSymbols[i].ids.push_back(id);
+    validSymbols[i].ids.push_back(new ID(id));
     return validSymbols[i].ids[validSymbols[i].ids.size() - 1];
 }
 
 void SymbolTable::DumpValidSymbols()
 {
-    for (int i = 0; i < validSymbols.size(); i++) {
+    for (int i = 0; i < validSymbols.size(); i++)
+    {
         cout << "\n";
         validSymbols[i].Dump();
         cout << "\n";
@@ -830,19 +1007,24 @@ void SymbolTable::DumpValidSymbols()
 
 void SymbolTable::DumpInvalidSymbols()
 {
-    for (int i = 0; i < invalidSymbols.size(); i++) {
+    for (int i = 0; i < invalidSymbols.size(); i++)
+    {
         cout << "\n";
         invalidSymbols[i].Dump();
         cout << "\n";
     }
 }
 
-void DebugLog(string log, bool hasLine) {
-    if (hasLine) cout << log << '\n';
-    else cout << log;
+void DebugLog(string log, bool hasLine)
+{
+    if (hasLine)
+        cout << log << '\n';
+    else
+        cout << log;
 }
 
-string IdTypeToString(IDTYPE idtype) {
+string IdTypeToString(IDTYPE idtype)
+{
     switch (idtype)
     {
     case IDTYPE::INVALID:
@@ -868,7 +1050,8 @@ string IdTypeToString(IDTYPE idtype) {
     }
 }
 
-string valueTypeToString(VALUETYPE valueType) {
+string valueTypeToString(VALUETYPE valueType)
+{
     switch (valueType)
     {
     case VALUETYPE::INVALID:
