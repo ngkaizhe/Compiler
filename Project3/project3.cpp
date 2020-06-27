@@ -1136,7 +1136,7 @@ string valueTypeToString(VALUETYPE valueType)
         return "void";
         break;
     case VALUETYPE::STRING:
-        return "string";
+        return "java.lang.String";
         break;
     case VALUETYPE::CHAR:
         return "char";

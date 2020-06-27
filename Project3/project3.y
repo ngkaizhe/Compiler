@@ -311,15 +311,15 @@ STMTS   : STMT
 STMT            : ID_NAME '=' EXP 
                 {
                     // check whether the exp has the same value type with the id name
-                    ID* rIDPtr = symbolTable.LookUp(*$1);
+                    ID* lIDPtr = symbolTable.LookUp(*$1);
                     
                     // the right id must be variable to do the assign operation
-                    if(rIDPtr->idType != IDTYPE::VARIABLE && rIDPtr->idType != IDTYPE::GLOBALVAR){
+                    if(lIDPtr->idType != IDTYPE::VARIABLE && lIDPtr->idType != IDTYPE::GLOBALVAR){
                         yyerror("Only local variable and global variable can do the assignment operation!");
                     }
 
-                    VALUE rvalue = rIDPtr->value;
-                    if(rvalue.valueType == $3->valueType){
+                    VALUE lvalue = lIDPtr->value;
+                    if(lvalue.valueType == $3->valueType){
                         DebugLog("Assignment operation done!");
                     }
                     else{
@@ -329,39 +329,73 @@ STMT            : ID_NAME '=' EXP
                     // start to output
                     PrintJasmTab();
                     // we only support int, boolean, char, float
-                    if(!isValueTypeSupported(rIDPtr->value.valueType)){
+                    if(!isValueTypeSupported(lIDPtr->value.valueType)){
                         yyerror("We only support assignment operation for int, boolean, char, float!");
                     }
 
                     // if is global variable
                     if(symbolTable.isGlobalScope(*$1)){
-                        fprintf(yyout, "putstatic %s %s.%s", 
-                            rIDPtr->value.ValueTypeString().c_str(), symbolTable.getObjectName().c_str(), rIDPtr->IDName.c_str());
+                        fprintf(yyout, "putstatic %s %s.%s\n", 
+                            lIDPtr->value.ValueTypeString().c_str(), symbolTable.getObjectName().c_str(), lIDPtr->IDName.c_str());
                     }
                     // else it must be local variable
                     else{
-                        if(rIDPtr->value.valueType == VALUETYPE::INT
-                        || rIDPtr->value.valueType == VALUETYPE::BOOLEAN
-                        || rIDPtr->value.valueType == VALUETYPE::CHAR)
-                            fprintf(yyout, "istore_%d", rIDPtr->scopeIndex);
-                        else if(rIDPtr->value.valueType == VALUETYPE::FLOAT)
-                            fprintf(yyout, "fstore_%d", rIDPtr->scopeIndex);
+                        if(lIDPtr->value.valueType == VALUETYPE::INT
+                        || lIDPtr->value.valueType == VALUETYPE::BOOLEAN
+                        || lIDPtr->value.valueType == VALUETYPE::CHAR)
+                            fprintf(yyout, "istore_%d\n", lIDPtr->scopeIndex);
+                        else if(lIDPtr->value.valueType == VALUETYPE::FLOAT)
+                            fprintf(yyout, "fstore_%d\n", lIDPtr->scopeIndex);
                     }
 
+                }
+                |   ID_NAME '[' EXP ']' '=' EXP
+                {
+                    // id name must be valid
+                    VALUE& arrID = symbolTable.LookUp(*$1)->value;
+
+                    // 1st exp should only be int type
+                    if($3->valueType != VALUETYPE::INT) yyerror("Array index must be integer type!");
+
+                    // set value to the array content
+                    arrID[$3->ival] = *$6;
+
+                    // we dont support array assignment
+                    yyerror("We don't support array assignment!\n");
                 }
                 | EXP
                 | VALDECLARATION
                 | VARDECLARATION
                 | RETURN_STMT
 
-                | PRINT '(' EXP ')'
+                | PRINT 
+                {
+                    // start to output
+                    PrintJasmTab();
+                    fprintf(yyout, "getstatic java.io.PrintStream java.lang.System.out\n");
+                }
+                '(' EXP ')'
                 {
                     DebugLog("Print function Called!");
+
+                    // start to output
+                    PrintJasmTab();
+                    fprintf(yyout, "invokevirtual void java.io.PrintStream.print(%s)\n", $4->ValueTypeString().c_str());
                 }
 
-                | PRINTLN '(' EXP ')'
+                | PRINTLN 
+                {
+                    // start to output
+                    PrintJasmTab();
+                    fprintf(yyout, "getstatic java.io.PrintStream java.lang.System.out\n");
+                }
+                '(' EXP ')'
                 {
                     DebugLog("Println function Called!");
+
+                    // start to output
+                    PrintJasmTab();
+                    fprintf(yyout, "invokevirtual void java.io.PrintStream.println(%s)\n", $4->ValueTypeString().c_str());
                 }
 
                 | READ ID_NAME
@@ -372,10 +406,19 @@ STMT            : ID_NAME '=' EXP
                 | '{' 
                 {
                     symbolTable.CreateSymbol();
+
+                    // start to output
+                    PrintJasmTab();
+                    fprintf(yyout, "{\n");
+                    tabCount++;
                 }
                 STMTS '}'
                 {
                     symbolTable.DropSymbol();
+                    // start to output
+                    tabCount--;
+                    PrintJasmTab();
+                    fprintf(yyout, "{\n");
                 }
 
                 | IF_STMT
@@ -434,6 +477,18 @@ VARDECLARATION  :       VAR ID_NAME ':' VALUE_TYPE
 
                                 // set value type
                                 newIdPtr->SetValueType(*$4);
+
+                                // start to output
+                                // we only support global var declaration
+                                if(symbolTable.isGlobalScope(*$2)){
+                                    PrintJasmTab();
+                                    fprintf(yyout, "field static %s %s\n", 
+                                        newIdPtr->value.ValueTypeString().c_str(), newIdPtr->IDName.c_str());
+                                }
+                                else{
+                                    yyerror("We Only Support Global Variable Declaration!\n");
+                                }
+                                
                             }
                             catch(string s){
                                 yyerror(s.c_str());
@@ -452,6 +507,17 @@ VARDECLARATION  :       VAR ID_NAME ':' VALUE_TYPE
 
                                 // set type
                                 newIdPtr->InitValue(*$4);
+
+                                // start to output
+                                // we only support global var declaration
+                                if(symbolTable.isGlobalScope(*$2)){
+                                    PrintJasmTab();
+                                    fprintf(yyout, "field static %s %s\n", 
+                                        newIdPtr->value.ValueTypeString().c_str(), newIdPtr->IDName.c_str());
+                                }
+                                else{
+                                    yyerror("We Only Support Global Variable Declaration!\n");
+                                }
                             }
                             catch(string s){
                                 yyerror(s.c_str());
@@ -471,6 +537,17 @@ VARDECLARATION  :       VAR ID_NAME ':' VALUE_TYPE
                                 // check VALUE_TOKEN's value type same as VALUE_TYPE
                                 newIdPtr->SetValueType(*$4);
                                 newIdPtr->InitValue(*$6);
+
+                                // start to output
+                                // we only support global var declaration
+                                if(symbolTable.isGlobalScope(*$2)){
+                                    PrintJasmTab();
+                                    fprintf(yyout, "field static %s %s\n", 
+                                        newIdPtr->value.ValueTypeString().c_str(), newIdPtr->IDName.c_str());
+                                }
+                                else{
+                                    yyerror("We Only Support Global Variable Declaration!\n");
+                                }
                             }
                             catch(string s){
                                 yyerror(s.c_str());
@@ -486,6 +563,17 @@ VARDECLARATION  :       VAR ID_NAME ':' VALUE_TYPE
                                 // check ID is already used in this scope or not
                                 // insert id with name to the symbol table
                                 symbolTable.Insert(newIdPtr);
+
+                                // start to output
+                                // we only support global var declaration
+                                // since we didn't set the variable type, we will set to default(int)
+                                if(symbolTable.isGlobalScope(*$2)){
+                                    PrintJasmTab();
+                                    fprintf(yyout, "field static int %s\n", newIdPtr->IDName.c_str());
+                                }
+                                else{
+                                    yyerror("We Only Support Global Variable Declaration!\n");
+                                }
                             }
                             catch(string s){
                                 yyerror(s.c_str());
@@ -509,6 +597,9 @@ VARDECLARATION  :       VAR ID_NAME ':' VALUE_TYPE
                                 // set the array range for id name
                                 // and resize and the array length
                                 newIdPtr->value = VALUE(*$4, $6->ival);
+
+                                // we don't support array
+                                yyerror("We don't support array declaration!\n");
                             }
                             catch(string s){
                                 yyerror(s.c_str());
@@ -517,24 +608,20 @@ VARDECLARATION  :       VAR ID_NAME ':' VALUE_TYPE
                 ;     
 
 // expression
-EXP     :   ID_NAME        {
-            // find the id in the symbol table
+EXP     :   ID_NAME        
+            {
+                // find the id in the symbol table
                 VALUE& idVal = symbolTable.LookUp(*$1)->value;
                 $$ = new VALUE(idVal);
+
+                // right value
+                // check whether id is global or local
+                // is global
+                if(symbolTable.isGlobalScope(*$1)){
+
+                }
+                // 
             }
-
-        |   ID_NAME '[' EXP ']' '=' EXP
-        {
-            // id name must be valid
-            VALUE& arrID = symbolTable.LookUp(*$1)->value;
-
-            // 1st exp should only be int type
-            if($3->valueType != VALUETYPE::INT) yyerror("Array index must be integer type!");
-
-            // set value to the array content
-            arrID[$3->ival] = *$6;
-
-        }
         |   EXP '+' EXP {$$ = new VALUE(*$1 + *$3);}
         |   EXP '-' EXP {$$ = new VALUE(*$1 - *$3);}
         |   EXP '*' EXP {$$ = new VALUE(*$1 * *$3);}
