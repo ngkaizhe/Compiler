@@ -479,14 +479,14 @@ VARDECLARATION  :       VAR ID_NAME ':' VALUE_TYPE
                                 newIdPtr->SetValueType(*$4);
 
                                 // start to output
-                                // we only support global var declaration
                                 if(symbolTable.isGlobalScope(*$2)){
                                     PrintJasmTab();
                                     fprintf(yyout, "field static %s %s\n", 
                                         newIdPtr->value.ValueTypeString().c_str(), newIdPtr->IDName.c_str());
                                 }
                                 else{
-                                    yyerror("We Only Support Global Variable Declaration!\n");
+                                    // set the scope index of the local variable
+                                    newIdPtr->scopeIndex = symbolTable.validSymbols.back().ids.size() - 1;
                                 }
                                 
                             }
@@ -509,14 +509,14 @@ VARDECLARATION  :       VAR ID_NAME ':' VALUE_TYPE
                                 newIdPtr->InitValue(*$4);
 
                                 // start to output
-                                // we only support global var declaration
                                 if(symbolTable.isGlobalScope(*$2)){
                                     PrintJasmTab();
                                     fprintf(yyout, "field static %s %s\n", 
                                         newIdPtr->value.ValueTypeString().c_str(), newIdPtr->IDName.c_str());
                                 }
                                 else{
-                                    yyerror("We Only Support Global Variable Declaration!\n");
+                                    // set the scope index of the local variable
+                                    newIdPtr->scopeIndex = symbolTable.validSymbols.back().ids.size() - 1;
                                 }
                             }
                             catch(string s){
@@ -539,14 +539,14 @@ VARDECLARATION  :       VAR ID_NAME ':' VALUE_TYPE
                                 newIdPtr->InitValue(*$6);
 
                                 // start to output
-                                // we only support global var declaration
                                 if(symbolTable.isGlobalScope(*$2)){
                                     PrintJasmTab();
                                     fprintf(yyout, "field static %s %s\n", 
                                         newIdPtr->value.ValueTypeString().c_str(), newIdPtr->IDName.c_str());
                                 }
                                 else{
-                                    yyerror("We Only Support Global Variable Declaration!\n");
+                                    // set the scope index of the local variable
+                                    newIdPtr->scopeIndex = symbolTable.validSymbols.back().ids.size() - 1;
                                 }
                             }
                             catch(string s){
@@ -565,14 +565,14 @@ VARDECLARATION  :       VAR ID_NAME ':' VALUE_TYPE
                                 symbolTable.Insert(newIdPtr);
 
                                 // start to output
-                                // we only support global var declaration
                                 // since we didn't set the variable type, we will set to default(int)
                                 if(symbolTable.isGlobalScope(*$2)){
                                     PrintJasmTab();
                                     fprintf(yyout, "field static int %s\n", newIdPtr->IDName.c_str());
                                 }
                                 else{
-                                    yyerror("We Only Support Global Variable Declaration!\n");
+                                    // set the scope index of the local variable
+                                    newIdPtr->scopeIndex = symbolTable.validSymbols.back().ids.size() - 1;
                                 }
                             }
                             catch(string s){
@@ -611,7 +611,7 @@ VARDECLARATION  :       VAR ID_NAME ':' VALUE_TYPE
 EXP     :   ID_NAME        
             {
                 // find the id in the symbol table
-                VALUE& idVal = symbolTable.LookUp(*$1)->value;
+                VALUE idVal = symbolTable.LookUp(*$1)->value;
                 $$ = new VALUE(idVal);
 
                 // right value
@@ -620,7 +620,10 @@ EXP     :   ID_NAME
                 if(symbolTable.isGlobalScope(*$1)){
 
                 }
-                // 
+                // else local
+                else{
+
+                }
             }
         |   EXP '+' EXP {$$ = new VALUE(*$1 + *$3);}
         |   EXP '-' EXP {$$ = new VALUE(*$1 - *$3);}

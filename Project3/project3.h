@@ -176,13 +176,12 @@ public:
 
 class SymbolTable
 {
-private:
+public:
     // the valid symbols that we are using
     vector<Symbol> validSymbols;
     // symbols that are already out of scope
     vector<Symbol> invalidSymbols;
 
-public:
     SymbolTable(){};
 
     // create symbol if we reached a new scope
