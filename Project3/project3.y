@@ -343,9 +343,9 @@ STMT            : ID_NAME '=' EXP
                         if(lIDPtr->value.valueType == VALUETYPE::INT
                         || lIDPtr->value.valueType == VALUETYPE::BOOLEAN
                         || lIDPtr->value.valueType == VALUETYPE::CHAR)
-                            fprintf(yyout, "istore_%d\n", lIDPtr->scopeIndex);
+                            fprintf(yyout, "istore %d\n", lIDPtr->scopeIndex);
                         else if(lIDPtr->value.valueType == VALUETYPE::FLOAT)
-                            fprintf(yyout, "fstore_%d\n", lIDPtr->scopeIndex);
+                            fprintf(yyout, "fstore %d\n", lIDPtr->scopeIndex);
                     }
 
                 }
@@ -615,14 +615,47 @@ EXP     :   ID_NAME
                 $$ = new VALUE(idVal);
 
                 // right value
-                // check whether id is global or local
-                // is global
-                if(symbolTable.isGlobalScope(*$1)){
-
+                // start to output
+                // we only support int, boolean, char, float
+                ID* rIDPtr = symbolTable.LookUp(*$1);
+                if(!isValueTypeSupported(rIDPtr->value.valueType)){
+                    yyerror("We only support rvalue get for int, boolean, char, float!");
                 }
-                // else local
-                else{
 
+                // check whether id is global or local or constant
+                // is global
+                if(rIDPtr->idType == IDTYPE::GLOBALVAR){
+                    PrintJasmTab();
+                    fprintf(yyout, "getstatic %s %s.%s\n", 
+                        rIDPtr->value.ValueTypeString().c_str(), symbolTable.getObjectName().c_str(), rIDPtr->IDName.c_str());
+                }
+                // else if local variable
+                else if(rIDPtr->idType == IDTYPE::VARIABLE){
+                    PrintJasmTab();
+                    if(rIDPtr->value.valueType == VALUETYPE::INT
+                    || rIDPtr->value.valueType == VALUETYPE::CHAR
+                    || rIDPtr->value.valueType == VALUETYPE::BOOLEAN){
+                        fprintf(yyout, "iload %d\n", rIDPtr->scopeIndex);
+                    }
+                    else if(rIDPtr->value.valueType == VALUETYPE::FLOAT){
+                        fprintf(yyout, "fload %d\n", rIDPtr->scopeIndex);
+                    }
+                }
+                // else if constant
+                else if(rIDPtr->idType == IDTYPE::CONSTVAR){
+                    PrintJasmTab();
+                    if(rIDPtr->value.valueType == VALUETYPE::INT){
+                        fprintf(yyout, "sipush %d\n", rIDPtr->value.ival);
+                    }
+                    else if(rIDPtr->value.valueType == VALUETYPE::BOOLEAN){
+                        fprintf(yyout, "iconst_%d\n", rIDPtr->value.bval ? 1: 0);
+                    }
+                    else if(rIDPtr->value.valueType == VALUETYPE::FLOAT){
+                        fprintf(yyout, "fcont_%f\n", rIDPtr->value.fval);
+                    }
+                }
+                else{
+                    yyerror("Rvalue can only be either constant, local var, global var!\n");
                 }
             }
         |   EXP '+' EXP {$$ = new VALUE(*$1 + *$3);}
