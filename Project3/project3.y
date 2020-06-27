@@ -249,6 +249,9 @@ ARG         : ID_NAME ':' VALUE_TYPE
                 // set the value type too
                 parameterID.SetValueType(*$3);
 
+                // set scope index (as this is the local variable)
+                parameterID.scopeIndex = functionScopedPtr->parameters.size();
+
                 // set the parameter to the function id
                 functionScopedPtr->AddParameter(parameterID);
             }
@@ -269,15 +272,17 @@ RETURN_STMT : RETURN EXP
                 // start to output to the file
                 PrintJasmTab();
                 // check return type
-                // currently we only support int, float
-                if(functionScopedPtr->retVal.valueType == VALUETYPE::INT){
+                // currently we only support int, char, boolean, float
+                if(functionScopedPtr->retVal.valueType == VALUETYPE::BOOLEAN
+                    || functionScopedPtr->retVal.valueType == VALUETYPE::INT
+                    || functionScopedPtr->retVal.valueType == VALUETYPE::CHAR){
                     fprintf(yyout, "ireturn\n");
                 }
                 else if(functionScopedPtr->retVal.valueType == VALUETYPE::FLOAT){
                     fprintf(yyout, "freturn\n");
                 }
                 else{
-                    yyerror("We only support return value type that is int and float!!!\n");
+                    yyerror("We only support return value type that is boolean, int, char, float, void!!!\n");
                 }
             }
             | RETURN
@@ -306,7 +311,14 @@ STMTS   : STMT
 STMT            : ID_NAME '=' EXP 
                 {
                     // check whether the exp has the same value type with the id name
-                    VALUE rvalue = symbolTable.LookUp(*$1)->value;
+                    ID* rIDPtr = symbolTable.LookUp(*$1);
+                    
+                    // the right id must be variable to do the assign operation
+                    if(rIDPtr->idType != IDTYPE::VARIABLE && rIDPtr->idType != IDTYPE::GLOBALVAR){
+                        yyerror("Only local variable and global variable can do the assignment operation!");
+                    }
+
+                    VALUE rvalue = rIDPtr->value;
                     if(rvalue.valueType == $3->valueType){
                         DebugLog("Assignment operation done!");
                     }
@@ -314,7 +326,28 @@ STMT            : ID_NAME '=' EXP
                         yyerror("Different type of value can't do the assignment operation!");
                     }
 
-                    // start to output 
+                    // start to output
+                    PrintJasmTab();
+                    // we only support int, boolean, char, float
+                    if(!isValueTypeSupported(rIDPtr->value.valueType)){
+                        yyerror("We only support assignment operation for int, boolean, char, float!");
+                    }
+
+                    // if is global variable
+                    if(symbolTable.isGlobalScope(*$1)){
+                        fprintf(yyout, "putstatic %s %s.%s", 
+                            rIDPtr->value.ValueTypeString().c_str(), symbolTable.getObjectName().c_str(), rIDPtr->IDName.c_str());
+                    }
+                    // else it must be local variable
+                    else{
+                        if(rIDPtr->value.valueType == VALUETYPE::INT
+                        || rIDPtr->value.valueType == VALUETYPE::BOOLEAN
+                        || rIDPtr->value.valueType == VALUETYPE::CHAR)
+                            fprintf(yyout, "istore_%d", rIDPtr->scopeIndex);
+                        else if(rIDPtr->value.valueType == VALUETYPE::FLOAT)
+                            fprintf(yyout, "fstore_%d", rIDPtr->scopeIndex);
+                    }
+
                 }
                 | EXP
                 | VALDECLARATION

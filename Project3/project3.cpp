@@ -1055,6 +1055,12 @@ bool SymbolTable::isGlobalScope()
     }
 }
 
+// get the object name / class name
+string SymbolTable::getObjectName()
+{
+    return validSymbols[0].ids[0]->IDName;
+}
+
 void SymbolTable::DumpValidSymbols()
 {
     for (int i = 0; i < validSymbols.size(); i++)
@@ -1164,5 +1170,21 @@ string valueTypeToString(VALUETYPE valueType)
         throw string("Value Type provided not found!");
         return "Invalid";
         break;
+    }
+}
+
+// check the value type is supported or not
+bool isValueTypeSupported(VALUETYPE valueType)
+{
+    if (valueType == VALUETYPE::INT ||
+        valueType == VALUETYPE::BOOLEAN ||
+        valueType == VALUETYPE::CHAR ||
+        valueType == VALUETYPE::FLOAT)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
     }
 }

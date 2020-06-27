@@ -154,10 +154,11 @@ public:
     // return type for function
     VALUE retVal;
 
-    // value type for var and constant var
+    // value type constant var
     VALUE value;
 
-    // only variable will used these
+    // only local variable will used these
+    // or we should say it function variables
     int scopeIndex;
 };
 
@@ -201,6 +202,9 @@ public:
     // same as the function above, but only used in initialized
     bool isGlobalScope();
 
+    // get the object name / class name
+    string getObjectName();
+
     // print all value in the current symbol table
     void DumpValidSymbols();
     void DumpInvalidSymbols();
@@ -213,5 +217,8 @@ void DebugLog(string log, bool hasLine = true);
 string IdTypeToString(IDTYPE idtype);
 
 string valueTypeToString(VALUETYPE valueType);
+
+// check the value type is supported or not
+bool isValueTypeSupported(VALUETYPE valueType);
 
 #endif
