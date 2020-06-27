@@ -173,6 +173,38 @@ FUNCTION_DEFINITION :   DEF ID_NAME
                             for(int i=0; i< functionScopedPtr->parameters.size(); i++){
                                 symbolTable.Insert(functionScopedPtr->parameters[i]);
                             }
+
+                            // start to output to the file
+                            PrintJasmTab();
+                            fprintf(yyout, "method public static %s %s(", 
+                                functionScopedPtr->retVal.ValueTypeString().c_str(), functionScopedPtr->IDName.c_str());
+
+                            // parameter parts
+                            // main function
+                            if(functionScopedPtr->IDName == "main"){
+                                fprintf(yyout, "java.lang.String[]");
+                            }
+                            // normal function
+                            else{
+                                for(int i = 0; i<functionScopedPtr->parameters.size(); i++){
+                                    fprintf(yyout, "%s", functionScopedPtr->parameters[i]->value.ValueTypeString().c_str());
+                                    if(i != functionScopedPtr->parameters.size()-1)
+                                        fprintf(yyout, ", ");
+                                }
+                            }
+
+                            // close bracket
+                            fprintf(yyout, ")\n");
+
+                            PrintJasmTab();
+                            fprintf(yyout, "max_stack 15\n");
+
+                            PrintJasmTab();
+                            fprintf(yyout, "max_locals 15\n");
+
+                            PrintJasmTab();
+                            fprintf(yyout, "{\n");
+                            tabCount++;
                         }
 
                         STMTS '}'
@@ -183,6 +215,11 @@ FUNCTION_DEFINITION :   DEF ID_NAME
                             symbolTable.DropSymbol();
                             // set the functionScopedPtr to null
                             functionScopedPtr = NULL;
+
+                            // start to output to the file
+                            tabCount--;
+                            PrintJasmTab();
+                            fprintf(yyout, "}\n");
                         }
                         ;
 
@@ -228,6 +265,20 @@ RETURN_STMT : RETURN EXP
                 // check whether the return exp's type is same as the current function type
                 if($2->valueType != functionScopedPtr->retVal.valueType) 
                     yyerror("The function return type definition is different as the function return type declaration!");
+
+                // start to output to the file
+                PrintJasmTab();
+                // check return type
+                // currently we only support int, float
+                if(functionScopedPtr->retVal.valueType == VALUETYPE::INT){
+                    fprintf(yyout, "ireturn\n");
+                }
+                else if(functionScopedPtr->retVal.valueType == VALUETYPE::FLOAT){
+                    fprintf(yyout, "freturn\n");
+                }
+                else{
+                    yyerror("We only support return value type that is int and float!!!\n");
+                }
             }
             | RETURN
             {
@@ -238,6 +289,10 @@ RETURN_STMT : RETURN EXP
                 // check whether the return exp's type is same as the current function type
                 if(VALUETYPE::VOID != functionScopedPtr->retVal.valueType) 
                     yyerror("The function return type must be void!"); 
+                
+                // start to output to the file
+                PrintJasmTab();
+                fprintf(yyout, "return\n");
             }
             ;
 
@@ -258,6 +313,8 @@ STMT            : ID_NAME '=' EXP
                     else{
                         yyerror("Different type of value can't do the assignment operation!");
                     }
+
+                    // start to output 
                 }
                 | EXP
                 | VALDECLARATION
@@ -602,6 +659,6 @@ int main(int argc, char* argv[]) {
 // print the tab count
 void PrintJasmTab(){
     for(int i=0; i<tabCount; i++){
-        fprintf(yyin, "\t");
+        fprintf(yyout, "\t");
     }
 }

@@ -9,7 +9,7 @@ all:
 	${CC} ${CFLAG} y.tab.cpp project3.cpp -o project3 -ll -ly -std=c++11
 
 run:
-	./project3 test/${testFileName}.scala result/${testFileName}.jasm
+	./project3 scala/${testFileName}.scala jasm/${testFileName}.jasm
 
 clean:
 	rm -f *.o lex.yy.cpp y.tab.cpp y.tab.hpp project3

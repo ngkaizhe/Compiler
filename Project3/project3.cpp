@@ -1121,43 +1121,43 @@ string valueTypeToString(VALUETYPE valueType)
     switch (valueType)
     {
     case VALUETYPE::INVALID:
-        return "Invalid";
+        return "invalid";
         break;
     case VALUETYPE::UNSET:
-        return "Unset";
+        return "unset";
         break;
     case VALUETYPE::VOID:
-        return "Void";
+        return "void";
         break;
     case VALUETYPE::STRING:
-        return "String";
+        return "string";
         break;
     case VALUETYPE::CHAR:
-        return "Char";
+        return "char";
         break;
     case VALUETYPE::INT:
-        return "Int";
+        return "int";
         break;
     case VALUETYPE::FLOAT:
-        return "Float";
+        return "float";
         break;
     case VALUETYPE::BOOLEAN:
-        return "Boolean";
+        return "bool";
         break;
     case VALUETYPE::ARRSTRING:
-        return "ArrString";
+        return "arr string";
         break;
     case VALUETYPE::ARRCHAR:
-        return "ArrChar";
+        return "arr char";
         break;
     case VALUETYPE::ARRINT:
-        return "ArrInt";
+        return "arr int";
         break;
     case VALUETYPE::ARRFLOAT:
-        return "ArrFloat";
+        return "arr float";
         break;
     case VALUETYPE::ARRBOOLEAN:
-        return "ArrBoolean";
+        return "arr bool";
         break;
 
     default:
