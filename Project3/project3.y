@@ -17,6 +17,11 @@ ID* functionScopedPtr;
 /* function called check parameter index*/
 ID* functionCalledPtr;
 int parameterIndex;
+
+// tab count
+int tabCount = 0;
+// print the tab count
+void PrintJasmTab();
 %}
 
 // all union var should be as pointer(i think is memory allocation problems)
@@ -102,12 +107,21 @@ PROGRAM     :
                 objectIdPtr->IDName = *$2;
                 objectIdPtr->idType = IDTYPE::OBJECTID;
                 symbolTable.Insert(objectIdPtr);
+
+                // start to output to the file
+                PrintJasmTab();
+                fprintf(yyout, "class %s\n", objectIdPtr->IDName.c_str());
             }   
 
             '{'
             {
                 // create new scope
                 symbolTable.CreateSymbol();
+
+                // start to output to the file
+                PrintJasmTab();
+                fprintf(yyout, "{\n");
+                tabCount++;
             }
 
             OBJCONTENT '}'
@@ -123,6 +137,11 @@ PROGRAM     :
                 // drop the symbol table
                 symbolTable.DropSymbol();
                 DebugLog("Object definition end!");
+
+                // start to output to the file
+                tabCount--;
+                PrintJasmTab();
+                fprintf(yyout, "}\n");
             }
             ;
 
@@ -578,4 +597,11 @@ int main(int argc, char* argv[]) {
         printf("Input file not found!\n");
     }
     return 0;
+}
+
+// print the tab count
+void PrintJasmTab(){
+    for(int i=0; i<tabCount; i++){
+        fprintf(yyin, "\t");
+    }
 }

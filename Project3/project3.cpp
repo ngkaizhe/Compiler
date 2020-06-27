@@ -10,6 +10,9 @@ extern string lineBuffer;
 // extern variables for symbol table
 extern SymbolTable symbolTable;
 
+// output the debug message or not
+bool isProject2 = false;
+
 // output the current line buffer
 void AddList(char *token)
 {
@@ -1074,10 +1077,13 @@ void SymbolTable::DumpInvalidSymbols()
 
 void DebugLog(string log, bool hasLine)
 {
-    if (hasLine)
-        cout << log << '\n';
-    else
-        cout << log;
+    if (isProject2)
+    {
+        if (hasLine)
+            cout << log << '\n';
+        else
+            cout << log;
+    }
 }
 
 string IdTypeToString(IDTYPE idtype)
