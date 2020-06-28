@@ -1,43 +1,36 @@
-class fib
+class HelloWorld
 {
-	field static int n = 8
-	field static int Fn = 1
-	field static int FNminus1 = 1
-	field static int temp
+	field static int af = 2
+	field static int i = 1
 	method public static void main(java.lang.String[])
 	max_stack 15
 	max_locals 15
 	{
-		LWHILE0Begin: 
-		getstatic int fib.n
-		ldc 2
+		ldc 5
+		putstatic int HelloWorld.i
+		LFOR0Begin: 
+		getstatic int HelloWorld.i
+		ldc 10
 		isub
-		ifgt LGT0False
+		iflt LFOR0True
 		iconst_0
-		goto LGT0Exit
-		LGT0False: iconst_1
-		LGT0Exit: 
-		ifeq LWHILE0Exit
-		getstatic int fib.Fn
-		putstatic int fib.temp
-		getstatic int fib.Fn
-		getstatic int fib.FNminus1
-		iadd
-		putstatic int fib.Fn
-		getstatic int fib.temp
-		putstatic int fib.FNminus1
-		getstatic int fib.n
-		ldc 1
-		isub
-		putstatic int fib.n
-		goto LWHILE0Begin
-		LWHILE0Exit: 
+		goto LFOR0False
+		LFOR0True: 
+		iconst_1
+		LFOR0False: 
+		ifeq LFOR0Exit
 		getstatic java.io.PrintStream java.lang.System.out
-		ldc "Result of computation: "
+		ldc "i value is -> "
 		invokevirtual void java.io.PrintStream.print(java.lang.String)
 		getstatic java.io.PrintStream java.lang.System.out
-		getstatic int fib.Fn
+		getstatic int HelloWorld.i
 		invokevirtual void java.io.PrintStream.println(int)
+		getstatic int HelloWorld.i
+		ldc 1
+		iadd
+		putstatic int HelloWorld.i
+		goto LFOR0Begin
+		LFOR0Exit: 
 		return
 	}
 }

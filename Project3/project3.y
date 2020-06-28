@@ -886,25 +886,96 @@ WHILE_STMT              : WHILE
                             PrintJasmTab();
                             fprintf(yyout, "%s: \n", LabelManager::getLabelString(LabelType::LWHILE, LabelState::EXIT).c_str());
 
-                            LabelManager::updateCounter(LabelType::LIF);
+                            LabelManager::updateCounter(LabelType::LWHILE);
                         }
                         ;
 
 // for loops
-FOR_STMT                : FOR '(' ID_NAME FOR_SET EXP TO EXP ')' 
+FOR_STMT                : FOR '(' ID_NAME FOR_SET EXP 
+                        {
+                            ID* lIDPtr = symbolTable.LookUp(*$3);
+                            // store the value to id_name
+                            // start to output
+                            PrintJasmTab();
+
+                            // if is global variable
+                            if(symbolTable.isGlobalScope(*$3)){
+                                fprintf(yyout, "%s\n", 
+                                    OperandStackManager::globalStore(lIDPtr, symbolTable.getObjectName()).c_str());
+                            }
+                            // else it must be local variable
+                            else{
+                                fprintf(yyout, "%s\n", 
+                                    OperandStackManager::localStore(lIDPtr).c_str());
+                            }
+                            // set begin
+                            // start output
+                            PrintJasmTab();
+                            fprintf(yyout, "%s: \n", LabelManager::getLabelString(LabelType::LFOR, LabelState::BEGIN).c_str());
+                            
+                            // load the variable to the operand stack
+                            PrintJasmTab();
+                            // is global
+                            if(symbolTable.isGlobalScope(*$3)){
+                                fprintf(yyout, "%s\n", 
+                                    OperandStackManager::globalLoad(lIDPtr, symbolTable.getObjectName()).c_str());
+                            }
+                            // else if local variable
+                            else{
+                                fprintf(yyout, "%s\n", 
+                                    OperandStackManager::localLoad(lIDPtr).c_str());
+                            }
+                        }
+                        TO EXP ')' 
                         {
                             // both exp must be only int expression
                             if($5->valueType != VALUETYPE::INT){
                                 yyerror("Assignment of for loop only can be int!");
                             }
-                            if($7->valueType != VALUETYPE::INT){
+                            if($8->valueType != VALUETYPE::INT){
                                 yyerror("Terminate value of for loop only can be int!");
                             }
 
                             ID* forIDPtr = symbolTable.LookUp(*$3);
                             forIDPtr->value = *$5;
+
+                            // subtract 2 values
+                            // must lt 0
+                            
+                            // start output
+                            PrintJasmTab();
+                            fprintf(yyout, "isub\n");
+
+                            PrintJasmTab();
+                            fprintf(yyout, "iflt %s\n", LabelManager::getLabelString(LabelType::LFOR, LabelState::TRUE).c_str());
+
+                            PrintJasmTab();
+                            fprintf(yyout, "iconst_0\n");
+
+                            PrintJasmTab();
+                            fprintf(yyout, "goto %s\n", LabelManager::getLabelString(LabelType::LFOR, LabelState::FALSE).c_str());
+
+                            PrintJasmTab();
+                            fprintf(yyout, "%s: \n", LabelManager::getLabelString(LabelType::LFOR, LabelState::TRUE).c_str());
+                            PrintJasmTab();
+                            fprintf(yyout, "iconst_1\n");
+
+                            PrintJasmTab();
+                            fprintf(yyout, "%s: \n", LabelManager::getLabelString(LabelType::LFOR, LabelState::FALSE).c_str());
+                            PrintJasmTab();
+                            fprintf(yyout, "ifeq %s\n", LabelManager::getLabelString(LabelType::LFOR, LabelState::EXIT).c_str());
                         }
                         STMT
+                        {
+                            // start output
+                            PrintJasmTab();
+                            fprintf(yyout, "goto %s\n", LabelManager::getLabelString(LabelType::LFOR, LabelState::BEGIN).c_str());
+
+                            PrintJasmTab();
+                            fprintf(yyout, "%s: \n", LabelManager::getLabelString(LabelType::LFOR, LabelState::EXIT).c_str());
+
+                            LabelManager::updateCounter(LabelType::LFOR);
+                        }
                         ;
 
 %%
