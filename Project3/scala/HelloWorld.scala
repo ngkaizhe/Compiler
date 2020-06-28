@@ -1,18 +1,28 @@
-/* while smtm without bracket consideration */
-object HelloWorld {
-  var af = 2
-  var i = 1
+
+/* fib.scala
+ *
+ * This test program computes the Nth Fibonacci number
+ */
+
+object fib
+{
+  // variables
+  var n: int = 8
+  var Fn: int = 1
+  var FNminus1: int = 1
+  var temp: int
+
   def main () {
-    // Print text to the console
-    while (i <= 10)
-        i = i + 1
+    // compute the nth Fibonacci number
+    while (n > 2) {
+      temp = Fn
+      Fn = Fn + FNminus1
+      FNminus1 = temp
+      n = n - 1
+    }
     
-    if(true)
-        print ("i value is -> ")
-    
-    if(true)
-        println (i)
-    else
-        println ("Error")
+    // print result
+    print ("Result of computation: ")
+    println (Fn)
   }
 }

@@ -503,9 +503,13 @@ VARDECLARATION  :       VAR ID_NAME ':' VALUE_TYPE
                                 lIDPtr->scopeIndex = symbolTable.validSymbols.back().ids.size() - 1;
                             }
                         }
-                |       VAR ID_NAME ':' VALUE_TYPE '=' EXP
+                |       VAR ID_NAME ':' VALUE_TYPE '=' VALUE_TOKEN
                         {
-                            ID* lIDPtr = symbolTable.LookUp(*$2);
+                            ID* lIDPtr = new ID();
+                            lIDPtr->SetToVar(*$2);
+                            // check ID is already used in this scope or not
+                            // insert id with name to the symbol table
+                            symbolTable.Insert(lIDPtr);
 
                             // check VALUE_TOKEN's value type same as VALUE_TYPE
                             lIDPtr->SetValueType(*$4);

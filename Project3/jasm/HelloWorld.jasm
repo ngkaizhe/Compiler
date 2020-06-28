@@ -1,48 +1,43 @@
-class HelloWorld
+class fib
 {
-	field static int af = 2
-	field static int i = 1
+	field static int n = 8
+	field static int Fn = 1
+	field static int FNminus1 = 1
+	field static int temp
 	method public static void main(java.lang.String[])
 	max_stack 15
 	max_locals 15
 	{
 		LWHILE0Begin: 
-		getstatic int HelloWorld.i
-		ldc 10
+		getstatic int fib.n
+		ldc 2
 		isub
-		ifle LLE0False
+		ifgt LGT0False
 		iconst_0
-		goto LLE0Exit
-		LLE0False: iconst_1
-		LLE0Exit: 
+		goto LGT0Exit
+		LGT0False: iconst_1
+		LGT0Exit: 
 		ifeq LWHILE0Exit
-		getstatic int HelloWorld.i
-		ldc 1
+		getstatic int fib.Fn
+		putstatic int fib.temp
+		getstatic int fib.Fn
+		getstatic int fib.FNminus1
 		iadd
-		putstatic int HelloWorld.i
+		putstatic int fib.Fn
+		getstatic int fib.temp
+		putstatic int fib.FNminus1
+		getstatic int fib.n
+		ldc 1
+		isub
+		putstatic int fib.n
 		goto LWHILE0Begin
 		LWHILE0Exit: 
-		ldc 1
-		ifeq LIF1False
 		getstatic java.io.PrintStream java.lang.System.out
-		ldc "i value is -> "
+		ldc "Result of computation: "
 		invokevirtual void java.io.PrintStream.print(java.lang.String)
-		goto LIF1Exit
-		LIF1False: 
-		goto LIF1Exit
-		LIF1Exit: 
-		ldc 0
-		ifeq LIF2False
 		getstatic java.io.PrintStream java.lang.System.out
-		getstatic int HelloWorld.i
+		getstatic int fib.Fn
 		invokevirtual void java.io.PrintStream.println(int)
-		goto LIF2Exit
-		LIF2False: 
-		getstatic java.io.PrintStream java.lang.System.out
-		ldc "Error"
-		invokevirtual void java.io.PrintStream.println(java.lang.String)
-		goto LIF2Exit
-		LIF2Exit: 
 		return
 	}
 }
