@@ -13,6 +13,10 @@ void ListLine();
 
 int yyerror(const char* s);
 
+// print the tab count
+void PrintJasmTab();
+extern FILE *yyout;
+
 enum class IDTYPE
 {
     INVALID,
@@ -224,6 +228,40 @@ public:
     static string globalLoad(ID* globalVarID, string objectName);
     static string localLoad(ID* localVarID);
     static string constantLoad(VALUE* constantValue);
+};
+
+// enum declaration
+enum class LabelType{
+    LLT,
+    LLE,
+    LEQ,
+    LNQ,
+    LGE,
+    LGT,
+    LFOR,
+    LWHILE,
+    LIF,
+    TOTAL
+};
+
+enum class Operation{
+    ADD,
+    SUB,
+    MUL,
+    DIV,
+    NEG,
+};
+
+// settle the naming of label
+class LabelManager{
+public:
+    static vector<int> labelCounters;
+
+    static void createComparisonLabel(LabelType labelType);
+    static string getOperatorString(Operation operation, VALUETYPE valueType);
+    static string labelTypeString(LabelType labelType);
+    static string getLabelString(LabelType labelType, bool isFalse);
+    static void updateCounter(LabelType labelType);
 };
 
 // helper debug function

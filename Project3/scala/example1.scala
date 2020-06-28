@@ -1,4 +1,4 @@
-/* Hello World Example */
+/* if statement, double consideration */
 object HelloWorld {
   var af = 1.5
   var bf: float

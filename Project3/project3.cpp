@@ -1225,6 +1225,120 @@ string OperandStackManager::constantLoad(VALUE* constantValue){
     return ret;
 }
 
+void LabelManager::createComparisonLabel(LabelType labelType){
+    PrintJasmTab();
+    switch (labelType)
+    {
+    case LabelType::LLT:
+        fprintf(yyout, "iflt ");
+        break;
+    case LabelType::LLE:
+        fprintf(yyout, "ifle ");
+        break;
+    case LabelType::LGE:
+        fprintf(yyout, "ifge ");
+        break;
+    case LabelType::LGT:
+        fprintf(yyout, "ifgt ");
+        break;
+    case LabelType::LEQ:
+        fprintf(yyout, "ifeq ");
+        break;
+    case LabelType::LNQ:
+        fprintf(yyout, "ifne ");
+        break;
+    
+    default:
+        break;
+    }
+    fprintf(yyout, "%s\n", LabelManager::getLabelString(labelType, true).c_str());
+
+    PrintJasmTab();
+    fprintf(yyout, "iconst_0\n");
+
+    PrintJasmTab();
+    fprintf(yyout, "goto %s\n", LabelManager::getLabelString(labelType, false).c_str());
+
+    PrintJasmTab();
+    fprintf(yyout, "%s: iconst_1\n", LabelManager::getLabelString(labelType, true).c_str());
+
+    PrintJasmTab();
+    fprintf(yyout, "%s: \n", LabelManager::getLabelString(labelType, false).c_str());
+
+    LabelManager::updateCounter(labelType);
+}
+
+string LabelManager::getOperatorString(Operation operation, VALUETYPE valueType){
+    string ret;
+    ret += (valueType == VALUETYPE::INT ? "i" : "d");
+
+    switch(operation){
+        case Operation::ADD:
+            ret += "add"; 
+            break;
+        case Operation::SUB:
+            ret += "sub"; 
+            break;
+        case Operation::MUL:
+            ret += "mul";
+            break;
+        case Operation::DIV:
+            ret += "div";
+            break;
+        case Operation::NEG:
+            ret += "neg";
+            break;
+        default:
+            break;
+    }
+    return ret;
+}
+
+string LabelManager::labelTypeString(LabelType labelType){
+    switch(labelType){
+        case LabelType::LLT:
+            return "LT"; 
+            break;
+        case LabelType::LLE:
+            return "LE";
+            break;
+        case LabelType::LEQ:
+            return "EQ";
+            break;
+        case LabelType::LNQ:
+            return "NQ";
+            break;
+        case LabelType::LGE:
+            return "GE";
+            break;
+        case LabelType::LGT:
+            return "GT";
+            break;
+        case LabelType::LFOR:
+            return "FOR";
+            break;
+        case LabelType::LWHILE:
+            return "WHILE";
+            break;
+        case LabelType::LIF:
+            return "IF";
+            break;
+        default:
+            throw "Invalid label Type!\n";
+            break;
+    }
+}
+
+string LabelManager::getLabelString(LabelType labelType, bool isFalse){
+    return "L" + LabelManager::labelTypeString(labelType) 
+        + to_string(LabelManager::labelCounters[(int)labelType]) + (isFalse ? "False" : "Exit");
+} 
+
+void LabelManager::updateCounter(LabelType labelType){
+    LabelManager::labelCounters[(int)labelType]++;
+    return;
+}
+
 void DebugLog(string log, bool hasLine)
 {
     if (isProject2)

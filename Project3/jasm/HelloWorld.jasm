@@ -27,6 +27,52 @@ class HelloWorld
 		getstatic double HelloWorld.af
 		invokevirtual void java.io.PrintStream.println(double)
 		getstatic java.io.PrintStream java.lang.System.out
+		ldc "-af value is -> "
+		invokevirtual void java.io.PrintStream.print(java.lang.String)
+		getstatic java.io.PrintStream java.lang.System.out
+		getstatic double HelloWorld.af
+		dneg
+		invokevirtual void java.io.PrintStream.println(double)
+		getstatic double HelloWorld.af
+		ldc2_w 0.000000
+		dsub
+		d2i
+		ifgt LGT0False
+		iconst_0
+		goto LGT0Exit
+		LGT0False: iconst_1
+		LGT0Exit: 
+		ifeq LIF0False
+		getstatic java.io.PrintStream java.lang.System.out
+		ldc "af is larger than zero!"
+		invokevirtual void java.io.PrintStream.println(java.lang.String)
+		goto LIF0Exit
+		LIF0False: 
+		getstatic java.io.PrintStream java.lang.System.out
+		ldc "af is smaller than zero!"
+		invokevirtual void java.io.PrintStream.println(java.lang.String)
+		LIF0Exit: 
+		getstatic double HelloWorld.af
+		dneg
+		ldc2_w 0.000000
+		dsub
+		d2i
+		ifgt LGT1False
+		iconst_0
+		goto LGT1Exit
+		LGT1False: iconst_1
+		LGT1Exit: 
+		ifeq LIF1False
+		getstatic java.io.PrintStream java.lang.System.out
+		ldc "-af is larger than zero!"
+		invokevirtual void java.io.PrintStream.println(java.lang.String)
+		goto LIF1Exit
+		LIF1False: 
+		getstatic java.io.PrintStream java.lang.System.out
+		ldc "-af is smaller than zero!"
+		invokevirtual void java.io.PrintStream.println(java.lang.String)
+		LIF1Exit: 
+		getstatic java.io.PrintStream java.lang.System.out
 		ldc "Hello World"
 		invokevirtual void java.io.PrintStream.println(java.lang.String)
 		return

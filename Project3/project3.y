@@ -23,6 +23,10 @@ int parameterIndex;
 int tabCount = 0;
 // print the tab count
 void PrintJasmTab();
+
+
+// init the label counter
+vector<int> LabelManager::labelCounters = {0, 0, 0, 0, 0, 0, 0, 0, 0};
 %}
 
 // all union var should be as pointer(i think is memory allocation problems)
@@ -600,14 +604,7 @@ EXP     :   ID_NAME
                 // start to output
                 // add operation only supports on float and int type
                 PrintJasmTab();
-                // int add
-                if($1->valueType == VALUETYPE::INT){
-                    fprintf(yyout, "iadd\n");
-                }
-                // float add
-                else if($1->valueType == VALUETYPE::FLOAT){
-                    fprintf(yyout, "dadd\n");
-                }
+                fprintf(yyout, "%s\n", LabelManager::getOperatorString(Operation::ADD, $1->valueType).c_str());
             }
         |   EXP '-' EXP 
             {
@@ -615,14 +612,7 @@ EXP     :   ID_NAME
                 // start to output
                 // sub operation only supports on float and int type
                 PrintJasmTab();
-                // int sub
-                if($1->valueType == VALUETYPE::INT){
-                    fprintf(yyout, "isub\n");
-                }
-                // float sub
-                else if($1->valueType == VALUETYPE::FLOAT){
-                    fprintf(yyout, "dsub\n");
-                }
+                fprintf(yyout, "%s\n", LabelManager::getOperatorString(Operation::SUB, $1->valueType).c_str());
             }
         |   EXP '*' EXP 
             {
@@ -630,14 +620,7 @@ EXP     :   ID_NAME
                 // start to output
                 // mul operation only supports on float and int type
                 PrintJasmTab();
-                // int mul
-                if($1->valueType == VALUETYPE::INT){
-                    fprintf(yyout, "imul\n");
-                }
-                // float mul
-                else if($1->valueType == VALUETYPE::FLOAT){
-                    fprintf(yyout, "dmul\n");
-                }
+                fprintf(yyout, "%s\n", LabelManager::getOperatorString(Operation::MUL, $1->valueType).c_str());
             }
         |   EXP '/' EXP 
             {
@@ -645,14 +628,7 @@ EXP     :   ID_NAME
                 // start to output
                 // div operation only supports on float and int type
                 PrintJasmTab();
-                // int div
-                if($1->valueType == VALUETYPE::INT){
-                    fprintf(yyout, "idiv\n");
-                }
-                // float div
-                else if($1->valueType == VALUETYPE::FLOAT){
-                    fprintf(yyout, "ddiv\n");
-                }
+                fprintf(yyout, "%s\n", LabelManager::getOperatorString(Operation::DIV, $1->valueType).c_str());
             }
 
         |   '-' EXP %prec UMINUS {
@@ -660,14 +636,7 @@ EXP     :   ID_NAME
                 // start to output
                 // unary negative operation only supports on float and int type
                 PrintJasmTab();
-                // int div
-                if($2->valueType == VALUETYPE::INT){
-                    fprintf(yyout, "ineg\n");
-                }
-                // float div
-                else if($2->valueType == VALUETYPE::FLOAT){
-                    fprintf(yyout, "dneg\n");
-                }
+                fprintf(yyout, "%s\n", LabelManager::getOperatorString(Operation::NEG, $2->valueType).c_str());
             }
         |   VALUE_TOKEN{
                 $$ = $1;
@@ -682,16 +651,114 @@ EXP     :   ID_NAME
                 $$ = new VALUE(!(*$2));
 
                 // start output
-                // 
+                PrintJasmTab();
+                fprintf(yyout, "ixor\n");
             }
-        |   EXP OR EXP { $$ = new VALUE(*$1 || *$3);}
-        |   EXP AND EXP { $$ = new VALUE(*$1 && *$3);}
-        |   EXP LT EXP  { $$ = new VALUE(*$1 < *$3);}
-        |   EXP LE EXP  { $$ = new VALUE(*$1 <= *$3);}
-        |   EXP EQ EXP  { $$ = new VALUE(*$1 == *$3);}
-        |   EXP NQ EXP  { $$ = new VALUE(*$1 != *$3);}
-        |   EXP GE EXP  { $$ = new VALUE(*$1 >= *$3);}
-        |   EXP GT EXP  { $$ = new VALUE(*$1 > *$3);}
+        |   EXP OR EXP { 
+                $$ = new VALUE(*$1 || *$3);
+
+                // start output
+                PrintJasmTab();
+                fprintf(yyout, "ior\n");
+            }
+        |   EXP AND EXP { 
+                $$ = new VALUE(*$1 && *$3);
+
+                // start output
+                PrintJasmTab();
+                fprintf(yyout, "iand\n");
+            }
+
+        |   EXP LT EXP  { 
+                $$ = new VALUE(*$1 < *$3);
+
+                // start output
+                PrintJasmTab();
+                fprintf(yyout, "%s\n", LabelManager::getOperatorString(Operation::SUB, $1->valueType).c_str());
+
+                // change the value from float to int for comparison
+                if($1->valueType == VALUETYPE::FLOAT){
+                    PrintJasmTab();
+                    fprintf(yyout, "d2i\n");
+                }
+
+                LabelManager::createComparisonLabel(LabelType::LLT);
+            }
+        |   EXP LE EXP  { 
+                $$ = new VALUE(*$1 <= *$3);
+
+                // start output
+                PrintJasmTab();
+                fprintf(yyout, "%s\n", LabelManager::getOperatorString(Operation::SUB, $1->valueType).c_str());
+
+                // change the value from float to int for comparison
+                if($1->valueType == VALUETYPE::FLOAT){
+                    PrintJasmTab();
+                    fprintf(yyout, "d2i\n");
+                }
+
+                LabelManager::createComparisonLabel(LabelType::LLE);
+            }
+        |   EXP EQ EXP  { 
+                $$ = new VALUE(*$1 == *$3);
+
+                // start output
+                PrintJasmTab();
+                fprintf(yyout, "%s\n", LabelManager::getOperatorString(Operation::SUB, $1->valueType).c_str());
+
+                // change the value from float to int for comparison
+                if($1->valueType == VALUETYPE::FLOAT){
+                    PrintJasmTab();
+                    fprintf(yyout, "d2i\n");
+                }
+                
+                LabelManager::createComparisonLabel(LabelType::LEQ);
+            }
+        |   EXP NQ EXP  { 
+                $$ = new VALUE(*$1 != *$3);
+
+                // start output
+                PrintJasmTab();
+                fprintf(yyout, "%s\n", LabelManager::getOperatorString(Operation::SUB, $1->valueType).c_str());
+
+                // change the value from float to int for comparison
+                if($1->valueType == VALUETYPE::FLOAT){
+                    PrintJasmTab();
+                    fprintf(yyout, "d2i\n");
+                }
+
+                LabelManager::createComparisonLabel(LabelType::LNQ);
+            }
+        |   EXP GE EXP  { 
+                $$ = new VALUE(*$1 >= *$3);
+
+                // start output
+                PrintJasmTab();
+                fprintf(yyout, "%s\n", LabelManager::getOperatorString(Operation::SUB, $1->valueType).c_str());
+
+                // change the value from float to int for comparison
+                if($1->valueType == VALUETYPE::FLOAT){
+                    PrintJasmTab();
+                    fprintf(yyout, "d2i\n");
+                }
+
+                LabelManager::createComparisonLabel(LabelType::LGE);
+            }
+        |   EXP GT EXP  { 
+                $$ = new VALUE(*$1 > *$3);
+
+                // start output
+                PrintJasmTab();
+                fprintf(yyout, "%s\n", LabelManager::getOperatorString(Operation::SUB, $1->valueType).c_str());
+
+                // change the value from float to int for comparison
+                if($1->valueType == VALUETYPE::FLOAT){
+                    PrintJasmTab();
+                    fprintf(yyout, "d2i\n");
+                }
+
+                LabelManager::createComparisonLabel(LabelType::LGT);
+            }
         ;
 
 // function called to use
@@ -748,8 +815,28 @@ IF_STMT                 : IF '(' EXP ')'
                             // the exp must be boolean only
                             if($3->valueType != VALUETYPE::BOOLEAN) yyerror("If Statement only accept boolean expression!");
                             else    DebugLog("IF statement detected.......OK");
+
+                            // start output
+                            PrintJasmTab();
+                            fprintf(yyout, "ifeq %s\n", LabelManager::getLabelString(LabelType::LIF, true).c_str());
                         } 
-                        STMT ELSE_STMT
+                        STMT 
+                        {
+                            // start output
+                            PrintJasmTab();
+                            fprintf(yyout, "goto %s\n", LabelManager::getLabelString(LabelType::LIF, false).c_str());
+
+                            PrintJasmTab();
+                            fprintf(yyout, "%s: \n", LabelManager::getLabelString(LabelType::LIF, true).c_str());
+                        }
+                        ELSE_STMT
+                        {
+                            // start output
+                            PrintJasmTab();
+                            fprintf(yyout, "%s: \n", LabelManager::getLabelString(LabelType::LIF, false).c_str());
+
+                            LabelManager::updateCounter(LabelType::LIF);
+                        }
                         ;
 
 // else statement
