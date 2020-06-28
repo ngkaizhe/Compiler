@@ -11,7 +11,7 @@ using namespace std;
 void AddList(char *token);
 void ListLine();
 
-// symbol table
+int yyerror(const char* s);
 
 enum class IDTYPE
 {
@@ -207,6 +207,18 @@ public:
     // print all value in the current symbol table
     void DumpValidSymbols();
     void DumpInvalidSymbols();
+};
+
+// settle the store and load operation within operand stack and the symbol table
+class OperandStackManager{
+    // store value from operand stack
+    static string globalStore(ID* globalVarID, string objectName);
+    static string localStore(ID* localVarID);
+
+    // load value to operand stack
+    static string globalLoad(ID* globalVarID, string objectName);
+    static string localLoad(ID* localVarID);
+    static string constantLoad(VALUE* constantValue);
 };
 
 // helper debug function

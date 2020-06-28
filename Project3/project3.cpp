@@ -1081,6 +1081,101 @@ void SymbolTable::DumpInvalidSymbols()
     }
 }
 
+// store value from operand stack
+string OperandStackManager::globalStore(ID* globalVarID, string objectName){
+    // check whether the var type is in our support types
+    if(!isValueTypeSupported(globalVarID->value.valueType)){
+        yyerror("We only support types int, float, boolean, char. "
+        "For storing value from operand stack to global variable!\n");
+    }
+
+    // putstatic {type} {className}.{id name}
+    string ret = "putstatic " + globalVarID->value.ValueTypeString() + " " + objectName + "." + globalVarID->IDName;
+    return ret;
+}
+
+string OperandStackManager::localStore(ID* localVarID){
+    // check whether the var type is in our support types
+    if(!isValueTypeSupported(localVarID->value.valueType)){
+        yyerror("We only support types int, float, boolean, char. "
+        "For storing value from operand stack to local variable!\n");
+    }
+
+    // {type}store {scope index}
+    string ret;
+    if(localVarID->value.valueType == VALUETYPE::FLOAT){
+        ret =  "fstore " + to_string(localVarID->scopeIndex);
+    }
+    else if(localVarID->value.valueType == VALUETYPE::CHAR
+        ||  localVarID->value.valueType == VALUETYPE::BOOLEAN
+        ||  localVarID->value.valueType == VALUETYPE::INT){
+        ret =  "istore " + to_string(localVarID->scopeIndex); 
+    }
+    return ret;
+}
+
+// load value to operand stack
+string OperandStackManager::globalLoad(ID* globalVarID, string objectName){
+    // check whether the var type is in our support types
+    if(!isValueTypeSupported(globalVarID->value.valueType)){
+        yyerror("We only support types int, float, boolean, char. "
+        "For loading value from global variable to operand stack!\n");
+    }
+
+    // getstatic {type} {className}.{id name}
+    string ret = "getstatic " + globalVarID->value.ValueTypeString() + " " + objectName + "." + globalVarID->IDName;
+    return ret;
+}
+
+string OperandStackManager::localLoad(ID* localVarID){
+    // check whether the var type is in our support types
+    if(!isValueTypeSupported(localVarID->value.valueType)){
+        yyerror("We only support types int, float, boolean, char. "
+        "For loading value from local variable to operand stack!\n");
+    }
+
+    // {type}load {scope index}
+    string ret;
+    if(localVarID->value.valueType == VALUETYPE::FLOAT){
+        ret =  "fload " + to_string(localVarID->scopeIndex);
+    }
+    else if(localVarID->value.valueType == VALUETYPE::CHAR
+        ||  localVarID->value.valueType == VALUETYPE::BOOLEAN
+        ||  localVarID->value.valueType == VALUETYPE::INT){
+        ret =  "iload " + to_string(localVarID->scopeIndex); 
+    }
+    return ret;
+}
+string OperandStackManager::constantLoad(VALUE* constantValue){
+    // check whether the var type is in our support types
+    if(!isValueTypeSupported(constantValue->valueType)){
+        yyerror("We only support types int, float, boolean, char. "
+        "For loading value from constant expression to operand stack!\n");
+    }
+
+    string ret;
+    // sipush 10
+    // iconst 1
+    // fconst 1.5
+    if(constantValue->valueType == VALUETYPE::BOOLEAN){
+        ret = "iconst " + to_string(constantValue->bval ? 1: 0);
+    }
+
+    else if(constantValue->valueType == VALUETYPE::INT){
+        ret = "sipush " + to_string(constantValue->ival);
+    }
+
+    else if(constantValue->valueType == VALUETYPE::CHAR){
+        ret = "sipush " + to_string(constantValue->cval);
+    }
+
+    else if(constantValue->valueType == VALUETYPE::FLOAT){
+        ret = "fconst " + to_string(constantValue->fval);
+    }
+
+    return ret;
+}
+
 void DebugLog(string log, bool hasLine)
 {
     if (isProject2)

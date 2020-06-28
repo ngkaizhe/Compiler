@@ -27,6 +27,7 @@
         "string_view": "cpp",
         "utility": "cpp",
         "typeinfo": "cpp",
-        "iostream": "cpp"
+        "iostream": "cpp",
+        "vector": "cpp"
     }
 }

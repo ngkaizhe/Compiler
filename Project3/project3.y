@@ -313,18 +313,8 @@ STMT            : ID_NAME '=' EXP
                     // check whether the exp has the same value type with the id name
                     ID* lIDPtr = symbolTable.LookUp(*$1);
                     
-                    // the right id must be variable to do the assign operation
-                    if(lIDPtr->idType != IDTYPE::VARIABLE && lIDPtr->idType != IDTYPE::GLOBALVAR){
-                        yyerror("Only local variable and global variable can do the assignment operation!");
-                    }
-
-                    VALUE lvalue = lIDPtr->value;
-                    if(lvalue.valueType == $3->valueType){
-                        DebugLog("Assignment operation done!");
-                    }
-                    else{
-                        yyerror("Different type of value can't do the assignment operation!");
-                    }
+                    // start to do the assignment operation
+                    lIDPtr->SetValue(*$3);
 
                     // start to output
                     PrintJasmTab();
@@ -505,18 +495,78 @@ VARDECLARATION  :       VAR ID_NAME ':' VALUE_TYPE
                                 // insert id with name to the symbol table
                                 symbolTable.Insert(newIdPtr);
 
-                                // set type
+                                // set value type
                                 newIdPtr->InitValue(*$4);
+
+                                // check whether do we support this value type
+                                if(!isValueTypeSupported(newIdPtr->value.valueType)){
+                                    yyerror("We only support variable declaration of float, int, char, boolean!");
+                                }
 
                                 // start to output
                                 if(symbolTable.isGlobalScope(*$2)){
                                     PrintJasmTab();
-                                    fprintf(yyout, "field static %s %s\n", 
+                                    fprintf(yyout, "field static %s %s", 
                                         newIdPtr->value.ValueTypeString().c_str(), newIdPtr->IDName.c_str());
+                                    
+                                    // assign the value to the variable
+                                    // int
+                                    if($4->valueType == VALUETYPE::INT){
+                                        fprintf(yyout, " = %d\n", $4->ival);
+                                    }
+                                    // float
+                                    else if($4->valueType == VALUETYPE::FLOAT){
+                                        fprintf(yyout, " = %f\n", $4->fval);
+                                    }
+                                    // boolean
+                                    else if($4->valueType == VALUETYPE::BOOLEAN){
+                                        fprintf(yyout, " = %d\n", $4->bval? 1: 0);
+                                    }
+                                    // char
+                                    else if($4->valueType == VALUETYPE::CHAR){
+                                        fprintf(yyout, " = %d\n", $4->cval);
+                                    }
                                 }
                                 else{
                                     // set the scope index of the local variable
                                     newIdPtr->scopeIndex = symbolTable.validSymbols.back().ids.size() - 1;
+                                    // load constant to operand stack
+                                    PrintJasmTab();
+                                    // int
+                                    if($4->valueType == VALUETYPE::INT){
+                                        fprintf(yyout, "sipush %d\n", $4->ival);
+                                    }
+                                    // float
+                                    else if($4->valueType == VALUETYPE::FLOAT){
+                                         fprintf(yyout, "fconst %f\n", $4->fval);
+                                    }
+                                    // boolean
+                                    else if($4->valueType == VALUETYPE::BOOLEAN){
+                                        fprintf(yyout, "iconst %d\n", $4->bval? 1: 0);
+                                    }
+                                    // char
+                                    else if($4->valueType == VALUETYPE::CHAR){
+                                        fprintf(yyout, "sipush %d\n", $4->cval);
+                                    }
+                                    
+                                    // store to local var
+                                    PrintJasmTab();
+                                    // int
+                                    if(newIdPtr->value.valueType == VALUETYPE::INT){
+                                        fprintf(yyout, "istore %d\n", newIdPtr->scopeIndex);
+                                    }
+                                    // float
+                                    else if(newIdPtr->value.valueType == VALUETYPE::FLOAT){
+                                         fprintf(yyout, "fstore %d\n", newIdPtr->scopeIndex);
+                                    }
+                                    // boolean
+                                    else if(newIdPtr->value.valueType == VALUETYPE::BOOLEAN){
+                                        fprintf(yyout, "istore %d\n", newIdPtr->scopeIndex);
+                                    }
+                                    // char
+                                    else if(newIdPtr->value.valueType == VALUETYPE::CHAR){
+                                        fprintf(yyout, "istore %d\n", newIdPtr->scopeIndex);
+                                    }
                                 }
                             }
                             catch(string s){
@@ -651,14 +701,20 @@ EXP     :   ID_NAME
                         fprintf(yyout, "iconst_%d\n", rIDPtr->value.bval ? 1: 0);
                     }
                     else if(rIDPtr->value.valueType == VALUETYPE::FLOAT){
-                        fprintf(yyout, "fcont_%f\n", rIDPtr->value.fval);
+                        fprintf(yyout, "fconst %f\n", rIDPtr->value.fval);
                     }
                 }
                 else{
                     yyerror("Rvalue can only be either constant, local var, global var!\n");
                 }
             }
-        |   EXP '+' EXP {$$ = new VALUE(*$1 + *$3);}
+        |   EXP '+' EXP 
+            {
+                $$ = new VALUE(*$1 + *$3);
+                // start to output
+                // add operation only supports on float and int type
+                PrintJasmTab();
+            }
         |   EXP '-' EXP {$$ = new VALUE(*$1 - *$3);}
         |   EXP '*' EXP {$$ = new VALUE(*$1 * *$3);}
         |   EXP '/' EXP {$$ = new VALUE(*$1 / *$3);}
