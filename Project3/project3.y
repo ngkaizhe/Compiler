@@ -96,7 +96,7 @@ vector<int> LabelManager::labelCounters = {0, 0, 0, 0, 0, 0, 0, 0, 0};
 %left NOT
 %left LT LE EQ GT GE NQ
 %left '-' '+'
-%left '*' '/'
+%left '*' '/' '%'
 %nonassoc UMINUS
 
 %%
@@ -405,7 +405,7 @@ STMT            : ID_NAME '=' EXP
 
                 | '{' 
                 {
-                    // symbolTable.CreateSymbol();
+                    symbolTable.CreateSymbol();
 
                     // // start to output
                     // PrintJasmTab();
@@ -414,7 +414,7 @@ STMT            : ID_NAME '=' EXP
                 }
                 STMTS '}'
                 {
-                    // symbolTable.DropSymbol();
+                    symbolTable.DropSymbol();
                     // // start to output
                     // tabCount--;
                     // PrintJasmTab();
@@ -630,7 +630,14 @@ EXP     :   ID_NAME
                 PrintJasmTab();
                 fprintf(yyout, "%s\n", LabelManager::getOperatorString(Operation::DIV, $1->valueType).c_str());
             }
-
+        |   EXP '%' EXP 
+            {
+                $$ = new VALUE(*$1 % *$3);
+                // start to output
+                // div operation only supports on float and int type
+                PrintJasmTab();
+                fprintf(yyout, "%s\n", LabelManager::getOperatorString(Operation::REM, $1->valueType).c_str());
+            }
         |   '-' EXP %prec UMINUS {
                 $$ = new VALUE(-(*$2));
                 // start to output
@@ -818,22 +825,26 @@ IF_STMT                 : IF '(' EXP ')'
 
                             // start output
                             PrintJasmTab();
-                            fprintf(yyout, "ifeq %s\n", LabelManager::getLabelString(LabelType::LIF, true).c_str());
+                            fprintf(yyout, "ifeq %s\n", LabelManager::getLabelString(LabelType::LIF, LabelState::FALSE).c_str());
                         } 
                         STMT 
                         {
                             // start output
                             PrintJasmTab();
-                            fprintf(yyout, "goto %s\n", LabelManager::getLabelString(LabelType::LIF, false).c_str());
+                            fprintf(yyout, "goto %s\n", LabelManager::getLabelString(LabelType::LIF, LabelState::EXIT).c_str());
 
                             PrintJasmTab();
-                            fprintf(yyout, "%s: \n", LabelManager::getLabelString(LabelType::LIF, true).c_str());
+                            fprintf(yyout, "%s: \n", LabelManager::getLabelString(LabelType::LIF, LabelState::FALSE).c_str());
                         }
                         ELSE_STMT
                         {
                             // start output
                             PrintJasmTab();
-                            fprintf(yyout, "%s: \n", LabelManager::getLabelString(LabelType::LIF, false).c_str());
+                            fprintf(yyout, "goto %s\n", LabelManager::getLabelString(LabelType::LIF, LabelState::EXIT).c_str());
+
+                            // start output
+                            PrintJasmTab();
+                            fprintf(yyout, "%s: \n", LabelManager::getLabelString(LabelType::LIF, LabelState::EXIT).c_str());
 
                             LabelManager::updateCounter(LabelType::LIF);
                         }
@@ -846,15 +857,33 @@ ELSE_STMT               :   ELSE STMT
 
 // loops
 // while loops
-WHILE_STMT              : WHILE '(' EXP ')' 
+WHILE_STMT              : WHILE 
+                        {
+                            // start output
+                            PrintJasmTab();
+                            fprintf(yyout, "%s: \n", LabelManager::getLabelString(LabelType::LWHILE, LabelState::BEGIN).c_str());
+                        }
+                        '(' EXP ')' 
                         {
                             // the exp must be boolean only
-                            if($3->valueType != VALUETYPE::BOOLEAN) yyerror("While Statement only accept boolean expression!");
+                            if($4->valueType != VALUETYPE::BOOLEAN) yyerror("While Statement only accept boolean expression!");
                             else    DebugLog("While statement detected.......OK");
 
-                            
+                            // start output
+                            PrintJasmTab();
+                            fprintf(yyout, "ifeq %s\n", LabelManager::getLabelString(LabelType::LWHILE, LabelState::EXIT).c_str());
                         }
                         STMT
+                        {
+                            // start output
+                            PrintJasmTab();
+                            fprintf(yyout, "goto %s\n", LabelManager::getLabelString(LabelType::LWHILE, LabelState::BEGIN).c_str());
+
+                            PrintJasmTab();
+                            fprintf(yyout, "%s: \n", LabelManager::getLabelString(LabelType::LWHILE, LabelState::EXIT).c_str());
+
+                            LabelManager::updateCounter(LabelType::LIF);
+                        }
                         ;
 
 // for loops

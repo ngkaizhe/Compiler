@@ -17,7 +17,7 @@ squarebracket   [\[\]]
 bracket         [{}]
 
 /*arithmetic operators*/
-arithmetic      [\+\-*\/]
+arithmetic      [\+\-*\/%]
 
 /*identifiers*/
 identifier      [a-zA-Z][A-Za-z0-9]*

@@ -249,7 +249,15 @@ enum class Operation{
     SUB,
     MUL,
     DIV,
+    REM,
     NEG,
+};
+
+enum class LabelState{
+    BEGIN,
+    TRUE,
+    FALSE,
+    EXIT,
 };
 
 // settle the naming of label
@@ -260,7 +268,7 @@ public:
     static void createComparisonLabel(LabelType labelType);
     static string getOperatorString(Operation operation, VALUETYPE valueType);
     static string labelTypeString(LabelType labelType);
-    static string getLabelString(LabelType labelType, bool isFalse);
+    static string getLabelString(LabelType labelType, LabelState labelState);
     static void updateCounter(LabelType labelType);
 };
 

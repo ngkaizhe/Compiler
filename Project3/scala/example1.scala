@@ -1,4 +1,4 @@
-/* if statement, double consideration */
+/* if statement, double add, mul, sub, div, consideration */
 object HelloWorld {
   var af = 1.5
   var bf: float

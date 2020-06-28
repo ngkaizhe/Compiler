@@ -448,10 +448,10 @@ VALUE operator/(const VALUE &lhs, const VALUE &rhs)
 {
     // type should be same
     if (lhs.valueType != rhs.valueType)
-        throw string("Different value type cant do the mutiple operation");
+        throw string("Different value type cant do the divide operation");
     // type should be int or float
     if (lhs.valueType != VALUETYPE::INT && lhs.valueType != VALUETYPE::FLOAT)
-        throw string("Only value type int and float do the mutiple operation");
+        throw string("Only value type int and float do the divide operation");
 
     // successful message
     VALUE answerValue;
@@ -467,7 +467,21 @@ VALUE operator/(const VALUE &lhs, const VALUE &rhs)
 
 VALUE operator%(const VALUE &lhs, const VALUE &rhs)
 {
-    throw string("The owner didn't implemented the remainder operation");
+    // type should be same
+    if (lhs.valueType != rhs.valueType)
+        throw string("Different value type cant do the remainder operation");
+    // type should be int or float
+    if (lhs.valueType != VALUETYPE::INT)
+        throw string("Only value type int can do the remainder operation");
+
+    // successful message
+    VALUE answerValue;
+    answerValue.valueType = lhs.valueType;
+    if (lhs.valueType == VALUETYPE::INT)
+        answerValue.ival = lhs.ival % rhs.ival;
+
+    DebugLog("<" + valueTypeToString(lhs.valueType) + "> % <" + valueTypeToString(rhs.valueType) + "> detected......OK");
+    return answerValue;
 }
 
 VALUE &VALUE::operator[](int idx)
@@ -1251,19 +1265,19 @@ void LabelManager::createComparisonLabel(LabelType labelType){
     default:
         break;
     }
-    fprintf(yyout, "%s\n", LabelManager::getLabelString(labelType, true).c_str());
+    fprintf(yyout, "%s\n", LabelManager::getLabelString(labelType, LabelState::FALSE).c_str());
 
     PrintJasmTab();
     fprintf(yyout, "iconst_0\n");
 
     PrintJasmTab();
-    fprintf(yyout, "goto %s\n", LabelManager::getLabelString(labelType, false).c_str());
+    fprintf(yyout, "goto %s\n", LabelManager::getLabelString(labelType, LabelState::EXIT).c_str());
 
     PrintJasmTab();
-    fprintf(yyout, "%s: iconst_1\n", LabelManager::getLabelString(labelType, true).c_str());
+    fprintf(yyout, "%s: iconst_1\n", LabelManager::getLabelString(labelType, LabelState::FALSE).c_str());
 
     PrintJasmTab();
-    fprintf(yyout, "%s: \n", LabelManager::getLabelString(labelType, false).c_str());
+    fprintf(yyout, "%s: \n", LabelManager::getLabelString(labelType, LabelState::EXIT).c_str());
 
     LabelManager::updateCounter(labelType);
 }
@@ -1284,6 +1298,9 @@ string LabelManager::getOperatorString(Operation operation, VALUETYPE valueType)
             break;
         case Operation::DIV:
             ret += "div";
+            break;
+        case Operation::REM:
+            ret += "rem";
             break;
         case Operation::NEG:
             ret += "neg";
@@ -1329,9 +1346,29 @@ string LabelManager::labelTypeString(LabelType labelType){
     }
 }
 
-string LabelManager::getLabelString(LabelType labelType, bool isFalse){
-    return "L" + LabelManager::labelTypeString(labelType) 
-        + to_string(LabelManager::labelCounters[(int)labelType]) + (isFalse ? "False" : "Exit");
+string LabelManager::getLabelString(LabelType labelType, LabelState labelState){
+    string ret = "L" + LabelManager::labelTypeString(labelType) 
+        + to_string(LabelManager::labelCounters[(int)labelType]);
+
+    switch (labelState)
+    {
+    case LabelState::BEGIN:
+        ret += "Begin";
+        break;
+    case LabelState::TRUE:
+        ret += "True";
+        break;
+    case LabelState::FALSE:
+        ret += "False";
+        break;
+    case LabelState::EXIT:
+        ret += "Exit";
+        break;
+    default:
+        break;
+    }
+
+    return ret;
 } 
 
 void LabelManager::updateCounter(LabelType labelType){

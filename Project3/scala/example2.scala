@@ -1,4 +1,4 @@
-/* if statement, double consideration */
+/* while, if stmt, remainder consideration */
 object HelloWorld {
   var af = 2
   var i = 1
