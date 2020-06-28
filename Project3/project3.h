@@ -211,6 +211,10 @@ public:
 
 // settle the store and load operation within operand stack and the symbol table
 class OperandStackManager{
+public:
+    // init for global variable
+    static string globalInit(ID* globalVarID, string objectName);
+
     // store value from operand stack
     static string globalStore(ID* globalVarID, string objectName);
     static string localStore(ID* localVarID);

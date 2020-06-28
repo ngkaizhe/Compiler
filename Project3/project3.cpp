@@ -1081,6 +1081,19 @@ void SymbolTable::DumpInvalidSymbols()
     }
 }
 
+// init for global variable
+string OperandStackManager::globalInit(ID* globalVarID, string objectName){
+    // check whether the var type is in our support types
+    if(!isValueTypeSupported(globalVarID->value.valueType)){
+        yyerror("We only support types int, float, boolean, char. "
+        "For initing global variable!\n");
+    }
+
+    // field static {type} {class name}.{id name}
+    string ret = "field static " + globalVarID->value.ValueTypeString() + " " + objectName + "." + globalVarID->IDName;
+    return ret;
+}
+
 // store value from operand stack
 string OperandStackManager::globalStore(ID* globalVarID, string objectName){
     // check whether the var type is in our support types
