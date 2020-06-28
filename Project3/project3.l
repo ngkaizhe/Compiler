@@ -49,8 +49,9 @@ char            '([^'\\\n]|\\.)'
 <STRINGS>\"      {
     BEGIN INITIAL;
     AddList(yytext);
-
-    yylval.value = new VALUE(string(yytext));
+    yylval.value = new VALUE(sBuffer);
+    
+    sBuffer = "";
 
     return VALUE_TOKEN;
 }

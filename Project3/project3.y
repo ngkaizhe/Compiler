@@ -14,6 +14,7 @@ extern FILE* yyin, *yyout;
 
 // function name to dynamic tracking current function scope
 ID* functionScopedPtr;
+bool hasReturn;
 /* function called check parameter index*/
 ID* functionCalledPtr;
 int parameterIndex;
@@ -163,6 +164,7 @@ FUNCTION_DEFINITION :   DEF ID_NAME
 
                             // set the functionScopedPtr to current function
                             functionScopedPtr = symbolTable.Insert(functionIDPtr);
+                            hasReturn = false;
                         }
 
                         FUNCTION_DEFINITION2 '{'
@@ -210,12 +212,19 @@ FUNCTION_DEFINITION :   DEF ID_NAME
 
                         STMTS '}'
                         {
+                            // manually return
+                            if(!hasReturn){
+                                PrintJasmTab();
+                                fprintf(yyout, "return\n");
+                            }
+
                             // dump to check that we set the correct function
                             // functionScopedPtr->Dump();
                             // drop the current scope
                             symbolTable.DropSymbol();
                             // set the functionScopedPtr to null
                             functionScopedPtr = NULL;
+                            hasReturn = false;
 
                             // start to output to the file
                             tabCount--;
@@ -285,6 +294,8 @@ RETURN_STMT : RETURN EXP
                 else{
                     yyerror("We only support return value type that is boolean, int, char, float, void!!!\n");
                 }
+
+                hasReturn = true;
             }
             | RETURN
             {
@@ -299,6 +310,8 @@ RETURN_STMT : RETURN EXP
                 // start to output to the file
                 PrintJasmTab();
                 fprintf(yyout, "return\n");
+                
+                hasReturn = true;
             }
             ;
 
@@ -415,36 +428,24 @@ STMT            : ID_NAME '=' EXP
 // constant declaration
 VALDECLARATION  :       VAL ID_NAME ':' VALUE_TYPE '=' VALUE_TOKEN
                         {
-                            // error checking first
-                            try{
-                                ID* newIdPtr = new ID();
-                                newIdPtr->SetToConstVar(*$2);
-                                // check ID is already used in this scope or not
-                                // insert id with name to the symbol table
-                                symbolTable.Insert(newIdPtr);
+                            ID* newIdPtr = new ID();
+                            newIdPtr->SetToConstVar(*$2);
+                            // check ID is already used in this scope or not
+                            // insert id with name to the symbol table
+                            symbolTable.Insert(newIdPtr);
 
-                                // check VALUE_TOKEN's value type same as VALUE_TYPE
-                                newIdPtr->SetValueType(*$4);
-                                newIdPtr->InitValue(*$6);
-                            }
-                            catch(string s){
-                                yyerror(s.c_str());
-                            }
+                            // check VALUE_TOKEN's value type same as VALUE_TYPE
+                            newIdPtr->SetValueType(*$4);
+                            newIdPtr->InitValue(*$6);
                         }
                 |       VAL ID_NAME '=' VALUE_TOKEN
                         {
-                            // error checking first
-                            try{
-                                ID* newIdPtr = new ID();
-                                newIdPtr->SetToConstVar(*$2);
-                                // check ID is already used in this scope or not
-                                // insert id with name to the symbol table
-                                symbolTable.Insert(newIdPtr);
-                                newIdPtr->InitValue(*$4);
-                            }
-                            catch(string s){
-                                yyerror(s.c_str());
-                            }
+                            ID* newIdPtr = new ID();
+                            newIdPtr->SetToConstVar(*$2);
+                            // check ID is already used in this scope or not
+                            // insert id with name to the symbol table
+                            symbolTable.Insert(newIdPtr);
+                            newIdPtr->InitValue(*$4);
                         }
                 ;       
 
@@ -477,7 +478,6 @@ VARDECLARATION  :       VARDECLAR1 ':' VALUE_TYPE
                                     OperandStackManager::localStore(lIDPtr).c_str());
                             }
                         }
-                
                 |       VARDECLAR1 ':' VALUE_TYPE '=' EXP
                         {
                             ID* lIDPtr = symbolTable.LookUp(*$1);
@@ -502,7 +502,6 @@ VARDECLARATION  :       VARDECLAR1 ':' VALUE_TYPE
                                     OperandStackManager::localStore(lIDPtr).c_str());
                             }
                         }
-                |       VARDECLAR1
                 |       VARDECLAR1 ':' VALUE_TYPE '[' EXP ']'
                         {
                             ID* lIDPtr = symbolTable.LookUp(*$1);
@@ -516,7 +515,8 @@ VARDECLARATION  :       VARDECLAR1 ':' VALUE_TYPE
 
                             // we don't support array
                             yyerror("We don't support array declaration!\n");    
-                        }
+                        }       
+                |       VARDECLAR1
                 ;     
 
 // first part of variable declaration
@@ -552,45 +552,28 @@ EXP     :   ID_NAME
                 VALUE idVal = symbolTable.LookUp(*$1)->value;
                 $$ = new VALUE(idVal);
 
-                // right value
+                // this id name is right value
                 // start to output
-                // we only support int, boolean, char, float
                 ID* rIDPtr = symbolTable.LookUp(*$1);
-                if(!isValueTypeSupported(rIDPtr->value.valueType)){
-                    yyerror("We only support rvalue get for int, boolean, char, float!");
-                }
 
                 // check whether id is global or local or constant
                 // is global
                 if(rIDPtr->idType == IDTYPE::GLOBALVAR){
                     PrintJasmTab();
-                    fprintf(yyout, "getstatic %s %s.%s\n", 
-                        rIDPtr->value.ValueTypeString().c_str(), symbolTable.getObjectName().c_str(), rIDPtr->IDName.c_str());
+                    fprintf(yyout, "%s\n", 
+                        OperandStackManager::globalLoad(rIDPtr, symbolTable.getObjectName()).c_str());
                 }
                 // else if local variable
                 else if(rIDPtr->idType == IDTYPE::VARIABLE){
                     PrintJasmTab();
-                    if(rIDPtr->value.valueType == VALUETYPE::INT
-                    || rIDPtr->value.valueType == VALUETYPE::CHAR
-                    || rIDPtr->value.valueType == VALUETYPE::BOOLEAN){
-                        fprintf(yyout, "iload %d\n", rIDPtr->scopeIndex);
-                    }
-                    else if(rIDPtr->value.valueType == VALUETYPE::FLOAT){
-                        fprintf(yyout, "fload %d\n", rIDPtr->scopeIndex);
-                    }
+                    fprintf(yyout, "%s\n", 
+                        OperandStackManager::localLoad(rIDPtr).c_str());
                 }
                 // else if constant
                 else if(rIDPtr->idType == IDTYPE::CONSTVAR){
                     PrintJasmTab();
-                    if(rIDPtr->value.valueType == VALUETYPE::INT){
-                        fprintf(yyout, "sipush %d\n", rIDPtr->value.ival);
-                    }
-                    else if(rIDPtr->value.valueType == VALUETYPE::BOOLEAN){
-                        fprintf(yyout, "iconst_%d\n", rIDPtr->value.bval ? 1: 0);
-                    }
-                    else if(rIDPtr->value.valueType == VALUETYPE::FLOAT){
-                        fprintf(yyout, "fconst %f\n", rIDPtr->value.fval);
-                    }
+                    fprintf(yyout, "%s\n",
+                        OperandStackManager::constantLoad(&idVal).c_str());
                 }
                 else{
                     yyerror("Rvalue can only be either constant, local var, global var!\n");
@@ -602,18 +585,90 @@ EXP     :   ID_NAME
                 // start to output
                 // add operation only supports on float and int type
                 PrintJasmTab();
+                // int add
+                if($1->valueType == VALUETYPE::INT){
+                    fprintf(yyout, "iadd\n");
+                }
+                // float add
+                else if($1->valueType == VALUETYPE::FLOAT){
+                    fprintf(yyout, "fadd\n");
+                }
             }
-        |   EXP '-' EXP {$$ = new VALUE(*$1 - *$3);}
-        |   EXP '*' EXP {$$ = new VALUE(*$1 * *$3);}
-        |   EXP '/' EXP {$$ = new VALUE(*$1 / *$3);}
+        |   EXP '-' EXP 
+            {
+                $$ = new VALUE(*$1 - *$3);
+                // start to output
+                // sub operation only supports on float and int type
+                PrintJasmTab();
+                // int sub
+                if($1->valueType == VALUETYPE::INT){
+                    fprintf(yyout, "isub\n");
+                }
+                // float sub
+                else if($1->valueType == VALUETYPE::FLOAT){
+                    fprintf(yyout, "fsub\n");
+                }
+            }
+        |   EXP '*' EXP 
+            {
+                $$ = new VALUE(*$1 * *$3);
+                // start to output
+                // mul operation only supports on float and int type
+                PrintJasmTab();
+                // int mul
+                if($1->valueType == VALUETYPE::INT){
+                    fprintf(yyout, "imul\n");
+                }
+                // float mul
+                else if($1->valueType == VALUETYPE::FLOAT){
+                    fprintf(yyout, "fmul\n");
+                }
+            }
+        |   EXP '/' EXP 
+            {
+                $$ = new VALUE(*$1 / *$3);
+                // start to output
+                // div operation only supports on float and int type
+                PrintJasmTab();
+                // int div
+                if($1->valueType == VALUETYPE::INT){
+                    fprintf(yyout, "idiv\n");
+                }
+                // float div
+                else if($1->valueType == VALUETYPE::FLOAT){
+                    fprintf(yyout, "fdiv\n");
+                }
+            }
 
         |   '-' EXP %prec UMINUS {
                 $$ = new VALUE(-(*$2));
+                // start to output
+                // unary negative operation only supports on float and int type
+                PrintJasmTab();
+                // int div
+                if($2->valueType == VALUETYPE::INT){
+                    fprintf(yyout, "ineg\n");
+                }
+                // float div
+                else if($2->valueType == VALUETYPE::FLOAT){
+                    fprintf(yyout, "fneg\n");
+                }
             }
-        |   VALUE_TOKEN
+        |   VALUE_TOKEN{
+                $$ = $1;
+                // start to output
+                // this is constant expression
+                PrintJasmTab();
+                fprintf(yyout, "%s\n", OperandStackManager::constantLoad($1).c_str());
+            }
         |   FUNCTION_CALLED
 
-        |   NOT EXP     { $$ = new VALUE(!(*$2));}
+        |   NOT EXP{ 
+                $$ = new VALUE(!(*$2));
+
+                // start output
+                // 
+            }
         |   EXP OR EXP { $$ = new VALUE(*$1 || *$3);}
         |   EXP AND EXP { $$ = new VALUE(*$1 && *$3);}
         |   EXP LT EXP  { $$ = new VALUE(*$1 < *$3);}

@@ -11,6 +11,12 @@ all:
 run:
 	./project3 scala/${testFileName}.scala jasm/${testFileName}.jasm
 
+javaa:
+	javaa jasm/${testFileName}.jasm
+
+java:
+	java ${testFileName}
+
 clean:
 	rm -f *.o lex.yy.cpp y.tab.cpp y.tab.hpp project3
 	

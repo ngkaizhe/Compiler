@@ -1161,7 +1161,8 @@ string OperandStackManager::localLoad(ID* localVarID){
 }
 string OperandStackManager::constantLoad(VALUE* constantValue){
     // check whether the var type is in our support types
-    if(!isValueTypeSupported(constantValue->valueType)){
+    // *** special consideration for string
+    if(!isValueTypeSupported(constantValue->valueType) && constantValue->valueType != VALUETYPE::STRING){
         yyerror("We only support types int, float, boolean, char. "
         "For loading value from constant expression to operand stack!\n");
     }
@@ -1184,6 +1185,10 @@ string OperandStackManager::constantLoad(VALUE* constantValue){
 
     else if(constantValue->valueType == VALUETYPE::FLOAT){
         ret = "fconst " + to_string(constantValue->fval);
+    }
+
+    else if(constantValue->valueType == VALUETYPE::STRING){
+        ret = "ldc \"" + constantValue->sval + "\"";
     }
 
     return ret;
