@@ -17,35 +17,32 @@ class HelloWorld
 		LLE0Exit: 
 		ifeq LWHILE0Exit
 		getstatic int HelloWorld.i
-		ldc 2
-		irem
-		ldc 1
-		isub
-		ifeq LEQ0False
-		iconst_0
-		goto LEQ0Exit
-		LEQ0False: iconst_1
-		LEQ0Exit: 
-		ifeq LIF0False
-		getstatic java.io.PrintStream java.lang.System.out
-		getstatic int HelloWorld.i
-		invokevirtual void java.io.PrintStream.println(int)
-		goto LIF0Exit
-		LIF0False: 
-		getstatic java.io.PrintStream java.lang.System.out
-		ldc "skrt"
-		invokevirtual void java.io.PrintStream.println(java.lang.String)
-		goto LIF0Exit
-		LIF0Exit: 
-		getstatic int HelloWorld.i
 		ldc 1
 		iadd
 		putstatic int HelloWorld.i
 		goto LWHILE0Begin
 		LWHILE0Exit: 
+		ldc 1
+		ifeq LIF1False
 		getstatic java.io.PrintStream java.lang.System.out
-		ldc "Hello World"
+		ldc "i value is -> "
+		invokevirtual void java.io.PrintStream.print(java.lang.String)
+		goto LIF1Exit
+		LIF1False: 
+		goto LIF1Exit
+		LIF1Exit: 
+		ldc 0
+		ifeq LIF2False
+		getstatic java.io.PrintStream java.lang.System.out
+		getstatic int HelloWorld.i
+		invokevirtual void java.io.PrintStream.println(int)
+		goto LIF2Exit
+		LIF2False: 
+		getstatic java.io.PrintStream java.lang.System.out
+		ldc "Error"
 		invokevirtual void java.io.PrintStream.println(java.lang.String)
+		goto LIF2Exit
+		LIF2Exit: 
 		return
 	}
 }

@@ -1,4 +1,4 @@
-/* while smtm without bracket consideration */
+/* while,if stmt without bracket consideration, if(true) */
 object HelloWorld {
   var af = 2
   var i = 1

@@ -1,11 +1,11 @@
-/* while, if stmt, remainder consideration */
+/* while, if stmt, logical, remainder consideration */
 object HelloWorld {
   var af = 2
   var i = 1
   def main () {
     // Print text to the console
     while (i <= 10){
-        if(i % 2 == 1)
+        if(i % 2 == 1 && i % 2 == 0)
             println(i)
         else{
             println("skrt")
