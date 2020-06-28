@@ -405,20 +405,20 @@ STMT            : ID_NAME '=' EXP
 
                 | '{' 
                 {
-                    symbolTable.CreateSymbol();
+                    // symbolTable.CreateSymbol();
 
-                    // start to output
-                    PrintJasmTab();
-                    fprintf(yyout, "{\n");
-                    tabCount++;
+                    // // start to output
+                    // PrintJasmTab();
+                    // fprintf(yyout, "{\n");
+                    // tabCount++;
                 }
                 STMTS '}'
                 {
-                    symbolTable.DropSymbol();
-                    // start to output
-                    tabCount--;
-                    PrintJasmTab();
-                    fprintf(yyout, "{\n");
+                    // symbolTable.DropSymbol();
+                    // // start to output
+                    // tabCount--;
+                    // PrintJasmTab();
+                    // fprintf(yyout, "}\n");
                 }
 
                 | IF_STMT
@@ -852,6 +852,7 @@ WHILE_STMT              : WHILE '(' EXP ')'
                             if($3->valueType != VALUETYPE::BOOLEAN) yyerror("While Statement only accept boolean expression!");
                             else    DebugLog("While statement detected.......OK");
 
+                            
                         }
                         STMT
                         ;

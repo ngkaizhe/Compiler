@@ -1,4 +1,4 @@
-/* Hello World Example */
+/* if statement, double consideration */
 object HelloWorld {
   var af = 1.5
   var bf: float
@@ -11,10 +11,14 @@ object HelloWorld {
     print ("-af value is -> ")
     println (-af)
 
-    if(af > 0.0)
+    if(af > 0.0){
         println("af is larger than zero!")
+    }
+
     else
+    {
         println("af is smaller than zero!")
+    }
     
     if(-af > 0.0)
         println("-af is larger than zero!")
