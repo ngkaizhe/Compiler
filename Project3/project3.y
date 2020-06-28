@@ -81,7 +81,6 @@ void PrintJasmTab();
 %token GT
 
 %type <value> EXP
-%type <idName> VARDECLAR1
 %type <value> FUNCTION_CALLED
 
 %token UMINUS
@@ -310,7 +309,7 @@ RETURN_STMT : RETURN EXP
                 // start to output to the file
                 PrintJasmTab();
                 fprintf(yyout, "return\n");
-                
+
                 hasReturn = true;
             }
             ;
@@ -450,100 +449,116 @@ VALDECLARATION  :       VAL ID_NAME ':' VALUE_TYPE '=' VALUE_TOKEN
                 ;       
 
 // variable declaration
-VARDECLARATION  :       VARDECLAR1 ':' VALUE_TYPE 
+VARDECLARATION  :       VAR ID_NAME ':' VALUE_TYPE 
                         {
-                            ID* lIDPtr = symbolTable.LookUp(*$1);
+                            ID* lIDPtr = new ID();
+                            lIDPtr->SetToVar(*$2);
+                            // check ID is already used in this scope or not
+                            // insert id with name to the symbol table
+                            symbolTable.Insert(lIDPtr);
                             // set value type
-                            lIDPtr->SetValueType(*$3);
-                        }
-                |       VARDECLAR1 '=' EXP
-                        {
-                            ID* lIDPtr = symbolTable.LookUp(*$1);
-                            // set value type
-                            lIDPtr->InitValue(*$3);
-                            
+                            lIDPtr->SetValueType(*$4);
+
                             // start to output
                             // what we need to do
-                            // 2. load constant value to the operand stack(which will be done from the EXP)
-                            // 3. store the value from operand stack to the variable
+                            // 1. init variable
 
-                            if(symbolTable.isGlobalScope(*$1)){
+                            if(symbolTable.isGlobalScope(*$2)){
                                 PrintJasmTab();
                                 fprintf(yyout, "%s\n", 
-                                    OperandStackManager::globalStore(lIDPtr, symbolTable.getObjectName()).c_str());
+                                    OperandStackManager::globalInit(lIDPtr, symbolTable.getObjectName()).c_str());
                             }
                             else{
-                                PrintJasmTab();
-                                fprintf(yyout, "%s\n", 
-                                    OperandStackManager::localStore(lIDPtr).c_str());
+                                // set the scope index of the local variable
+                                lIDPtr->scopeIndex = symbolTable.validSymbols.back().ids.size() - 1;
                             }
                         }
-                |       VARDECLAR1 ':' VALUE_TYPE '=' EXP
+                |       VAR ID_NAME '=' VALUE_TOKEN
                         {
-                            ID* lIDPtr = symbolTable.LookUp(*$1);
+                            ID* lIDPtr = new ID();
+                            lIDPtr->SetToVar(*$2);
+                            // check ID is already used in this scope or not
+                            // insert id with name to the symbol table
+                            symbolTable.Insert(lIDPtr);
+
+                            // set value type
+                            lIDPtr->InitValue(*$4);
+
+                            // start to output
+                            // what we need to do
+                            // 1. init variable with value
+
+                            // 1. init variable with value     
+                            if(symbolTable.isGlobalScope(*$2)){
+                                PrintJasmTab();
+                                fprintf(yyout, "%s\n", 
+                                    OperandStackManager::globalInitWithValue(lIDPtr, symbolTable.getObjectName()).c_str());
+                            }
+                            else{
+                                // set the scope index of the local variable
+                                lIDPtr->scopeIndex = symbolTable.validSymbols.back().ids.size() - 1;
+                            }
+                        }
+                |       VAR ID_NAME ':' VALUE_TYPE '=' EXP
+                        {
+                            ID* lIDPtr = symbolTable.LookUp(*$2);
 
                             // check VALUE_TOKEN's value type same as VALUE_TYPE
-                            lIDPtr->SetValueType(*$3);
-                            lIDPtr->InitValue(*$5);
+                            lIDPtr->SetValueType(*$4);
+                            lIDPtr->InitValue(*$6);
                             
-                            // start to output
                             // what we need to do
-                            // 2. load constant value to the operand stack(which will be done from the EXP)
-                            // 3. store the value from operand stack to the variable
+                            // 1. init variable with value
 
-                            if(symbolTable.isGlobalScope(*$1)){
+                            // 1. init variable with value
+                            if(symbolTable.isGlobalScope(*$2)){
                                 PrintJasmTab();
                                 fprintf(yyout, "%s\n", 
-                                    OperandStackManager::globalStore(lIDPtr, symbolTable.getObjectName()).c_str());
+                                    OperandStackManager::globalInitWithValue(lIDPtr, symbolTable.getObjectName()).c_str());
                             }
                             else{
-                                PrintJasmTab();
-                                fprintf(yyout, "%s\n", 
-                                    OperandStackManager::localStore(lIDPtr).c_str());
+                                // set the scope index of the local variable
+                                lIDPtr->scopeIndex = symbolTable.validSymbols.back().ids.size() - 1;
                             }
                         }
-                |       VARDECLAR1 ':' VALUE_TYPE '[' EXP ']'
+                |       VAR ID_NAME ':' VALUE_TYPE '[' EXP ']'
                         {
-                            ID* lIDPtr = symbolTable.LookUp(*$1);
+                            ID* lIDPtr = symbolTable.LookUp(*$2);
 
                             // the value_token must be type int
-                            if($5->valueType != VALUETYPE::INT) yyerror("array declaration's number value must be integer!");
+                            if($6->valueType != VALUETYPE::INT) yyerror("array declaration's number value must be integer!");
 
                             // set the array range for id name
                             // and resize and the array length
-                            lIDPtr->value = VALUE(*$3, $5->ival);
+                            lIDPtr->value = VALUE(*$4, $6->ival);
 
                             // we don't support array
                             yyerror("We don't support array declaration!\n");    
                         }       
-                |       VARDECLAR1
-                ;     
+                |       VAR ID_NAME
+                        {
+                            ID* lIDPtr = new ID();
+                            lIDPtr->SetToVar(*$2);
+                            // check ID is already used in this scope or not
+                            // insert id with name to the symbol table
+                            symbolTable.Insert(lIDPtr);
+                            // we are going to set the var to default value... which is int
+                            lIDPtr->SetValueType(VALUETYPE::INT);
 
-// first part of variable declaration
-VARDECLAR1      : VAR ID_NAME
-                {
-                    ID* lIDPtr = new ID();
-                    lIDPtr->SetToVar(*$2);
-                    // check ID is already used in this scope or not
-                    // insert id with name to the symbol table
-                    symbolTable.Insert(lIDPtr);
-
-                    // start to output
-                    // what we need to do
-                    // 1. init variable
-                                
-                    if(symbolTable.isGlobalScope(*$2)){
-                        PrintJasmTab();
-                        fprintf(yyout, "%s\n", 
-                            OperandStackManager::globalInit(lIDPtr, symbolTable.getObjectName()).c_str());
-                    }
-                    else{
-                        // set the scope index of the local variable
-                        lIDPtr->scopeIndex = symbolTable.validSymbols.back().ids.size() - 1;
-                    }
-
-                    $$ = $2;
-                }
+                            // start to output
+                            // what we need to do
+                            // 1. init variable
+                                        
+                            if(symbolTable.isGlobalScope(*$2)){
+                                PrintJasmTab();
+                                fprintf(yyout, "%s\n", 
+                                    OperandStackManager::globalInit(lIDPtr, symbolTable.getObjectName()).c_str());
+                            }
+                            else{
+                                // set the scope index of the local variable
+                                lIDPtr->scopeIndex = symbolTable.validSymbols.back().ids.size() - 1;
+                            }
+                        }
                 ;
 // expression
 EXP     :   ID_NAME        
@@ -591,7 +606,7 @@ EXP     :   ID_NAME
                 }
                 // float add
                 else if($1->valueType == VALUETYPE::FLOAT){
-                    fprintf(yyout, "fadd\n");
+                    fprintf(yyout, "dadd\n");
                 }
             }
         |   EXP '-' EXP 
@@ -606,7 +621,7 @@ EXP     :   ID_NAME
                 }
                 // float sub
                 else if($1->valueType == VALUETYPE::FLOAT){
-                    fprintf(yyout, "fsub\n");
+                    fprintf(yyout, "dsub\n");
                 }
             }
         |   EXP '*' EXP 
@@ -621,7 +636,7 @@ EXP     :   ID_NAME
                 }
                 // float mul
                 else if($1->valueType == VALUETYPE::FLOAT){
-                    fprintf(yyout, "fmul\n");
+                    fprintf(yyout, "dmul\n");
                 }
             }
         |   EXP '/' EXP 
@@ -636,7 +651,7 @@ EXP     :   ID_NAME
                 }
                 // float div
                 else if($1->valueType == VALUETYPE::FLOAT){
-                    fprintf(yyout, "fdiv\n");
+                    fprintf(yyout, "ddiv\n");
                 }
             }
 
@@ -651,7 +666,7 @@ EXP     :   ID_NAME
                 }
                 // float div
                 else if($2->valueType == VALUETYPE::FLOAT){
-                    fprintf(yyout, "fneg\n");
+                    fprintf(yyout, "dneg\n");
                 }
             }
         |   VALUE_TOKEN{

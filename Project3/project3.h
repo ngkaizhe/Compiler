@@ -214,6 +214,7 @@ class OperandStackManager{
 public:
     // init for global variable
     static string globalInit(ID* globalVarID, string objectName);
+    static string globalInitWithValue(ID* globalVarID, string objectName);
 
     // store value from operand stack
     static string globalStore(ID* globalVarID, string objectName);

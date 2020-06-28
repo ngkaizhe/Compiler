@@ -1,12 +1,34 @@
 class HelloWorld
 {
+	field static double af = 1.500000
+	field static double bf
 	method public static void main(java.lang.String[])
 	max_stack 15
 	max_locals 15
 	{
+		ldc2_w 6.500000
+		putstatic double HelloWorld.bf
+		getstatic double HelloWorld.af
+		getstatic double HelloWorld.bf
+		dadd
+		getstatic double HelloWorld.af
+		getstatic double HelloWorld.af
+		dmul
+		getstatic double HelloWorld.bf
+		ddiv
+		dsub
+		ldc2_w 3.600000
+		dadd
+		putstatic double HelloWorld.af
+		getstatic java.io.PrintStream java.lang.System.out
+		ldc "af value is -> "
+		invokevirtual void java.io.PrintStream.print(java.lang.String)
+		getstatic java.io.PrintStream java.lang.System.out
+		getstatic double HelloWorld.af
+		invokevirtual void java.io.PrintStream.println(double)
 		getstatic java.io.PrintStream java.lang.System.out
 		ldc "Hello World"
 		invokevirtual void java.io.PrintStream.println(java.lang.String)
-        return
+		return
 	}
 }

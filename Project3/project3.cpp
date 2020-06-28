@@ -1090,7 +1090,38 @@ string OperandStackManager::globalInit(ID* globalVarID, string objectName){
     }
 
     // field static {type} {class name}.{id name}
-    string ret = "field static " + globalVarID->value.ValueTypeString() + " " + objectName + "." + globalVarID->IDName;
+    string ret = "field static " + globalVarID->value.ValueTypeString() + " " + globalVarID->IDName;
+    return ret;
+}
+
+string OperandStackManager::globalInitWithValue(ID* globalVarID, string objectName){
+    // check whether the var type is in our support types
+    if(!isValueTypeSupported(globalVarID->value.valueType)){
+        yyerror("We only support types int, float, boolean, char. "
+        "For initing global variable!\n");
+    }
+
+    // field static {type} {class name}.{id name}
+    string ret = "field static " + 
+        globalVarID->value.ValueTypeString() + " " + globalVarID->IDName + " = ";
+
+    // int
+    if(globalVarID->value.valueType == VALUETYPE::INT){
+        ret += to_string(globalVarID->value.ival);
+    }
+    // char
+    else if(globalVarID->value.valueType == VALUETYPE::CHAR){
+        ret += to_string(globalVarID->value.cval);
+    }
+    // float
+    else if(globalVarID->value.valueType == VALUETYPE::FLOAT){
+        ret += to_string(globalVarID->value.fval);
+    }
+    // boolean
+    else if(globalVarID->value.valueType == VALUETYPE::BOOLEAN){
+        ret += to_string(globalVarID->value.bval ? 1: 0);
+    }
+
     return ret;
 }
 
@@ -1117,7 +1148,7 @@ string OperandStackManager::localStore(ID* localVarID){
     // {type}store {scope index}
     string ret;
     if(localVarID->value.valueType == VALUETYPE::FLOAT){
-        ret =  "fstore " + to_string(localVarID->scopeIndex);
+        ret =  "dstore " + to_string(localVarID->scopeIndex);
     }
     else if(localVarID->value.valueType == VALUETYPE::CHAR
         ||  localVarID->value.valueType == VALUETYPE::BOOLEAN
@@ -1150,7 +1181,7 @@ string OperandStackManager::localLoad(ID* localVarID){
     // {type}load {scope index}
     string ret;
     if(localVarID->value.valueType == VALUETYPE::FLOAT){
-        ret =  "fload " + to_string(localVarID->scopeIndex);
+        ret =  "dload " + to_string(localVarID->scopeIndex);
     }
     else if(localVarID->value.valueType == VALUETYPE::CHAR
         ||  localVarID->value.valueType == VALUETYPE::BOOLEAN
@@ -1172,19 +1203,19 @@ string OperandStackManager::constantLoad(VALUE* constantValue){
     // iconst 1
     // fconst 1.5
     if(constantValue->valueType == VALUETYPE::BOOLEAN){
-        ret = "iconst " + to_string(constantValue->bval ? 1: 0);
+        ret = "ldc " + to_string(constantValue->bval ? 1: 0);
     }
 
     else if(constantValue->valueType == VALUETYPE::INT){
-        ret = "sipush " + to_string(constantValue->ival);
+        ret = "ldc " + to_string(constantValue->ival);
     }
 
     else if(constantValue->valueType == VALUETYPE::CHAR){
-        ret = "sipush " + to_string(constantValue->cval);
+        ret = "ldc " + to_string(constantValue->cval);
     }
 
     else if(constantValue->valueType == VALUETYPE::FLOAT){
-        ret = "fconst " + to_string(constantValue->fval);
+        ret = "ldc2_w " + to_string(constantValue->fval);
     }
 
     else if(constantValue->valueType == VALUETYPE::STRING){
@@ -1258,7 +1289,7 @@ string valueTypeToString(VALUETYPE valueType)
         return "int";
         break;
     case VALUETYPE::FLOAT:
-        return "float";
+        return "double";
         break;
     case VALUETYPE::BOOLEAN:
         return "bool";
