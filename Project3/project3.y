@@ -177,6 +177,8 @@ FUNCTION_DEFINITION :   DEF ID_NAME
 
                             // put all parameter into the current function parameters scope
                             for(int i=0; i< functionScopedPtr->parameters.size(); i++){
+                                // we need to manually set the parameters as local variables
+                                functionScopedPtr->parameters[i]->idType = IDTYPE::VARIABLE;
                                 symbolTable.Insert(functionScopedPtr->parameters[i]);
                             }
 
@@ -792,6 +794,20 @@ FUNCTION_CALLED         : ID_NAME
                         {   
                             // set the function return value to $$, to get change to exp
                             $$ = new VALUE(functionCalledPtr->retVal);
+
+                            // start output
+                            PrintJasmTab();
+                            fprintf(yyout, "invokestatic %s %s.%s(", 
+                                functionCalledPtr->retVal.ValueTypeString().c_str(),
+                                symbolTable.getObjectName().c_str(),
+                                functionCalledPtr->IDName.c_str()    
+                            );
+
+                            for(int i=0; i<functionCalledPtr->parameters.size(); i++){
+                                fprintf(yyout, "%s", functionCalledPtr->parameters[i]->value.ValueTypeString().c_str());
+                                if(i == functionCalledPtr->parameters.size()-1) fprintf(yyout, ")\n");
+                                else fprintf(yyout, ", ");
+                            }
                             
                             // finish checking all function parameter, reset the parameter index and function pointer
                             parameterIndex = 0;

@@ -11,7 +11,7 @@ extern string lineBuffer;
 extern SymbolTable symbolTable;
 
 // output the debug message or not
-bool isProject2 = false;
+bool isProject2 = true;
 
 // output the current line buffer
 void AddList(char *token)

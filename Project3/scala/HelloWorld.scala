@@ -1,16 +1,22 @@
-/* if statement, double consideration */
-object HelloWorld {
-  var af = 2
-  var i = 1
-  def main () {
-    // Print text to the console
-    for(i <- 5 to 10){
-        print ("i value is -> ")
-        println (i)
-        i = i + 1
-    }
-    
+object HelloWorld{
+    val a = 5
+    var c: int
 
-    
-  }
+    // function declaration
+    def add(a:int, b:int): int
+    {
+        return a+b
+    }
+
+    // main statements
+    def main(){
+        c = add(a, 10)
+        print("Current C value is -> ")
+        println(c)
+
+        if(c > 10) println(-c)
+        else println(c)
+
+        return
+    }
 }

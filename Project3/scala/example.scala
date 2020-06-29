@@ -1,4 +1,4 @@
-object example{
+object HelloWorld{
     val a = 5
     var c: int
 
@@ -11,7 +11,12 @@ object example{
     // main statements
     def main(){
         c = add(a, 10)
-        println (c)
+        print("Current C value is -> ")
+        println(c)
+
+        if(c > 10) println(-c)
+        else println(c)
+
         return
     }
 }

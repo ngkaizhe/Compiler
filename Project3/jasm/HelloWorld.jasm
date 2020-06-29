@@ -1,36 +1,49 @@
 class HelloWorld
 {
-	field static int af = 2
-	field static int i = 1
+	field static int c
+	method public static int add(int, int)
+	max_stack 15
+	max_locals 15
+	{
+		iload 0
+		iload 1
+		iadd
+		ireturn
+	}
 	method public static void main(java.lang.String[])
 	max_stack 15
 	max_locals 15
 	{
 		ldc 5
-		putstatic int HelloWorld.i
-		LFOR0Begin: 
-		getstatic int HelloWorld.i
 		ldc 10
-		isub
-		iflt LFOR0True
-		iconst_0
-		goto LFOR0False
-		LFOR0True: 
-		iconst_1
-		LFOR0False: 
-		ifeq LFOR0Exit
+		invokestatic int HelloWorld.add(int, int)
+		putstatic int HelloWorld.c
 		getstatic java.io.PrintStream java.lang.System.out
-		ldc "i value is -> "
+		ldc "Current C value is -> "
 		invokevirtual void java.io.PrintStream.print(java.lang.String)
 		getstatic java.io.PrintStream java.lang.System.out
-		getstatic int HelloWorld.i
+		getstatic int HelloWorld.c
 		invokevirtual void java.io.PrintStream.println(int)
-		getstatic int HelloWorld.i
-		ldc 1
-		iadd
-		putstatic int HelloWorld.i
-		goto LFOR0Begin
-		LFOR0Exit: 
+		getstatic int HelloWorld.c
+		ldc 10
+		isub
+		ifgt LGT0False
+		iconst_0
+		goto LGT0Exit
+		LGT0False: iconst_1
+		LGT0Exit: 
+		ifeq LIF0False
+		getstatic java.io.PrintStream java.lang.System.out
+		getstatic int HelloWorld.c
+		ineg
+		invokevirtual void java.io.PrintStream.println(int)
+		goto LIF0Exit
+		LIF0False: 
+		getstatic java.io.PrintStream java.lang.System.out
+		getstatic int HelloWorld.c
+		invokevirtual void java.io.PrintStream.println(int)
+		goto LIF0Exit
+		LIF0Exit: 
 		return
 	}
 }
