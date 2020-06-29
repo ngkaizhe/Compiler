@@ -5,7 +5,7 @@ object HelloWorld {
   def main () {
     // Print text to the console
     while (i <= 10){
-        if(i % 2 == 1 && i % 2 == 0)
+        if(i % 2 == 1 && i % 3 == 0)
             println(i)
         else{
             println("skrt")

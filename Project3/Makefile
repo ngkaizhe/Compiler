@@ -19,5 +19,5 @@ java:
 	java ${testFileName}
 
 clean:
-	rm -f *.o lex.yy.cpp y.tab.cpp y.tab.hpp project3 *.class
+	rm -f *.o lex.yy.cpp y.tab.cpp y.tab.hpp project3 *.class jasm/*.jasm
 	
