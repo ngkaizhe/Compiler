@@ -15,6 +15,9 @@ object HelloWorld {
       FNminus1 = temp
       i = i + 1
     }
+
+    println("The result should be 21")
+    println("")
     
     // print result
     print ("Result of computation: ")

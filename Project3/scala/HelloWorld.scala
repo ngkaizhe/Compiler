@@ -11,8 +11,7 @@ object HelloWorld{
     // main statements
     def main(){
         c = add(a, 10)
-        print("Current C value is -> ")
-        println(c)
+        println("You should output -> -15")
 
         if(c > 10) println(-c)
         else println(c)

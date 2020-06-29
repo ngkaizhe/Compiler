@@ -1,7 +1,7 @@
 # compiler command
 CC= g++
 CFLAG= -g
-testFileName = HelloWorld
+testFileName = sigma
 .PHONY: jasm javaa java clean
 
 all:
@@ -17,6 +17,11 @@ javaa:
 
 java:
 	java ${testFileName}
+
+run:
+	./project3 scala/${testFileName}.scala jasm/${testFileName}.jasm
+	javaa jasm/${testFileName}.jasm
+	java HelloWorld
 
 clean:
 	rm -f *.o lex.yy.cpp y.tab.cpp y.tab.hpp project3 *.class jasm/*.jasm

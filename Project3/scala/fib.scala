@@ -4,7 +4,7 @@
  * This test program computes the Nth Fibonacci number
  */
 
-object fib
+object HelloWorld
 {
   // variables
   var n: int = 8
@@ -21,6 +21,9 @@ object fib
       n = n - 1
     }
     
+    println("The result must be 21")
+    println("")
+
     // print result
     print ("Result of computation: ")
     println (Fn)

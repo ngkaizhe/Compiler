@@ -7,6 +7,9 @@ object HelloWorld {
     while (i <= 10)
         i = i + 1
     
+    println("i value should be 11")
+    println("")
+    
     if(true)
         print ("i value is -> ")
     

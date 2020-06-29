@@ -4,6 +4,8 @@ object HelloWorld {
   var i = 1
   def main () {
     // Print text to the console
+    println("Only 3 and 9 will be printed")
+    println("")
     while (i <= 10){
         if(i % 2 == 1 && i % 3 == 0)
             println(i)

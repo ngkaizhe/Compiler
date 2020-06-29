@@ -3,7 +3,7 @@
  * Compute sum = 1 + 2 + ... + n
  */
 
-object Sigma
+object HelloWorld
 {
   // constants and variables
   val n = 10
@@ -18,6 +18,9 @@ object Sigma
       sum = sum + index
       index = index + 1
     }
+    println("The result should be 55")
+    println("")
+
     print ("The sum is ")
     println (sum)
   }
