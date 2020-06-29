@@ -176,6 +176,9 @@ public:
     // the id that owns this Symbol
     // only used by object scope and function scope
     ID *parentIDPtr;
+    
+    // get the current scope index
+    int getScopeIndex();
 };
 
 class SymbolTable

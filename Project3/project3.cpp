@@ -959,6 +959,15 @@ void Symbol::Dump()
     }
 }
 
+int Symbol::getScopeIndex(){
+    int scopeIndex = 0;
+    for(int i=0; i<ids.size() - 1; i++){
+        if(ids[i]->value.valueType == VALUETYPE::FLOAT) scopeIndex += 2;
+        else scopeIndex += 1;
+    }
+    return scopeIndex;
+}
+
 void SymbolTable::CreateSymbol()
 {
     DebugLog("New Symbol Created! Means that we have enter a new scope......OK");
@@ -1134,6 +1143,10 @@ string OperandStackManager::globalInitWithValue(ID* globalVarID, string objectNa
     // boolean
     else if(globalVarID->value.valueType == VALUETYPE::BOOLEAN){
         ret += to_string(globalVarID->value.bval ? 1: 0);
+    }
+    // string
+    else if(globalVarID->value.valueType == VALUETYPE::STRING){
+        ret += "\"" + globalVarID->value.sval + "\"";
     }
 
     return ret;
@@ -1495,7 +1508,8 @@ bool isValueTypeSupported(VALUETYPE valueType)
     if (valueType == VALUETYPE::INT ||
         valueType == VALUETYPE::BOOLEAN ||
         valueType == VALUETYPE::CHAR ||
-        valueType == VALUETYPE::FLOAT)
+        valueType == VALUETYPE::FLOAT ||
+        valueType == VALUETYPE::STRING)
     {
         return true;
     }

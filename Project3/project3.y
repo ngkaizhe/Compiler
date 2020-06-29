@@ -264,7 +264,12 @@ ARG         : ID_NAME ':' VALUE_TYPE
                 parameterID.SetValueType(*$3);
 
                 // set scope index (as this is the local variable)
-                parameterID.scopeIndex = functionScopedPtr->parameters.size();
+                int scopeIndex = 0;
+                for(int i=0; i<functionScopedPtr->parameters.size(); i++){
+                    if(functionScopedPtr->parameters[i]->value.valueType == VALUETYPE::FLOAT) scopeIndex+=2;
+                    else scopeIndex+=1;
+                }
+                parameterID.scopeIndex = scopeIndex;
 
                 // set the parameter to the function id
                 functionScopedPtr->AddParameter(parameterID);
@@ -293,7 +298,7 @@ RETURN_STMT : RETURN EXP
                     fprintf(yyout, "ireturn\n");
                 }
                 else if(functionScopedPtr->retVal.valueType == VALUETYPE::FLOAT){
-                    fprintf(yyout, "freturn\n");
+                    fprintf(yyout, "dreturn\n");
                 }
                 else{
                     yyerror("We only support return value type that is boolean, int, char, float, void!!!\n");
@@ -476,10 +481,10 @@ VARDECLARATION  :       VAR ID_NAME ':' VALUE_TYPE
                             }
                             else{
                                 // set the scope index of the local variable
-                                lIDPtr->scopeIndex = symbolTable.validSymbols.back().ids.size() - 1;
+                                lIDPtr->scopeIndex = symbolTable.validSymbols.back().getScopeIndex();
                             }
                         }
-                |       VAR ID_NAME '=' EXP
+                |       VAR ID_NAME '=' VALUE_TOKEN
                         {
                             ID* lIDPtr = new ID();
                             lIDPtr->SetToVar(*$2);
@@ -502,7 +507,12 @@ VARDECLARATION  :       VAR ID_NAME ':' VALUE_TYPE
                             }
                             else{
                                 // set the scope index of the local variable
-                                lIDPtr->scopeIndex = symbolTable.validSymbols.back().ids.size() - 1;
+                                lIDPtr->scopeIndex = symbolTable.validSymbols.back().getScopeIndex();
+
+                                // start to output
+                                // this is constant expression
+                                PrintJasmTab();
+                                fprintf(yyout, "%s\n", OperandStackManager::constantLoad($4).c_str());
 
                                 // assign the value to local variable
                                 PrintJasmTab();
@@ -510,7 +520,7 @@ VARDECLARATION  :       VAR ID_NAME ':' VALUE_TYPE
                                     OperandStackManager::localStore(lIDPtr).c_str());
                             }
                         }
-                |       VAR ID_NAME ':' VALUE_TYPE '=' EXP
+                |       VAR ID_NAME ':' VALUE_TYPE '=' VALUE_TOKEN
                         {
                             ID* lIDPtr = new ID();
                             lIDPtr->SetToVar(*$2);
@@ -533,7 +543,12 @@ VARDECLARATION  :       VAR ID_NAME ':' VALUE_TYPE
                             }
                             else{
                                 // set the scope index of the local variable
-                                lIDPtr->scopeIndex = symbolTable.validSymbols.back().ids.size() - 1;
+                                lIDPtr->scopeIndex = symbolTable.validSymbols.back().getScopeIndex();
+
+                                // start to output
+                                // this is constant expression
+                                PrintJasmTab();
+                                fprintf(yyout, "%s\n", OperandStackManager::constantLoad($6).c_str());
 
                                 // assign the value to local variable
                                 PrintJasmTab();
@@ -576,7 +591,7 @@ VARDECLARATION  :       VAR ID_NAME ':' VALUE_TYPE
                             }
                             else{
                                 // set the scope index of the local variable
-                                lIDPtr->scopeIndex = symbolTable.validSymbols.back().ids.size() - 1;
+                                lIDPtr->scopeIndex = symbolTable.validSymbols.back().getScopeIndex();
                             }
                         }
                 ;
@@ -706,7 +721,10 @@ EXP     :   ID_NAME
                 // change the value from float to int for comparison
                 if($1->valueType == VALUETYPE::FLOAT){
                     PrintJasmTab();
-                    fprintf(yyout, "d2i\n");
+                    fprintf(yyout, "dconst_0\n");
+
+                    PrintJasmTab();
+                    fprintf(yyout, "dcmpl\n");
                 }
 
                 LabelManager::createComparisonLabel(LabelType::LLT);
@@ -721,7 +739,10 @@ EXP     :   ID_NAME
                 // change the value from float to int for comparison
                 if($1->valueType == VALUETYPE::FLOAT){
                     PrintJasmTab();
-                    fprintf(yyout, "d2i\n");
+                    fprintf(yyout, "dconst_0\n");
+
+                    PrintJasmTab();
+                    fprintf(yyout, "dcmpl\n");
                 }
 
                 LabelManager::createComparisonLabel(LabelType::LLE);
@@ -736,7 +757,10 @@ EXP     :   ID_NAME
                 // change the value from float to int for comparison
                 if($1->valueType == VALUETYPE::FLOAT){
                     PrintJasmTab();
-                    fprintf(yyout, "d2i\n");
+                    fprintf(yyout, "dconst_0\n");
+
+                    PrintJasmTab();
+                    fprintf(yyout, "dcmpl\n");
                 }
                 
                 LabelManager::createComparisonLabel(LabelType::LEQ);
@@ -751,7 +775,10 @@ EXP     :   ID_NAME
                 // change the value from float to int for comparison
                 if($1->valueType == VALUETYPE::FLOAT){
                     PrintJasmTab();
-                    fprintf(yyout, "d2i\n");
+                    fprintf(yyout, "dconst_0\n");
+
+                    PrintJasmTab();
+                    fprintf(yyout, "dcmpl\n");
                 }
 
                 LabelManager::createComparisonLabel(LabelType::LNQ);
@@ -766,7 +793,10 @@ EXP     :   ID_NAME
                 // change the value from float to int for comparison
                 if($1->valueType == VALUETYPE::FLOAT){
                     PrintJasmTab();
-                    fprintf(yyout, "d2i\n");
+                    fprintf(yyout, "dconst_0\n");
+
+                    PrintJasmTab();
+                    fprintf(yyout, "dcmpl\n");
                 }
 
                 LabelManager::createComparisonLabel(LabelType::LGE);
@@ -781,7 +811,10 @@ EXP     :   ID_NAME
                 // change the value from float to int for comparison
                 if($1->valueType == VALUETYPE::FLOAT){
                     PrintJasmTab();
-                    fprintf(yyout, "d2i\n");
+                    fprintf(yyout, "dconst_0\n");
+
+                    PrintJasmTab();
+                    fprintf(yyout, "dcmpl\n");
                 }
 
                 LabelManager::createComparisonLabel(LabelType::LGT);
@@ -820,9 +853,9 @@ FUNCTION_CALLED         : ID_NAME
 
                             for(int i=0; i<functionCalledPtr->parameters.size(); i++){
                                 fprintf(yyout, "%s", functionCalledPtr->parameters[i]->value.ValueTypeString().c_str());
-                                if(i == functionCalledPtr->parameters.size()-1) fprintf(yyout, ")\n");
-                                else fprintf(yyout, ", ");
+                                if(i != functionCalledPtr->parameters.size()-1) fprintf(yyout, ", ");
                             }
+                            fprintf(yyout, ")\n");
                             
                             // finish checking all function parameter, reset the parameter index and function pointer
                             parameterIndex = 0;
@@ -990,7 +1023,7 @@ FOR_STMT                : FOR '(' ID_NAME FOR_SET EXP
                             fprintf(yyout, "isub\n");
 
                             PrintJasmTab();
-                            fprintf(yyout, "iflt %s\n", LabelManager::getLabelString(LabelType::LFOR, LabelState::TRUE).c_str());
+                            fprintf(yyout, "ifle %s\n", LabelManager::getLabelString(LabelType::LFOR, LabelState::TRUE).c_str());
 
                             PrintJasmTab();
                             fprintf(yyout, "iconst_0\n");
