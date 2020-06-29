@@ -1464,7 +1464,7 @@ string valueTypeToString(VALUETYPE valueType)
         return "double";
         break;
     case VALUETYPE::BOOLEAN:
-        return "bool";
+        return "boolean";
         break;
     case VALUETYPE::ARRSTRING:
         return "arr string";

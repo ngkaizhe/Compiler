@@ -1,45 +1,339 @@
 class HelloWorld
 {
-	method public static void myprint(int)
+	field static int n
+	field static int sum
+	field static int index
+	method public static int fib(int)
 	max_stack 15
 	max_locals 15
 	{
 		iload 0
-		ldc 50
+		ldc 2
+		isub
+		iflt LFalse1
+		iconst_0
+		goto LExit1
+		LFalse1: 
+		iconst_1
+		LExit1: 
+		ifeq LFalse2
+		iload 0
+		ireturn
+		goto LExit2
+		LFalse2: 
+		iload 0
+		ldc 1
+		isub
+		invokestatic int HelloWorld.fib(int)
+		iload 0
+		ldc 2
+		isub
+		invokestatic int HelloWorld.fib(int)
 		iadd
-		istore 1
-		getstatic java.io.PrintStream java.lang.System.out
+		ireturn
+		goto LExit2
+		LExit2: 
+		return
+	}
+	method public static int add(int, int)
+	max_stack 15
+	max_locals 15
+	{
+		iload 0
 		iload 1
+		iadd
+		istore 2
+		iload 2
+		ireturn
+		return
+	}
+	method public static void myprint(int, boolean)
+	max_stack 15
+	max_locals 15
+	{
+		iload 0
+		iload 0
+		iload 0
+		imul
+		iadd
+		istore 2
+		getstatic java.io.PrintStream java.lang.System.out
+		iload 2
 		invokevirtual void java.io.PrintStream.println(int)
+		iload 1
+		ldc 1
+		ixor
+		ifeq LFalse3
+		getstatic java.io.PrintStream java.lang.System.out
+		ldc "flag false"
+		invokevirtual void java.io.PrintStream.println(java.lang.String)
+		iload 2
+		ldc 1100
+		isub
+		ifgt LFalse4
+		iconst_0
+		goto LExit4
+		LFalse4: 
+		iconst_1
+		LExit4: 
+		ifeq LFalse5
+		getstatic java.io.PrintStream java.lang.System.out
+		ldc "a is bigger than 1100 and a is"
+		invokevirtual void java.io.PrintStream.print(java.lang.String)
+		getstatic java.io.PrintStream java.lang.System.out
+		iload 2
+		invokevirtual void java.io.PrintStream.println(int)
+		goto LExit5
+		LFalse5: 
+		getstatic java.io.PrintStream java.lang.System.out
+		ldc "a is"
+		invokevirtual void java.io.PrintStream.print(java.lang.String)
+		getstatic java.io.PrintStream java.lang.System.out
+		iload 2
+		invokevirtual void java.io.PrintStream.println(int)
+		goto LExit5
+		LExit5: 
+		goto LExit3
+		LFalse3: 
+		getstatic java.io.PrintStream java.lang.System.out
+		ldc "flag true"
+		invokevirtual void java.io.PrintStream.println(java.lang.String)
+		goto LExit3
+		LExit3: 
+		getstatic int HelloWorld.sum
+		iload 0
+		invokestatic int HelloWorld.add(int, int)
+		putstatic int HelloWorld.sum
 		return
 	}
 	method public static void main(java.lang.String[])
 	max_stack 15
 	max_locals 15
 	{
+		ldc 1
+		putstatic int HelloWorld.sum
+		ldc 0
+		putstatic int HelloWorld.index
+		ldc 1
+		putstatic int HelloWorld.n
+		getstatic java.io.PrintStream java.lang.System.out
+		ldc 33
+		invokevirtual void java.io.PrintStream.print(int)
+		getstatic java.io.PrintStream java.lang.System.out
+		ldc "The sum is"
+		invokevirtual void java.io.PrintStream.print(java.lang.String)
+		getstatic java.io.PrintStream java.lang.System.out
+		getstatic int HelloWorld.sum
+		invokevirtual void java.io.PrintStream.println(int)
+		getstatic java.io.PrintStream java.lang.System.out
+		getstatic int HelloWorld.index
+		invokevirtual void java.io.PrintStream.println(int)
 		ldc 0
 		istore 0
+		iload 0
+		ldc 0
+		isub
+		ifle LFalse6
+		iconst_0
+		goto LExit6
+		LFalse6: 
+		iconst_1
+		LExit6: 
+		ifeq LFalse7
+		getstatic java.io.PrintStream java.lang.System.out
+		ldc "i <= 0"
+		invokevirtual void java.io.PrintStream.println(java.lang.String)
+		getstatic int HelloWorld.sum
+		ldc 0
+		isub
+		ifeq LFalse8
+		iconst_0
+		goto LExit8
+		LFalse8: 
+		iconst_1
+		LExit8: 
+		ifeq LFalse9
+		getstatic java.io.PrintStream java.lang.System.out
+		ldc "sum=0"
+		invokevirtual void java.io.PrintStream.println(java.lang.String)
+		goto LExit9
+		LFalse9: 
+		getstatic java.io.PrintStream java.lang.System.out
+		ldc "sum!=0"
+		invokevirtual void java.io.PrintStream.println(java.lang.String)
+		goto LExit9
+		LExit9: 
+		goto LExit7
+		LFalse7: 
+		iload 0
+		ldc 0
+		isub
+		ifge LFalse10
+		iconst_0
+		goto LExit10
+		LFalse10: 
+		iconst_1
+		LExit10: 
+		ifeq LFalse11
+		getstatic java.io.PrintStream java.lang.System.out
+		ldc "i>=0"
+		invokevirtual void java.io.PrintStream.println(java.lang.String)
+		goto LExit11
+		LFalse11: 
+		getstatic java.io.PrintStream java.lang.System.out
+		ldc "i!= 1 or 0 "
+		invokevirtual void java.io.PrintStream.println(java.lang.String)
+		goto LExit11
+		LExit11: 
+		goto LExit7
+		LExit7: 
+		ldc 10
+		putstatic int HelloWorld.sum
+		LBegin12: 
+		getstatic int HelloWorld.sum
+		ldc 10
+		isub
+		iflt LTrue12
+		iconst_0
+		goto LFalse12
+		LTrue12: 
+		iconst_1
+		LFalse12: 
+		ifeq LExit12
+		getstatic java.io.PrintStream java.lang.System.out
+		getstatic int HelloWorld.index
+		invokevirtual void java.io.PrintStream.println(int)
+		getstatic int HelloWorld.index
+		ldc 1
+		iadd
+		putstatic int HelloWorld.index
 		ldc 0
 		istore 0
-		LBegin1: 
+		LBegin13: 
 		iload 0
 		ldc 10
 		isub
-		iflt LTrue1
+		iflt LTrue13
 		iconst_0
-		goto LFalse1
-		LTrue1: 
+		goto LFalse13
+		LTrue13: 
 		iconst_1
-		LFalse1: 
-		ifeq LExit1
+		LFalse13: 
+		ifeq LExit13
+		getstatic java.io.PrintStream java.lang.System.out
 		iload 0
-		invokestatic void HelloWorld.myprint(int)
+		invokevirtual void java.io.PrintStream.print(int)
+		getstatic int HelloWorld.index
+		ldc 1
+		iadd
+		putstatic int HelloWorld.index
 		iload 0
 		ldc 1
 		iadd
 istore 0
-		goto LBegin1
-		LExit1: 
+		goto LBegin13
+		LExit13: 
+		getstatic java.io.PrintStream java.lang.System.out
+		ldc ""
+		invokevirtual void java.io.PrintStream.println(java.lang.String)
+		getstatic int HelloWorld.sum
+		ldc 1
+		iadd
+putstatic int HelloWorld.sum
+		goto LBegin12
+		LExit12: 
+		getstatic java.io.PrintStream java.lang.System.out
+		getstatic int HelloWorld.index
+		invokevirtual void java.io.PrintStream.println(int)
+		ldc 0
+		istore 0
+		ldc 4
+		istore 2
+		ldc 0
+		istore 0
+		LBegin14: 
+		iload 0
+		iload 2
+		isub
+		iflt LTrue14
+		iconst_0
+		goto LFalse14
+		LTrue14: 
+		iconst_1
+		LFalse14: 
+		ifeq LExit14
+		getstatic java.io.PrintStream java.lang.System.out
+		ldc "i = "
+		invokevirtual void java.io.PrintStream.print(java.lang.String)
+		getstatic java.io.PrintStream java.lang.System.out
+		iload 0
+		ldc 1
+		invokestatic int HelloWorld.add(int, int)
+		invokevirtual void java.io.PrintStream.println(int)
+		getstatic java.io.PrintStream java.lang.System.out
+		iload 0
+		invokestatic int HelloWorld.fib(int)
+		invokevirtual void java.io.PrintStream.println(int)
+		iload 0
+		ldc 1
+		iadd
+istore 0
+		goto LBegin14
+		LExit14: 
+		ldc 1
+		istore 2
+		iload 2
+		ldc 1
+		isub
+		ifeq LFalse15
+		iconst_0
+		goto LExit15
+		LFalse15: 
+		iconst_1
+		LExit15: 
+		ifeq LFalse16
+		getstatic java.io.PrintStream java.lang.System.out
+		ldc "end = 1"
+		invokevirtual void java.io.PrintStream.println(java.lang.String)
+		goto LExit16
+		LFalse16: 
+		goto LExit16
+		LExit16: 
+		getstatic java.io.PrintStream java.lang.System.out
+		ldc "call void"
+		invokevirtual void java.io.PrintStream.println(java.lang.String)
+		getstatic java.io.PrintStream java.lang.System.out
+		ldc "sum is"
+		invokevirtual void java.io.PrintStream.println(java.lang.String)
+		ldc 10
+		ldc 0
+		invokestatic void HelloWorld.myprint(int, boolean)
+		getstatic java.io.PrintStream java.lang.System.out
+		getstatic int HelloWorld.sum
+		invokevirtual void java.io.PrintStream.println(int)
+		ldc 5
+		putstatic int HelloWorld.sum
+		getstatic java.io.PrintStream java.lang.System.out
+		getstatic int HelloWorld.sum
+		ldc 5
+		isub
+		ifeq LFalse17
+		iconst_0
+		goto LExit17
+		LFalse17: 
+		iconst_1
+		LExit17: 
+		getstatic int HelloWorld.sum
+		ldc 3
+		isub
+		ifeq LFalse18
+		iconst_0
+		goto LExit18
+		LFalse18: 
+		iconst_1
+		LExit18: 
+		ior
+		invokevirtual void java.io.PrintStream.println(boolean)
 		return
 	}
 }

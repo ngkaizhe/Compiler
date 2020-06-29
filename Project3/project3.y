@@ -675,6 +675,8 @@ EXP     :   ID_NAME
         |   NOT EXP{ 
                 $$ = new VALUE(!(*$2));
 
+                PrintJasmTab();
+                fprintf(yyout, "ldc 1\n");
                 // start output
                 PrintJasmTab();
                 fprintf(yyout, "ixor\n");
