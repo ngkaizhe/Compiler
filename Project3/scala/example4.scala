@@ -13,7 +13,7 @@ object HelloWorld {
       temp = Fn
       Fn = Fn + FNminus1
       FNminus1 = temp
-      i = i + 1
+      
     }
 
     println("The result should be 21")

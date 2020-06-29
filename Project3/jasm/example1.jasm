@@ -1,0 +1,84 @@
+class HelloWorld
+{
+	field static double af = 1.500000
+	field static double bf
+	method public static void main(java.lang.String[])
+	max_stack 15
+	max_locals 15
+	{
+		ldc2_w 6.500000
+		putstatic double HelloWorld.bf
+		getstatic double HelloWorld.af
+		getstatic double HelloWorld.bf
+		dadd
+		getstatic double HelloWorld.af
+		getstatic double HelloWorld.af
+		dmul
+		getstatic double HelloWorld.bf
+		ddiv
+		dsub
+		ldc2_w 3.600000
+		dadd
+		putstatic double HelloWorld.af
+		getstatic java.io.PrintStream java.lang.System.out
+		ldc "af value is -> "
+		invokevirtual void java.io.PrintStream.print(java.lang.String)
+		getstatic java.io.PrintStream java.lang.System.out
+		getstatic double HelloWorld.af
+		invokevirtual void java.io.PrintStream.println(double)
+		getstatic java.io.PrintStream java.lang.System.out
+		ldc "-af value is -> "
+		invokevirtual void java.io.PrintStream.print(java.lang.String)
+		getstatic java.io.PrintStream java.lang.System.out
+		getstatic double HelloWorld.af
+		dneg
+		invokevirtual void java.io.PrintStream.println(double)
+		getstatic double HelloWorld.af
+		ldc2_w 0.000000
+		dsub
+		d2i
+		ifgt LFalse1
+		iconst_0
+		goto LExit1
+		LFalse1: 
+		iconst_1
+		LExit1: 
+		ifeq LFalse2
+		getstatic java.io.PrintStream java.lang.System.out
+		ldc "af is larger than zero!"
+		invokevirtual void java.io.PrintStream.println(java.lang.String)
+		goto LExit2
+		LFalse2: 
+		getstatic java.io.PrintStream java.lang.System.out
+		ldc "af is smaller than zero!"
+		invokevirtual void java.io.PrintStream.println(java.lang.String)
+		goto LExit2
+		LExit2: 
+		getstatic double HelloWorld.af
+		dneg
+		ldc2_w 0.000000
+		dsub
+		d2i
+		ifgt LFalse3
+		iconst_0
+		goto LExit3
+		LFalse3: 
+		iconst_1
+		LExit3: 
+		ifeq LFalse4
+		getstatic java.io.PrintStream java.lang.System.out
+		ldc "-af is larger than zero!"
+		invokevirtual void java.io.PrintStream.println(java.lang.String)
+		goto LExit4
+		LFalse4: 
+		getstatic java.io.PrintStream java.lang.System.out
+		ldc "-af is smaller than zero!"
+		invokevirtual void java.io.PrintStream.println(java.lang.String)
+		goto LExit4
+		LExit4: 
+		getstatic java.io.PrintStream java.lang.System.out
+		ldc "Hello World"
+		invokevirtual void java.io.PrintStream.println(java.lang.String)
+		return
+	}
+}

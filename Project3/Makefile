@@ -1,7 +1,7 @@
 # compiler command
 CC= g++
 CFLAG= -g
-testFileName = sigma
+testFileName = sigma1
 .PHONY: jasm javaa java clean
 
 all:

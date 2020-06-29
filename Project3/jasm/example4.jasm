@@ -1,0 +1,53 @@
+class HelloWorld
+{
+	field static int n = 8
+	field static int Fn = 1
+	field static int FNminus1 = 1
+	field static int temp
+	field static int i = 0
+	method public static void main(java.lang.String[])
+	max_stack 15
+	max_locals 15
+	{
+		ldc 2
+		putstatic int HelloWorld.i
+		LBegin1: 
+		getstatic int HelloWorld.i
+		getstatic int HelloWorld.n
+		isub
+		iflt LTrue1
+		iconst_0
+		goto LFalse1
+		LTrue1: 
+		iconst_1
+		LFalse1: 
+		ifeq LExit1
+		getstatic int HelloWorld.Fn
+		putstatic int HelloWorld.temp
+		getstatic int HelloWorld.Fn
+		getstatic int HelloWorld.FNminus1
+		iadd
+		putstatic int HelloWorld.Fn
+		getstatic int HelloWorld.temp
+		putstatic int HelloWorld.FNminus1
+		getstatic int HelloWorld.i
+		ldc 1
+		iadd
+		putstatic int HelloWorld.i
+		goto LBegin1
+		LExit1: 
+		getstatic java.io.PrintStream java.lang.System.out
+		ldc "The result should be 21"
+		invokevirtual void java.io.PrintStream.println(java.lang.String)
+		getstatic java.io.PrintStream java.lang.System.out
+		ldc ""
+		invokevirtual void java.io.PrintStream.println(java.lang.String)
+		getstatic java.io.PrintStream java.lang.System.out
+		ldc "Result of computation: "
+		invokevirtual void java.io.PrintStream.print(java.lang.String)
+		getstatic java.io.PrintStream java.lang.System.out
+		getstatic int HelloWorld.Fn
+		invokevirtual void java.io.PrintStream.println(int)
+		return
+	}
+}

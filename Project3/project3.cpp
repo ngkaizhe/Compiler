@@ -11,7 +11,7 @@ extern string lineBuffer;
 extern SymbolTable symbolTable;
 
 // output the debug message or not
-bool isProject2 = false;
+bool isProject2 = true;
 
 // output the current line buffer
 void AddList(char *token)
@@ -1240,6 +1240,9 @@ string OperandStackManager::constantLoad(VALUE* constantValue){
 }
 
 void LabelManager::createComparisonLabel(LabelType labelType){
+    // push the stack
+    LabelManager::pushStack();
+
     PrintJasmTab();
     switch (labelType)
     {
@@ -1274,12 +1277,17 @@ void LabelManager::createComparisonLabel(LabelType labelType){
     fprintf(yyout, "goto %s\n", LabelManager::getLabelString(labelType, LabelState::EXIT).c_str());
 
     PrintJasmTab();
-    fprintf(yyout, "%s: iconst_1\n", LabelManager::getLabelString(labelType, LabelState::FALSE).c_str());
+    fprintf(yyout, "%s: \n", LabelManager::getLabelString(labelType, LabelState::FALSE).c_str());
+
+    PrintJasmTab();
+    fprintf(yyout, "iconst_1\n");
 
     PrintJasmTab();
     fprintf(yyout, "%s: \n", LabelManager::getLabelString(labelType, LabelState::EXIT).c_str());
 
     LabelManager::updateCounter(labelType);
+    // pop the stack
+    LabelManager::popStack();
 }
 
 string LabelManager::getOperatorString(Operation operation, VALUETYPE valueType){
@@ -1347,8 +1355,7 @@ string LabelManager::labelTypeString(LabelType labelType){
 }
 
 string LabelManager::getLabelString(LabelType labelType, LabelState labelState){
-    string ret = "L" + LabelManager::labelTypeString(labelType) 
-        + to_string(LabelManager::labelCounters[(int)labelType]);
+    string ret = "L";
 
     switch (labelState)
     {
@@ -1367,12 +1374,26 @@ string LabelManager::getLabelString(LabelType labelType, LabelState labelState){
     default:
         break;
     }
+    ret += to_string(LabelManager::labelStackCounter.back());
 
     return ret;
 } 
 
 void LabelManager::updateCounter(LabelType labelType){
-    LabelManager::labelCounters[(int)labelType]++;
+    // LabelManager::labelCounter++;
+    return;
+}
+
+// add the label stack counter
+void LabelManager::pushStack(){
+    LabelManager::labelCounter++;
+    LabelManager::labelStackCounter.push_back(LabelManager::labelCounter);
+    return;
+}
+
+// subtract the label stack counter
+void LabelManager::popStack(){
+    LabelManager::labelStackCounter.pop_back();
     return;
 }
 

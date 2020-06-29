@@ -1,0 +1,48 @@
+class HelloWorld
+{
+	field static int sum
+	field static int index
+	method public static void main(java.lang.String[])
+	max_stack 15
+	max_locals 15
+	{
+		ldc 0
+		putstatic int HelloWorld.sum
+		ldc 0
+		putstatic int HelloWorld.index
+		LBegin1: 
+		getstatic int HelloWorld.index
+		ldc 10
+		isub
+		ifle LFalse2
+		iconst_0
+		goto LExit2
+		LFalse2: 
+		iconst_1
+		LExit2: 
+		ifeq LExit1
+		getstatic int HelloWorld.sum
+		getstatic int HelloWorld.index
+		iadd
+		putstatic int HelloWorld.sum
+		getstatic int HelloWorld.index
+		ldc 1
+		iadd
+		putstatic int HelloWorld.index
+		goto LBegin1
+		LExit1: 
+		getstatic java.io.PrintStream java.lang.System.out
+		ldc "The result should be 55"
+		invokevirtual void java.io.PrintStream.println(java.lang.String)
+		getstatic java.io.PrintStream java.lang.System.out
+		ldc ""
+		invokevirtual void java.io.PrintStream.println(java.lang.String)
+		getstatic java.io.PrintStream java.lang.System.out
+		ldc "The sum is "
+		invokevirtual void java.io.PrintStream.print(java.lang.String)
+		getstatic java.io.PrintStream java.lang.System.out
+		getstatic int HelloWorld.sum
+		invokevirtual void java.io.PrintStream.println(int)
+		return
+	}
+}

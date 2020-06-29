@@ -26,7 +26,8 @@ void PrintJasmTab();
 
 
 // init the label counter
-vector<int> LabelManager::labelCounters = {0, 0, 0, 0, 0, 0, 0, 0, 0};
+int LabelManager::labelCounter = 0;
+vector<int> LabelManager::labelStackCounter;
 %}
 
 // all union var should be as pointer(i think is memory allocation problems)
@@ -218,10 +219,8 @@ FUNCTION_DEFINITION :   DEF ID_NAME
                         STMTS '}'
                         {
                             // manually return
-                            if(!hasReturn){
-                                PrintJasmTab();
-                                fprintf(yyout, "return\n");
-                            }
+                            PrintJasmTab();
+                            fprintf(yyout, "return\n");
 
                             // dump to check that we set the correct function
                             // functionScopedPtr->Dump();
@@ -350,6 +349,7 @@ STMT            : ID_NAME '=' EXP
                     }
 
                 }
+                |   FUNCTION_CALLED
                 |   ID_NAME '[' EXP ']' '=' EXP
                 {
                     // id name must be valid
@@ -374,13 +374,13 @@ STMT            : ID_NAME '=' EXP
                     PrintJasmTab();
                     fprintf(yyout, "getstatic java.io.PrintStream java.lang.System.out\n");
                 }
-                '(' EXP ')'
+                EXP
                 {
                     DebugLog("Print function Called!");
 
                     // start to output
                     PrintJasmTab();
-                    fprintf(yyout, "invokevirtual void java.io.PrintStream.print(%s)\n", $4->ValueTypeString().c_str());
+                    fprintf(yyout, "invokevirtual void java.io.PrintStream.print(%s)\n", $3->ValueTypeString().c_str());
                 }
 
                 | PRINTLN 
@@ -389,13 +389,13 @@ STMT            : ID_NAME '=' EXP
                     PrintJasmTab();
                     fprintf(yyout, "getstatic java.io.PrintStream java.lang.System.out\n");
                 }
-                '(' EXP ')'
+                EXP 
                 {
                     DebugLog("Println function Called!");
 
                     // start to output
                     PrintJasmTab();
-                    fprintf(yyout, "invokevirtual void java.io.PrintStream.println(%s)\n", $4->ValueTypeString().c_str());
+                    fprintf(yyout, "invokevirtual void java.io.PrintStream.println(%s)\n", $3->ValueTypeString().c_str());
                 }
 
                 | READ ID_NAME
@@ -479,7 +479,7 @@ VARDECLARATION  :       VAR ID_NAME ':' VALUE_TYPE
                                 lIDPtr->scopeIndex = symbolTable.validSymbols.back().ids.size() - 1;
                             }
                         }
-                |       VAR ID_NAME '=' VALUE_TOKEN
+                |       VAR ID_NAME '=' EXP
                         {
                             ID* lIDPtr = new ID();
                             lIDPtr->SetToVar(*$2);
@@ -503,9 +503,14 @@ VARDECLARATION  :       VAR ID_NAME ':' VALUE_TYPE
                             else{
                                 // set the scope index of the local variable
                                 lIDPtr->scopeIndex = symbolTable.validSymbols.back().ids.size() - 1;
+
+                                // assign the value to local variable
+                                PrintJasmTab();
+                                fprintf(yyout, "%s\n", 
+                                    OperandStackManager::localStore(lIDPtr).c_str());
                             }
                         }
-                |       VAR ID_NAME ':' VALUE_TYPE '=' VALUE_TOKEN
+                |       VAR ID_NAME ':' VALUE_TYPE '=' EXP
                         {
                             ID* lIDPtr = new ID();
                             lIDPtr->SetToVar(*$2);
@@ -529,6 +534,11 @@ VARDECLARATION  :       VAR ID_NAME ':' VALUE_TYPE
                             else{
                                 // set the scope index of the local variable
                                 lIDPtr->scopeIndex = symbolTable.validSymbols.back().ids.size() - 1;
+
+                                // assign the value to local variable
+                                PrintJasmTab();
+                                fprintf(yyout, "%s\n", 
+                                    OperandStackManager::localStore(lIDPtr).c_str());
                             }
                         }
                 |       VAR ID_NAME ':' VALUE_TYPE '[' EXP ']'
@@ -604,6 +614,9 @@ EXP     :   ID_NAME
                     yyerror("Rvalue can only be either constant, local var, global var!\n");
                 }
             }
+        | '(' EXP ')'{
+            $$ = $2;
+        }
         |   EXP '+' EXP 
             {
                 $$ = new VALUE(*$1 + *$3);
@@ -659,7 +672,6 @@ EXP     :   ID_NAME
                 fprintf(yyout, "%s\n", OperandStackManager::constantLoad($1).c_str());
             }
         |   FUNCTION_CALLED
-
         |   NOT EXP{ 
                 $$ = new VALUE(!(*$2));
 
@@ -772,6 +784,7 @@ EXP     :   ID_NAME
 
                 LabelManager::createComparisonLabel(LabelType::LGT);
             }
+        
         ;
 
 // function called to use
@@ -844,6 +857,9 @@ IF_STMT                 : IF '(' EXP ')'
                             else    DebugLog("IF statement detected.......OK");
 
                             // start output
+                            // push the stack
+                            LabelManager::pushStack();
+                            
                             PrintJasmTab();
                             fprintf(yyout, "ifeq %s\n", LabelManager::getLabelString(LabelType::LIF, LabelState::FALSE).c_str());
                         } 
@@ -867,6 +883,8 @@ IF_STMT                 : IF '(' EXP ')'
                             fprintf(yyout, "%s: \n", LabelManager::getLabelString(LabelType::LIF, LabelState::EXIT).c_str());
 
                             LabelManager::updateCounter(LabelType::LIF);
+                            // pop the stack
+                            LabelManager::popStack();
                         }
                         ;
 
@@ -879,6 +897,8 @@ ELSE_STMT               :   ELSE STMT
 // while loops
 WHILE_STMT              : WHILE 
                         {
+                            // push the stack
+                            LabelManager::pushStack();
                             // start output
                             PrintJasmTab();
                             fprintf(yyout, "%s: \n", LabelManager::getLabelString(LabelType::LWHILE, LabelState::BEGIN).c_str());
@@ -903,12 +923,17 @@ WHILE_STMT              : WHILE
                             fprintf(yyout, "%s: \n", LabelManager::getLabelString(LabelType::LWHILE, LabelState::EXIT).c_str());
 
                             LabelManager::updateCounter(LabelType::LWHILE);
+                            // pop the stack
+                            LabelManager::popStack();
                         }
                         ;
 
 // for loops
 FOR_STMT                : FOR '(' ID_NAME FOR_SET EXP 
                         {
+                            // push the stack
+                            LabelManager::pushStack();
+
                             ID* lIDPtr = symbolTable.LookUp(*$3);
                             // store the value to id_name
                             // start to output
@@ -983,7 +1008,38 @@ FOR_STMT                : FOR '(' ID_NAME FOR_SET EXP
                         }
                         STMT
                         {
+                            ID* lIDPtr = symbolTable.LookUp(*$3);
                             // start output
+                            // i = i + 1
+                            // load the variable to the operand stack
+                            PrintJasmTab();
+                            // is global
+                            if(symbolTable.isGlobalScope(*$3)){
+                                fprintf(yyout, "%s\n", 
+                                    OperandStackManager::globalLoad(lIDPtr, symbolTable.getObjectName()).c_str());
+                            }
+                            // else if local variable
+                            else{
+                                fprintf(yyout, "%s\n", 
+                                    OperandStackManager::localLoad(lIDPtr).c_str());
+                            }
+                            PrintJasmTab();
+                            fprintf(yyout, "ldc 1\n");
+                            PrintJasmTab();
+                            fprintf(yyout, "iadd\n");
+
+                            // store to the variable
+                            // if is global variable
+                            if(symbolTable.isGlobalScope(*$3)){
+                                fprintf(yyout, "%s\n", 
+                                    OperandStackManager::globalStore(lIDPtr, symbolTable.getObjectName()).c_str());
+                            }
+                            // else it must be local variable
+                            else{
+                                fprintf(yyout, "%s\n", 
+                                    OperandStackManager::localStore(lIDPtr).c_str());
+                            }
+
                             PrintJasmTab();
                             fprintf(yyout, "goto %s\n", LabelManager::getLabelString(LabelType::LFOR, LabelState::BEGIN).c_str());
 
@@ -991,6 +1047,8 @@ FOR_STMT                : FOR '(' ID_NAME FOR_SET EXP
                             fprintf(yyout, "%s: \n", LabelManager::getLabelString(LabelType::LFOR, LabelState::EXIT).c_str());
 
                             LabelManager::updateCounter(LabelType::LFOR);
+                            // pop the stack
+                            LabelManager::popStack();
                         }
                         ;
 

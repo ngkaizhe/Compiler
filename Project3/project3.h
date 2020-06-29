@@ -263,13 +263,22 @@ enum class LabelState{
 // settle the naming of label
 class LabelManager{
 public:
-    static vector<int> labelCounters;
+    static vector<int> labelStackCounter;
+    static int labelCounter;
 
     static void createComparisonLabel(LabelType labelType);
     static string getOperatorString(Operation operation, VALUETYPE valueType);
+    // unused
     static string labelTypeString(LabelType labelType);
     static string getLabelString(LabelType labelType, LabelState labelState);
+
+    // update the label counter
     static void updateCounter(LabelType labelType);
+
+    // add the label stack counter
+    static void pushStack();
+    // subtract the label stack counter
+    static void popStack();
 };
 
 // helper debug function
